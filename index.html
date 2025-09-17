@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinais de Emoções</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        /* Custom styles to apply the Poppins font */
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Simple transition for screen changes */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="app-container" class="max-w-lg mx-auto min-h-screen bg-white shadow-lg flex flex-col">
+        
+        <!-- App Header -->
+        <header id="app-header" class="p-4 border-b border-gray-200 hidden">
+            <h1 class="text-xl font-bold text-center text-gray-700"></h1>
+        </header>
+
+        <main class="flex-grow p-6 overflow-y-auto">
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="screen flex flex-col items-center justify-center h-full text-center">
+                <i data-feather="heart" class="w-20 h-20 text-teal-500 mb-6"></i>
+                <h1 class="text-3xl font-bold mb-4">Bem-vindo(a) ao<br>Sinais de Emoções</h1>
+                <p class="text-gray-600 mb-8">Um espaço seguro para você entender e registrar seus sentimentos.</p>
+                <button id="get-started-btn" class="bg-teal-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300">
+                    Começar
+                </button>
+            </div>
+
+            <!-- Emotional Check-in Screen -->
+            <div id="checkin-screen" class="screen text-center">
+                <p class="text-lg text-gray-600 mb-8">Escolha a cor que melhor representa seu sentimento agora.</p>
+                <div class="space-y-4">
+                    <button data-mood="verde" class="mood-btn w-full bg-green-500 hover:bg-green-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                        <i data-feather="smile" class="inline-block mr-2"></i> Siga em Frente
+                    </button>
+                    <button data-mood="amarelo" class="mood-btn w-full bg-amber-400 hover:bg-amber-500 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                        <i data-feather="meh" class="inline-block mr-2"></i> Atenção
+                    </button>
+                    <button data-mood="vermelho" class="mood-btn w-full bg-red-500 hover:bg-red-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                        <i data-feather="frown" class="inline-block mr-2"></i> Pare
+                    </button>
+                </div>
+            </div>
+
+            <!-- Check-in Details Screen -->
+            <div id="details-screen" class="screen">
+                <form id="details-form">
+                    <div class="mb-6">
+                        <label for="notes" class="block text-lg font-semibold mb-2">Notas (Opcional)</label>
+                        <textarea id="notes" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="Como você está se sentindo? O que aconteceu?"></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label for="tags-input" class="block text-lg font-semibold mb-2">Tags de Contexto</label>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="tags-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="Ex: trabalho, família">
+                            <button type="button" id="add-tag-btn" class="bg-teal-500 text-white p-3 rounded-lg hover:bg-teal-600 transition-colors">
+                                <i data-feather="plus"></i>
+                            </button>
+                        </div>
+                        <div id="tags-container" class="mt-3 flex flex-wrap gap-2"></div>
+                    </div>
+                    <button type="submit" id="save-checkin-btn" class="w-full text-white font-bold py-4 rounded-full shadow-lg transition-colors duration-300">
+                        Salvar Registro
+                    </button>
+                </form>
+            </div>
+
+            <!-- History Dashboard Screen -->
+            <div id="history-screen" class="screen">
+                <div id="history-content">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-center">Tendência Emocional</h3>
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-center">Frequência de Emoções</h3>
+                        <div class="max-w-xs mx-auto">
+                            <canvas id="mood-pie-chart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-center">Registros Recentes</h3>
+                        <div id="history-list" class="space-y-3"></div>
+                    </div>
+                </div>
+                <div id="no-history" class="text-center text-gray-500 py-16 hidden">
+                    <i data-feather="archive" class="w-16 h-16 mx-auto mb-4"></i>
+                    <p>Nenhum registro encontrado ainda.</p>
+                </div>
+            </div>
+
+            <!-- Resource Library Screen -->
+            <div id="resources-screen" class="screen">
+                <div id="suggested-resources" class="mb-8"></div>
+                <div id="all-resources">
+                    <h3 class="text-xl font-bold mb-4">Biblioteca Completa</h3>
+                    <div id="resources-list" class="space-y-4"></div>
+                </div>
+            </div>
+
+            <!-- Emergency Help Screen -->
+            <div id="emergency-screen" class="screen flex flex-col items-center justify-center text-center">
+                <i data-feather="alert-triangle" class="w-20 h-20 text-red-500 mb-6"></i>
+                <h2 class="text-2xl font-bold mb-4">Precisa de ajuda agora?</h2>
+                <p class="text-gray-600 mb-8">Se você está em uma crise ou precisa de apoio imediato, ligue para o Centro de Valorização da Vida. O serviço é gratuito e funciona 24 horas.</p>
+                <a href="tel:188" class="w-full bg-red-500 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-red-600 transition-colors duration-300 flex items-center justify-center gap-3">
+                    <i data-feather="phone-call"></i> Ligar para CVV - 188
+                </a>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="w-full max-w-lg mx-auto bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0">
+            <div id="bottom-nav" class="flex justify-around hidden">
+                <button data-screen="checkin-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
+                    <i data-feather="home" class="mx-auto"></i><span class="text-xs block">Início</span>
+                </button>
+                <button data-screen="history-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
+                    <i data-feather="bar-chart-2" class="mx-auto"></i><span class="text-xs block">Histórico</span>
+                </button>
+                <button data-screen="resources-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
+                    <i data-feather="book-open" class="mx-auto"></i><span class="text-xs block">Recursos</span>
+                </button>
+                <button data-screen="emergency-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
+                    <i data-feather="life-buoy" class="mx-auto"></i><span class="text-xs block">Ajuda</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Spacer to prevent content from being hidden by the nav bar -->
+        <div id="nav-spacer" class="h-20 hidden"></div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE MANAGEMENT & INITIALIZATION ---
+            const state = {
+                currentScreen: 'welcome-screen',
+                checkins: [],
+                currentMood: null,
+                currentTags: [],
+                isAuthenticated: false,
+                trendChart: null,
+                pieChart: null,
+            };
+
+            // --- MOCK DATA ---
+            const mockResources = [
+                { id: "1", title: "Técnicas de Respiração", description: "Aprenda a controlar a ansiedade com exercícios simples.", type: "article", contentUrl: "#", icon: "wind" },
+                { id: "2", title: "Meditação Guiada para Dormir", description: "Relaxe e prepare-se para uma noite de sono tranquila.", type: "audio", contentUrl: "#", icon: "headphones" },
+                { id: "3", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "#", icon: "youtube" },
+                { id: "4", title: "Como Lidar com o Estresse", description: "Dicas práticas para o dia a dia.", type: "article", contentUrl: "#", icon: "wind" },
+            ];
+
+            // --- DOM ELEMENTS ---
+            const screens = document.querySelectorAll('.screen');
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const header = document.getElementById('app-header');
+            const headerTitle = header.querySelector('h1');
+            const bottomNav = document.getElementById('bottom-nav');
+            const navSpacer = document.getElementById('nav-spacer');
+            
+            // --- UTILITY FUNCTIONS ---
+            const getMoodColor = (mood) => ({
+                verde: 'bg-green-500',
+                amarelo: 'bg-amber-400',
+                vermelho: 'bg-red-500'
+            }[mood] || 'bg-gray-400');
+
+            const getMoodBorderColor = (mood) => ({
+                verde: 'border-green-500',
+                amarelo: 'border-amber-400',
+                vermelho: 'border-red-500'
+            }[mood] || 'border-gray-400');
+
+            const getMoodName = (mood) => ({
+                verde: 'Bem',
+                amarelo: 'Ok',
+                vermelho: 'Mal'
+            }[mood] || 'N/A');
+
+            // --- DATA PERSISTENCE (localStorage) ---
+            const loadState = () => {
+                const savedCheckins = localStorage.getItem('sinais-checkins');
+                if (savedCheckins) {
+                    state.checkins = JSON.parse(savedCheckins).map(c => ({...c, createdAt: new Date(c.createdAt)}));
+                }
+                const authStatus = localStorage.getItem('sinais-auth');
+                state.isAuthenticated = authStatus === 'true';
+            };
+
+            const saveState = () => {
+                localStorage.setItem('sinais-checkins', JSON.stringify(state.checkins));
+                localStorage.setItem('sinais-auth', state.isAuthenticated);
+            };
+
+            // --- RENDERING & UI UPDATES ---
+            const navigateTo = (screenId) => {
+                state.currentScreen = screenId;
+                screens.forEach(s => s.style.display = 'none');
+                document.getElementById(screenId).style.display = 'block';
+
+                // Update nav button styles
+                navButtons.forEach(btn => {
+                    if (btn.dataset.screen === screenId) {
+                        btn.classList.add('text-teal-500');
+                        btn.classList.remove('text-gray-500');
+                    } else {
+                        btn.classList.add('text-gray-500');
+                        btn.classList.remove('text-teal-500');
+                    }
+                });
+
+                // Update header title
+                const titles = {
+                    'checkin-screen': 'Como você está?',
+                    'history-screen': 'Meu Histórico',
+                    'resources-screen': 'Recursos de Apoio',
+                    'emergency-screen': 'Ajuda Urgente'
+                };
+                headerTitle.textContent = titles[screenId] || '';
+            };
+            
+            const renderTags = () => {
+                const container = document.getElementById('tags-container');
+                container.innerHTML = state.currentTags.map(tag => `
+                    <div class="bg-teal-100 text-teal-800 text-sm font-semibold px-3 py-1 rounded-full flex items-center gap-2">
+                        <span>${tag}</span>
+                        <button data-tag="${tag}" class="remove-tag-btn">&times;</button>
+                    </div>
+                `).join('');
+            };
+
+            const renderHistory = () => {
+                const listContainer = document.getElementById('history-list');
+                const noHistoryEl = document.getElementById('no-history');
+                const historyContentEl = document.getElementById('history-content');
+
+                if (state.checkins.length === 0) {
+                    noHistoryEl.style.display = 'block';
+                    historyContentEl.style.display = 'none';
+                    return;
+                }
+                
+                noHistoryEl.style.display = 'none';
+                historyContentEl.style.display = 'block';
+                
+                // Sort check-ins from newest to oldest
+                const sortedCheckins = [...state.checkins].sort((a, b) => b.createdAt - a.createdAt);
+
+                listContainer.innerHTML = sortedCheckins.map(checkin => `
+                    <div class="bg-white p-4 rounded-lg border ${getMoodBorderColor(checkin.mood)} flex items-start gap-4">
+                        <div class="w-3 h-3 rounded-full ${getMoodColor(checkin.mood)} mt-2"></div>
+                        <div class="flex-grow">
+                            <p class="font-bold">${getMoodName(checkin.mood)} - ${checkin.createdAt.toLocaleDateString('pt-BR')}</p>
+                            <p class="text-gray-600 text-sm">${checkin.notes || 'Nenhuma nota adicionada.'}</p>
+                            ${checkin.tags.length > 0 ? `<div class="mt-2 flex flex-wrap gap-1">${checkin.tags.map(t => `<span class="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">${t}</span>`).join('')}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                renderCharts();
+            };
+
+            const renderCharts = () => {
+                const trendCtx = document.getElementById('trend-chart').getContext('2d');
+                const pieCtx = document.getElementById('mood-pie-chart').getContext('2d');
+
+                const moodToValue = (mood) => ({ verde: 3, amarelo: 2, vermelho: 1 }[mood]);
+                
+                // Trend Chart
+                const trendLabels = state.checkins.map(c => c.createdAt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+                const trendData = state.checkins.map(c => moodToValue(c.mood));
+
+                if (state.trendChart) state.trendChart.destroy();
+                state.trendChart = new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: trendLabels,
+                        datasets: [{
+                            label: 'Tendência Emocional',
+                            data: trendData,
+                            borderColor: 'rgb(20, 184, 166)',
+                            backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 4,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: (value) => ['', 'Mal', 'Ok', 'Bem', ''][value]
+                                }
+                            }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+
+                // Pie Chart
+                const moodCounts = state.checkins.reduce((acc, c) => {
+                    acc[c.mood] = (acc[c.mood] || 0) + 1;
+                    return acc;
+                }, {});
+
+                if (state.pieChart) state.pieChart.destroy();
+                state.pieChart = new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(moodCounts).map(getMoodName),
+                        datasets: [{
+                            data: Object.values(moodCounts),
+                            backgroundColor: [
+                                'rgb(34, 197, 94)',  // green
+                                'rgb(251, 191, 36)', // amber
+                                'rgb(239, 68, 68)',   // red
+                            ],
+                        }]
+                    },
+                    options: { plugins: { legend: { position: 'bottom' } } }
+                });
+            };
+
+            const renderResources = () => {
+                const allList = document.getElementById('resources-list');
+                const suggestedContainer = document.getElementById('suggested-resources');
+                
+                const createResourceCard = (resource) => `
+                    <a href="${resource.contentUrl}" target="_blank" class="block bg-white p-4 rounded-lg border hover:shadow-lg transition-shadow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i data-feather="${resource.icon}" class="w-5 h-5 text-teal-500"></i>
+                            <h4 class="font-bold text-lg">${resource.title}</h4>
+                        </div>
+                        <p class="text-gray-600 text-sm">${resource.description}</p>
+                    </a>
+                `;
+                
+                allList.innerHTML = mockResources.map(createResourceCard).join('');
+                
+                // Suggest resources based on last check-in
+                const lastCheckin = state.checkins.length > 0 ? state.checkins[state.checkins.length - 1] : null;
+                if (lastCheckin && (lastCheckin.mood === 'vermelho' || lastCheckin.mood === 'amarelo')) {
+                    suggestedContainer.innerHTML = `
+                        <h3 class="text-xl font-bold mb-4">Sugestões para Você</h3>
+                        <div class="space-y-4">
+                            ${createResourceCard(mockResources[0])}
+                            ${createResourceCard(mockResources[3])}
+                        </div>
+                        <hr class="my-8">
+                    `;
+                } else {
+                    suggestedContainer.innerHTML = '';
+                }
+            };
+            
+            // --- EVENT LISTENERS ---
+            document.getElementById('get-started-btn').addEventListener('click', () => {
+                state.isAuthenticated = true;
+                saveState();
+                initializeApp();
+            });
+
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    state.currentMood = e.currentTarget.dataset.mood;
+                    document.getElementById('save-checkin-btn').className = `w-full ${getMoodColor(state.currentMood)} text-white font-bold py-4 rounded-full shadow-lg transition-colors duration-300`;
+                    navigateTo('details-screen');
+                });
+            });
+            
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const screenId = e.currentTarget.dataset.screen;
+                    if (screenId === 'history-screen') renderHistory();
+                    if (screenId === 'resources-screen') renderResources();
+                    navigateTo(screenId);
+                });
+            });
+
+            document.getElementById('add-tag-btn').addEventListener('click', () => {
+                const tagInput = document.getElementById('tags-input');
+                const tag = tagInput.value.trim();
+                if (tag && !state.currentTags.includes(tag)) {
+                    state.currentTags.push(tag);
+                    renderTags();
+                }
+                tagInput.value = '';
+                tagInput.focus();
+            });
+
+            document.getElementById('tags-container').addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-tag-btn')) {
+                    const tagToRemove = e.target.dataset.tag;
+                    state.currentTags = state.currentTags.filter(t => t !== tagToRemove);
+                    renderTags();
+                }
+            });
+
+            document.getElementById('details-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newCheckin = {
+                    id: Date.now().toString(),
+                    mood: state.currentMood,
+                    notes: document.getElementById('notes').value,
+                    tags: [...state.currentTags],
+                    createdAt: new Date(),
+                };
+                state.checkins.push(newCheckin);
+                saveState();
+
+                // Reset form state
+                document.getElementById('notes').value = '';
+                document.getElementById('tags-input').value = '';
+                state.currentTags = [];
+                renderTags();
+                
+                navigateTo('checkin-screen');
+            });
+
+            // --- APP INITIALIZATION ---
+            const initializeApp = () => {
+                if (state.isAuthenticated) {
+                    header.style.display = 'block';
+                    bottomNav.style.display = 'flex';
+                    navSpacer.style.display = 'block';
+                    navigateTo('checkin-screen');
+                } else {
+                    document.getElementById('welcome-screen').style.display = 'flex';
+                }
+                feather.replace(); // Initialize icons
+            };
+
+            loadState();
+            initializeApp();
+        });
+    </script>
+</body>
+</html>
