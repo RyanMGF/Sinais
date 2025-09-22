@@ -7,6 +7,30 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            // darkMode is handled by a 'data-theme' attribute now
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'rgb(var(--color-bg-primary) / <alpha-value>)',
+                        'bg-secondary': 'rgb(var(--color-bg-secondary) / <alpha-value>)',
+                        'bg-tertiary': 'rgb(var(--color-bg-tertiary) / <alpha-value>)',
+                        'bg-input': 'rgb(var(--color-bg-input) / <alpha-value>)',
+                        'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
+                        'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
+                        'text-muted': 'rgb(var(--color-text-muted) / <alpha-value>)',
+                        'border-primary': 'rgb(var(--color-border-primary) / <alpha-value>)',
+                        'accent': 'rgb(var(--color-accent) / <alpha-value>)',
+                        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+                        'accent-text': 'rgb(var(--color-accent-text) / <alpha-value>)',
+                        'accent-bg-light': 'rgb(var(--color-accent-bg-light) / <alpha-value>)',
+                        'accent-text-dark': 'rgb(var(--color-accent-text-dark) / <alpha-value>)',
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +43,58 @@
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
 
+    <!-- Confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
     <style>
+        :root {
+            --color-bg-primary: 249 250 251; /* gray-50 */
+            --color-bg-secondary: 255 255 255; /* white */
+            --color-bg-tertiary: 243 244 246; /* gray-100 */
+            --color-bg-input: 255 255 255; /* white */
+            --color-text-primary: 17 24 39; /* gray-900 */
+            --color-text-secondary: 107 114 128; /* gray-600 */
+            --color-text-muted: 156 163 175; /* gray-400 */
+            --color-border-primary: 229 231 235; /* gray-200 */
+            --color-accent: 20 184 166; /* teal-500 */
+            --color-accent-hover: 15 159 132; /* teal-600 */
+            --color-accent-text: 255 255 255; /* white */
+            --color-accent-bg-light: 204 251 241; /* teal-100 */
+            --color-accent-text-dark: 15 118 110; /* teal-800 */
+            --chart-text-rgb: 55, 65, 81; /* gray-700 */
+            --chart-grid-rgba: rgba(0, 0, 0, 0.1);
+        }
+        [data-theme="dark"] {
+            --color-bg-primary: 17 24 39; /* gray-900 */
+            --color-bg-secondary: 31 41 55; /* gray-800 */
+            --color-bg-tertiary: 55 65 81; /* gray-700 */
+            --color-bg-input: 55 65 81; /* gray-700 */
+            --color-text-primary: 229 231 235; /* gray-200 */
+            --color-text-secondary: 156 163 175; /* gray-400 */
+            --color-text-muted: 107 114 128; /* gray-500 */
+            --color-border-primary: 55 65 81; /* gray-700 */
+            --color-accent-bg-light: 13 47 42; /* teal-900 */
+            --color-accent-text-dark: 107 235 208; /* teal-300 */
+            --chart-text-rgb: 209, 213, 219; /* gray-300 */
+            --chart-grid-rgba: rgba(255, 255, 255, 0.1);
+        }
+        [data-theme="ocean"] {
+            --color-bg-primary: 15 23 42; /* slate-900 */
+            --color-bg-secondary: 30 41 59; /* slate-800 */
+            --color-bg-tertiary: 51 65 85; /* slate-700 */
+            --color-bg-input: 51 65 85; /* slate-700 */
+            --color-text-primary: 226 232 240; /* slate-200 */
+            --color-text-secondary: 148 163 184; /* slate-400 */
+            --color-text-muted: 100 116 139; /* slate-500 */
+            --color-border-primary: 71 85 105; /* slate-600 */
+            --color-accent: 34 211 238; /* cyan-400 */
+            --color-accent-hover: 6 182 212; /* cyan-500 */
+            --color-accent-text: 15 23 42; /* slate-900 */
+            --color-accent-bg-light: 165 243 252; /* cyan-200 */
+            --color-accent-text-dark: 22 78 99; /* cyan-800 */
+            --chart-text-rgb: 203, 213, 225; /* slate-300 */
+            --chart-grid-rgba: rgba(255, 255, 255, 0.1);
+        }
         /* Custom styles to apply the Poppins font */
         body {
             font-family: 'Poppins', sans-serif;
@@ -48,31 +123,71 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Modal animations */
+        .modal-enter {
+            animation: modal-in 0.3s ease-out;
+        }
+        .modal-leave {
+            animation: modal-out 0.3s ease-in forwards; /* 'forwards' keeps the final state */
+        }
+        @keyframes modal-in {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes modal-out {
+            from { opacity: 1; transform: scale(1) translateY(0); }
+            to { opacity: 0; transform: scale(0.95) translateY(10px); }
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-bg-primary text-text-primary">
 
-    <div id="app-container" class="max-w-lg mx-auto min-h-screen bg-white shadow-lg flex flex-col">
+    <div id="app-container" class="max-w-lg mx-auto min-h-screen bg-bg-secondary shadow-lg flex flex-col">
         
         <!-- App Header -->
-        <header id="app-header" class="p-4 border-b border-gray-200 hidden">
-            <h1 class="text-xl font-bold text-center text-gray-700"></h1>
+        <header id="app-header" class="p-4 border-b border-border-primary hidden">
+            <h1 class="text-xl font-bold text-center text-text-primary"></h1>
         </header>
 
         <main class="flex-grow p-6 overflow-y-auto">
             <!-- Welcome Screen -->
             <div id="welcome-screen" class="screen flex flex-col items-center justify-center h-full text-center">
-                <i data-feather="heart" class="w-20 h-20 text-teal-500 mb-6"></i>
-                <h1 class="text-3xl font-bold mb-4">Bem-vindo(a) ao<br>Sinais de Emoções</h1>
-                <p class="text-gray-600 mb-8">Um espaço seguro para você entender e registrar seus sentimentos.</p>
-                <button id="get-started-btn" class="bg-teal-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-teal-600 transition-colors duration-300">
+                <i data-feather="heart" class="w-20 h-20 text-accent mb-6"></i>
+                <h1 class="text-3xl font-bold mb-4 text-text-primary">Bem-vindo(a) ao<br>Sinais de Emoções</h1>
+                <p class="text-lg text-text-secondary mb-2">Seu espaço seguro para navegar pelas emoções.</p>
+                <p class="text-text-secondary mb-8 max-w-md">Aqui, você pode registrar o que sente, entender seus padrões e encontrar recursos para cuidar do seu bem-estar.</p>
+
+                <button id="get-started-btn" class="bg-accent text-accent-text font-bold py-3 px-8 rounded-full shadow-lg hover:bg-accent-hover transition-colors duration-300">
                     Começar
+                </button>
+            </div>
+
+            <!-- Mandatory Contact Screen -->
+            <div id="mandatory-contact-screen" class="screen">
+                <div class="text-center">
+                    <i data-feather="users" class="w-16 h-16 text-accent mx-auto mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Sua Rede de Apoio</h2>
+                    <p class="text-text-secondary mb-6">Adicionar pelo menos um contato de confiança é um passo importante. Em momentos difíceis, ter alguém para conversar pode fazer toda a diferença.</p>
+                </div>
+                <div id="mandatory-contacts-list" class="space-y-2 mb-6"></div>
+                <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                    <h3 class="text-lg font-semibold mb-3">Adicionar Contato</h3>
+                    <div class="flex items-center gap-2 mb-3">
+                        <input type="text" id="mandatory-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Nome (Ex: Mãe)">
+                        <input type="tel" id="mandatory-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Telefone">
+                    </div>
+                    <button id="add-mandatory-contact-btn" class="w-full bg-bg-tertiary text-text-primary font-semibold py-2 px-4 rounded-lg hover:opacity-80 transition-opacity">
+                        Adicionar
+                    </button>
+                </div>
+                <button id="mandatory-contact-continue-btn" class="w-full bg-accent text-accent-text font-bold py-4 rounded-full shadow-lg mt-8 transition-opacity duration-300 opacity-50 cursor-not-allowed" disabled>
+                    Continuar
                 </button>
             </div>
 
             <!-- Emotional Check-in Screen -->
             <div id="checkin-screen" class="screen text-center">
-                <p class="text-lg text-gray-600 mb-8">Escolha a cor que melhor representa seu sentimento agora.</p>
+                <p class="text-lg text-text-secondary mb-8">Escolha a cor que melhor representa seu sentimento agora.</p>
                 <div class="space-y-4">
                     <button data-mood="verde" class="mood-btn w-full bg-green-500 hover:bg-green-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
                         <i data-feather="smile" class="inline-block mr-2"></i> Siga em Frente
@@ -90,36 +205,172 @@
             <div id="details-screen" class="screen">
                 <form id="details-form">
                     <div class="mb-6">
-                        <label for="notes" class="block text-lg font-semibold mb-2">Notas (Opcional)</label>
-                        <textarea id="notes" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="Como você está se sentindo? O que aconteceu?"></textarea>
+                        <label class="block text-lg font-semibold mb-2">Tags de Contexto</label>
+                        <p class="text-sm text-text-muted mb-3">Selecione uma ou mais tags que se aplicam.</p>
+                        <div id="predefined-tags-container" class="flex flex-wrap gap-2"></div>
                     </div>
                     <div class="mb-6">
-                        <label for="tags-input" class="block text-lg font-semibold mb-2">Tags de Contexto</label>
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="tags-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="Ex: trabalho, família">
-                            <button type="button" id="add-tag-btn" class="bg-teal-500 text-white p-3 rounded-lg hover:bg-teal-600 transition-colors">
-                                <i data-feather="plus"></i>
-                            </button>
-                        </div>
-                        <div id="tags-container" class="mt-3 flex flex-wrap gap-2"></div>
+                        <label for="notes" class="block text-lg font-semibold mb-2">Notas (Opcional)</label>
+                        <textarea id="notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="O que aconteceu? Descreva a situação ou o sentimento."></textarea>
                     </div>
-                    <button type="submit" id="save-checkin-btn" class="w-full text-white font-bold py-4 rounded-full shadow-lg transition-colors duration-300">
+                    <button type="submit" id="save-checkin-btn" class="w-full text-accent-text font-bold py-4 rounded-full shadow-lg transition-colors duration-300 bg-accent hover:bg-accent-hover">
                         Salvar Registro
                     </button>
                 </form>
             </div>
 
+            <!-- Feedback Screen -->
+            <div id="feedback-screen" class="screen flex flex-col items-center justify-center h-full text-center">
+                <i id="feedback-icon" data-feather="smile" class="w-20 h-20 text-accent mb-6"></i>
+                <h2 id="feedback-title" class="text-3xl font-bold mb-4 text-text-primary">Que bom!</h2>
+                <p id="feedback-message" class="text-text-secondary mb-8">É ótimo ver que você está se sentindo bem. Continue assim!</p>
+                <button id="feedback-continue-btn" class="text-accent-text font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300">
+                    Continuar
+                </button>
+            </div>
+
+            <!-- Contextual Tips Screen -->
+            <div id="contextual-tips-screen" class="screen">
+                <h2 class="text-2xl font-bold mb-4 text-center">Dicas para seu Momento</h2>
+                <p class="text-text-secondary mb-8 text-center">Com base no que você compartilhou, aqui estão algumas sugestões.</p>
+                <div id="tips-container" class="space-y-6 mb-8">
+                    <!-- Tips will be rendered here by JS -->
+                </div>
+                <button id="tips-continue-btn" class="w-full bg-accent text-accent-text font-bold py-3 px-8 rounded-full shadow-lg hover:bg-accent-hover transition-colors duration-300">
+                    Entendido
+                </button>
+            </div>
+
+            <!-- Weekly Diagnosis Screen -->
+            <div id="diagnosis-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-2 text-center">Diagnóstico Semanal</h3>
+                <p class="text-text-muted text-center mb-8">Um resumo dos seus sentimentos nos últimos 7 dias.</p>
+                
+                <div id="diagnosis-content" class="hidden">
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold mb-4 text-center">Balanço da Semana</h4>
+                        <canvas id="weekly-bar-chart"></canvas>
+                    </div>
+                    <div id="diagnosis-feedback" class="bg-bg-tertiary p-6 rounded-lg">
+                        <h4 id="diagnosis-title" class="text-xl font-bold mb-3"></h4>
+                        <p id="diagnosis-text" class="text-text-primary"></p>
+                    </div>
+                </div>
+                <div id="no-diagnosis-data" class="text-center text-text-muted py-16 hidden">
+                    <i data-feather="calendar" class="w-16 h-16 mx-auto mb-4"></i>
+                    <p>Não há registros suficientes na última semana para gerar um diagnóstico.</p>
+                </div>
+            </div>
+
+            <!-- Gratitude Journal Screen -->
+            <div id="gratitude-journal-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-2 text-center">Diário de Gratidão</h3>
+                <p class="text-text-muted text-center mb-8">Registre as coisas pelas quais você é grato(a) hoje.</p>
+                <div class="mb-6">
+                    <textarea id="new-gratitude-entry-input" rows="3" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Hoje sou grato(a) por..."></textarea>
+                    <button type="button" id="add-new-gratitude-entry-btn" class="w-full mt-3 bg-accent text-accent-text font-bold py-3 rounded-lg hover:bg-accent-hover transition-colors">
+                        Adicionar Gratidão
+                    </button>
+                </div>
+                <div id="gratitude-entries-list" class="space-y-3">
+                    <!-- Entries will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Journey Hub Screen -->
+            <div id="journey-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-8 text-center">Sua Jornada</h3>
+                <div class="space-y-4">
+                    <button data-screen="history-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent transition-colors">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="bar-chart-2" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Histórico</h4>
+                                <p class="text-sm text-text-secondary text-left">Veja seus registros e padrões.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                    <button data-screen="diagnosis-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent transition-colors">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="compass" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Diagnóstico</h4>
+                                <p class="text-sm text-text-secondary text-left">Análise do seu humor semanal.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                    <button data-screen="achievements-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent transition-colors">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="star" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Conquistas</h4>
+                                <p class="text-sm text-text-secondary text-left">Acompanhe seu progresso.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                    <button data-screen="goals-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent transition-colors">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="target" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Metas</h4>
+                                <p class="text-sm text-text-secondary text-left">Defina seus objetivos.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                    <button data-screen="gratitude-journal-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent transition-colors">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="sun" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Diário de Gratidão</h4>
+                                <p class="text-sm text-text-secondary text-left">Foque nos pontos positivos.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                </div>
+            </div>
+
             <!-- History Dashboard Screen -->
             <div id="history-screen" class="screen">
-                <div id="history-content">
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold mb-4 text-center">Tendência Emocional</h3>
-                        <canvas id="trend-chart"></canvas>
+                <div id="calendar-view" class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn" class="p-2 rounded-full hover:bg-bg-tertiary"><i data-feather="chevron-left"></i></button>
+                        <h3 id="calendar-month-year" class="text-xl font-bold capitalize"></h3>
+                        <button id="next-month-btn" class="p-2 rounded-full hover:bg-bg-tertiary"><i data-feather="chevron-right"></i></button>
                     </div>
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold mb-4 text-center">Frequência de Emoções</h3>
-                        <div class="max-w-xs mx-auto">
-                            <canvas id="mood-pie-chart"></canvas>
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center">
+                        <!-- Calendar will be rendered here by JS -->
+                    </div>
+                </div>
+
+                <div class="flex justify-end mb-4">
+                    <button id="zen-mode-toggle" title="Modo Zen" class="flex items-center gap-2 text-text-muted hover:text-accent p-2 rounded-lg transition-colors">
+                        <i data-feather="leaf"></i>
+                        <span class="text-sm font-semibold">Modo Zen</span>
+                    </button>
+                </div>
+
+                <div id="history-filter-container" class="mb-6" style="display: none;">
+                    <h3 class="text-lg font-semibold mb-3 text-center">Filtrar por Tag</h3>
+                    <div id="history-tags-filter" class="flex flex-wrap justify-center gap-2">
+                        <!-- Filter tags will be rendered here by JS -->
+                    </div>
+                </div>
+                <div id="history-content">
+                    <div id="charts-container">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold mb-4 text-center">Tendência Emocional</h3>
+                            <canvas id="trend-chart"></canvas>
+                        </div>
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold mb-4 text-center">Frequência de Emoções</h3>
+                            <div class="max-w-xs mx-auto">
+                                <canvas id="mood-pie-chart"></canvas>
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -127,7 +378,7 @@
                         <div id="history-list" class="space-y-3"></div>
                     </div>
                 </div>
-                <div id="no-history" class="text-center text-gray-500 py-16 hidden">
+                <div id="no-history" class="text-center text-text-muted py-16 hidden">
                     <i data-feather="archive" class="w-16 h-16 mx-auto mb-4"></i>
                     <p>Nenhum registro encontrado ainda.</p>
                 </div>
@@ -135,6 +386,26 @@
 
             <!-- Resource Library Screen -->
             <div id="resources-screen" class="screen">
+                <div id="emergency-help-section" class="mb-8 p-6 rounded-lg bg-red-500/10 border border-red-500/20 text-center">
+                    <h3 class="text-xl font-bold mb-2 text-red-500">Ajuda Urgente</h3>
+                    <p class="text-text-secondary mb-4">Se você está em uma crise, ligue para o Centro de Valorização da Vida (CVV).</p>
+                    <a href="tel:188" class="w-full bg-red-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-600 transition-colors duration-300 flex items-center justify-center gap-3">
+                        <i data-feather="phone-call"></i> Ligar para CVV - 188
+                    </a>
+                    <div id="favorite-contacts-container" class="w-full mt-6">
+                        <!-- Favorite contacts will be rendered here -->
+                    </div>
+                    <div class="mt-6 pt-6 border-t border-red-500/20">
+                        <h3 class="text-lg font-semibold mb-3 text-left">Adicionar Novo Contato</h3>
+                        <div class="flex items-center gap-2 mb-3">
+                            <input type="text" id="resources-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Nome">
+                            <input type="tel" id="resources-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Telefone">
+                        </div>
+                        <button id="add-resources-contact-btn" class="w-full bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-opacity">
+                            Adicionar à Rede
+                        </button>
+                    </div>
+                </div>
                 <div id="suggested-resources" class="mb-8"></div>
                 <div id="all-resources">
                     <h3 class="text-xl font-bold mb-4">Biblioteca Completa</h3>
@@ -142,31 +413,73 @@
                 </div>
             </div>
 
-            <!-- Emergency Help Screen -->
-            <div id="emergency-screen" class="screen flex flex-col items-center justify-center text-center">
-                <i data-feather="alert-triangle" class="w-20 h-20 text-red-500 mb-6"></i>
-                <h2 class="text-2xl font-bold mb-4">Precisa de ajuda agora?</h2>
-                <p class="text-gray-600 mb-8">Se você está em uma crise ou precisa de apoio imediato, ligue para o Centro de Valorização da Vida. O serviço é gratuito e funciona 24 horas.</p>
-                <a href="tel:188" class="w-full bg-red-500 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:bg-red-600 transition-colors duration-300 flex items-center justify-center gap-3">
-                    <i data-feather="phone-call"></i> Ligar para CVV - 188
-                </a>
+            <!-- Settings Screen -->
+            <div id="settings-screen" class="screen">
+                <h3 class="text-xl font-bold mb-6">Configurações</h3>
+                <div class="space-y-4">
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                        <h4 class="text-lg font-bold mb-4">Tema</h4>
+                        <div id="theme-selector" class="grid grid-cols-3 gap-4">
+                            <button data-theme="light" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Claro</button>
+                            <button data-theme="dark" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Escuro</button>
+                            <button data-theme="ocean" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Oceano</button>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h4 class="text-lg font-bold mb-4">Gerenciar Tags</h4>
+                        <div class="flex items-center gap-2 mb-4">
+                            <input type="text" id="new-tag-input" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Adicionar nova tag...">
+                            <button type="button" id="add-new-tag-btn" class="bg-accent text-accent-text p-3 rounded-lg hover:bg-accent-hover transition-colors flex-shrink-0">
+                                <i data-feather="plus"></i>
+                            </button>
+                        </div>
+                        <div id="tag-management-list" class="space-y-2">
+                            <!-- Tags will be rendered here by JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Achievements Screen -->
+            <div id="achievements-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-2 text-center">Minhas Conquistas</h3>
+                <p class="text-text-muted text-center mb-8">Continue registrando para desbloquear todas!</p>
+                <div id="achievements-list" class="grid grid-cols-2 gap-4">
+                    <!-- Achievements will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Goals Screen -->
+            <div id="goals-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-2 text-center">Minhas Metas</h3>
+                <p class="text-text-muted text-center mb-8">Defina objetivos para seu bem-estar emocional.</p>
+                <div class="flex items-center gap-2 mb-6">
+                    <input type="text" id="new-goal-input" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Ex: Meditar 5 minutos por dia">
+                    <button type="button" id="add-new-goal-btn" class="bg-accent text-accent-text p-3 rounded-lg hover:bg-accent-hover transition-colors flex-shrink-0">
+                        <i data-feather="plus"></i>
+                    </button>
+                </div>
+                <div id="goals-list" class="space-y-3">
+                    <!-- Goals will be rendered here -->
+                </div>
+            </div>
+
         </main>
 
         <!-- Bottom Navigation Bar -->
-        <nav class="w-full max-w-lg mx-auto bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0">
+        <nav class="w-full max-w-lg mx-auto bg-bg-secondary border-t border-border-primary fixed bottom-0 left-0 right-0">
             <div id="bottom-nav" class="flex justify-around hidden">
-                <button data-screen="checkin-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
+                <button data-screen="checkin-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
                     <i data-feather="home" class="mx-auto"></i><span class="text-xs block">Início</span>
                 </button>
-                <button data-screen="history-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
-                    <i data-feather="bar-chart-2" class="mx-auto"></i><span class="text-xs block">Histórico</span>
+                <button data-screen="journey-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
+                    <i data-feather="trending-up" class="mx-auto"></i><span class="text-xs block">Jornada</span>
                 </button>
-                <button data-screen="resources-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
+                <button data-screen="resources-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
                     <i data-feather="book-open" class="mx-auto"></i><span class="text-xs block">Recursos</span>
                 </button>
-                <button data-screen="emergency-screen" class="nav-btn flex-1 py-3 text-center text-gray-500">
-                    <i data-feather="life-buoy" class="mx-auto"></i><span class="text-xs block">Ajuda</span>
+                <button data-screen="settings-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
+                    <i data-feather="settings" class="mx-auto"></i><span class="text-xs block">Ajustes</span>
                 </button>
             </div>
         </nav>
@@ -174,6 +487,39 @@
         <!-- Spacer to prevent content from being hidden by the nav bar -->
         <div id="nav-spacer" class="h-20 hidden"></div>
 
+        <!-- Edit Modal -->
+        <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+            <div id="edit-modal-content" class="bg-bg-secondary rounded-lg shadow-xl w-full max-w-md p-6">
+                <h3 class="text-xl font-bold mb-4">Editar Registro</h3>
+                <form id="edit-form">
+                    <div class="mb-6">
+                        <label for="edit-notes" class="block text-lg font-semibold mb-2">Notas</label>
+                        <textarea id="edit-notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted"></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-lg font-semibold mb-2">Tags</label>
+                        <div id="edit-predefined-tags-container" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <div class="flex justify-end gap-4">
+                        <button type="button" id="cancel-edit-btn" class="px-6 py-2 bg-bg-tertiary text-text-primary rounded-lg hover:opacity-80 transition-opacity">Cancelar</button>
+                        <button type="submit" id="save-edit-btn" class="px-6 py-2 bg-accent text-accent-text rounded-lg hover:bg-accent-hover">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Achievement Unlocked Modal -->
+        <div id="achievement-unlocked-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
+            <div id="achievement-modal-content" class="bg-bg-secondary rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
+                <i data-feather="award" class="w-16 h-16 text-accent mx-auto mb-4"></i>
+                <h3 class="text-2xl font-bold mb-2">Conquista Desbloqueada!</h3>
+                <p id="unlocked-achievement-title" class="text-lg font-semibold text-accent"></p>
+                <p id="unlocked-achievement-desc" class="text-text-secondary mb-6"></p>
+                <button id="close-achievement-modal-btn" class="w-full bg-accent text-accent-text font-bold py-2 px-4 rounded-lg hover:bg-accent-hover">
+                    Legal!
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -187,15 +533,109 @@
                 isAuthenticated: false,
                 trendChart: null,
                 pieChart: null,
+                weeklyBarChart: null,
+                editingCheckinId: null,
+                editingTags: [],
+                calendarDate: new Date(),
+                selectedDate: null,
+                isZenMode: false,
+                streaks: { current: 0, longest: 0 },
+                unlockedAchievements: [],
+                gratitudeEntries: [],
+                goals: [],
+                historyFilterTag: null,
+                favoriteContacts: [],
+                theme: 'light',
+                predefinedTags: ["Trabalho", "Família", "Relacionamentos", "Saúde", "Lazer", "Estudos", "Finanças", "Pessoal"], // Default tags
             };
 
             // --- MOCK DATA ---
-            const mockResources = [
-                { id: "1", title: "Técnicas de Respiração", description: "Aprenda a controlar a ansiedade com exercícios simples.", type: "article", contentUrl: "#", icon: "wind" },
-                { id: "2", title: "Meditação Guiada para Dormir", description: "Relaxe e prepare-se para uma noite de sono tranquila.", type: "audio", contentUrl: "#", icon: "headphones" },
-                { id: "3", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "#", icon: "youtube" },
-                { id: "4", title: "Como Lidar com o Estresse", description: "Dicas práticas para o dia a dia.", type: "article", contentUrl: "#", icon: "wind" },
+            const achievementsData = [
+                { id: 'streak-3', title: 'Início Consistente', description: 'Registrou o humor por 3 dias seguidos.', icon: 'award', requirement: { type: 'streak', value: 3 } },
+                { id: 'streak-7', title: 'Hábito Semanal', description: 'Registrou o humor por 7 dias seguidos.', icon: 'calendar', requirement: { type: 'streak', value: 7 } },
+                { id: 'streak-14', title: 'Jornada de Autocuidado', description: 'Registrou o humor por 14 dias seguidos.', icon: 'trending-up', requirement: { type: 'streak', value: 14 } },
+                { id: 'streak-30', title: 'Mestre da Consciência', description: 'Registrou o humor por 30 dias seguidos.', icon: 'shield', requirement: { type: 'streak', value: 30 } },
             ];
+
+            // A lista de tags foi movida para o objeto 'state' para ser personalizável
+            const mockResources = [
+                // Contextual resources based on tags
+                { id: "10", title: "Lidando com Pressão no Trabalho", description: "Estratégias para gerenciar o estresse profissional.", type: "article", contentUrl: "#", icon: "briefcase", category: "contextual", tags: ["Trabalho"] },
+                { id: "11", title: "Comunicação Familiar Positiva", description: "Dicas para melhorar o diálogo com seus familiares.", type: "article", contentUrl: "#", icon: "users", category: "contextual", tags: ["Família"] },
+                { id: "12", title: "Cuidando da Saúde Mental", description: "Um guia para priorizar seu bem-estar emocional.", type: "video", contentUrl: "#", icon: "heart", category: "contextual", tags: ["Saúde", "Pessoal"] },
+                { id: "13", title: "Finanças e Bem-estar", description: "Como a organização financeira impacta suas emoções.", type: "article", contentUrl: "#", icon: "dollar-sign", category: "contextual", tags: ["Finanças"] },
+                // General Calm/Release resources
+                { id: "1", title: "Técnicas de Respiração", description: "Aprenda a controlar a ansiedade com exercícios simples.", type: "article", contentUrl: "#", icon: "wind", category: "calm", tags: [] },
+                { id: "2", title: "Meditação Guiada para Acalmar", description: "Relaxe e encontre seu centro com esta meditação.", type: "audio", contentUrl: "#", icon: "headphones", category: "calm", tags: [] },
+                { id: "3", title: "Diário Expressivo", description: "Escreva sobre seus sentimentos sem julgamento para clarear a mente.", type: "activity", contentUrl: "#", icon: "edit-3", category: "release", tags: [] },
+                { id: "4", title: "Movimente o Corpo", description: "Uma caminhada rápida ou dança pode ajudar a aliviar o estresse.", type: "activity", contentUrl: "#", icon: "activity", category: "release", tags: [] },
+                // General resources
+                { id: "9", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "#", icon: "youtube", category: "general", tags: [] },
+            ];
+            const contextualTipsData = {
+                "Estudos": {
+                    icon: "book-open",
+                    title: "Lidando com a Pressão dos Estudos",
+                    texts: [
+                        "Divida suas tarefas em partes menores e celebre cada pequena conquista. Lembre-se de fazer pausas regulares para descansar a mente.",
+                        "Tente a técnica Pomodoro: 25 minutos de foco intenso e 5 minutos de descanso. Isso pode aumentar sua produtividade e diminuir a ansiedade.",
+                        "Conversar com colegas sobre as dificuldades também pode aliviar o peso. Vocês não estão sozinhos nisso."
+                    ]
+                },
+                "Trabalho": {
+                    icon: "briefcase",
+                    title: "Gerenciando o Estresse no Trabalho",
+                    texts: [
+                        "Defina limites claros entre o trabalho e a vida pessoal. Desconectar é essencial para recarregar as energias.",
+                        "Tente identificar a fonte do estresse. É uma tarefa específica? Um relacionamento? Saber a causa é o primeiro passo para resolver.",
+                        "Pequenas pausas durante o dia são essenciais. Levante-se, alongue-se ou apenas olhe pela janela por alguns minutos."
+                    ]
+                },
+                "Família": {
+                    icon: "users",
+                    title: "Navegando em Dinâmicas Familiares",
+                    texts: [
+                        "A comunicação aberta é fundamental. Tente expressar seus sentimentos de forma calma, usando frases como 'Eu sinto que...' em vez de acusações.",
+                        "Lembre-se de que você não pode controlar a reação dos outros, mas pode controlar a sua. Respire fundo antes de responder.",
+                        "Às vezes, um pouco de distância pode ser saudável. Permita-se ter seu próprio espaço para processar as emoções."
+                    ]
+                },
+                "Relacionamentos": {
+                    icon: "heart",
+                    title: "Cuidando dos seus Relacionamentos",
+                    texts: [
+                        "Seja honesto(a) sobre seus sentimentos com a outra pessoa, mas escolha um bom momento para a conversa, quando ambos estiverem calmos.",
+                        "Escutar ativamente é tão importante quanto falar. Tente entender o ponto de vista do outro sem interromper.",
+                        "Reserve um tempo de qualidade para se conectar, mesmo que seja algo simples. A intenção de estar presente faz toda a diferença."
+                    ]
+                },
+                "Finanças": {
+                    icon: "dollar-sign",
+                    title: "Enfrentando a Ansiedade Financeira",
+                    texts: [
+                        "O primeiro passo é organizar. Crie um orçamento simples para entender para onde seu dinheiro está indo. Conhecimento é poder.",
+                        "Se a situação for complexa, buscar orientação de um profissional pode trazer clareza e alívio. Não hesite em pedir ajuda.",
+                        "Foque em pequenos passos. Que tal cortar um gasto supérfluo essa semana ou pesquisar uma forma de renda extra? Cada passo conta."
+                    ]
+                },
+                // A generic tip if no specific tag matches
+                "generic": {
+                    icon: "life-buoy",
+                    title: "Um Passo de Cada Vez",
+                    texts: [
+                        "Reconhecer que você não está bem é um ato de coragem. Permita-se sentir, mas lembre-se de que as emoções são passageiras.",
+                        "Respire fundo, contando até quatro ao inspirar e até seis ao expirar. Isso ajuda a acalmar o sistema nervoso.",
+                        "Seja gentil com você mesmo hoje. Permita-se fazer algo que te conforte, por menor que seja.",
+                        "Lembre-se: sentimentos são como nuvens, eles vêm e vão. Esta sensação não durará para sempre.",
+                        "Foque no presente. O que você pode fazer nos próximos 5 minutos para se sentir um pouco melhor? Um copo d'água? Uma música?",
+                        "Escrever sobre o que você está sentindo pode ajudar a organizar os pensamentos e aliviar a pressão.",
+                        "Você é mais forte do que pensa. Você já superou 100% dos seus dias ruins até hoje.",
+                        "Não se cobre perfeição. Apenas o fato de estar aqui, tentando, já é uma grande vitória.",
+                        "O autocuidado não é egoísmo. É uma necessidade. O que seu corpo e sua mente estão pedindo agora?",
+                        "Lembre-se de que você pode encontrar mais ferramentas e apoio na nossa seção de Recursos."
+                    ]
+                },
+            };
 
             // --- DOM ELEMENTS ---
             const screens = document.querySelectorAll('.screen');
@@ -204,6 +644,7 @@
             const headerTitle = header.querySelector('h1');
             const bottomNav = document.getElementById('bottom-nav');
             const navSpacer = document.getElementById('nav-spacer');
+            const editModal = document.getElementById('edit-modal');
             
             // --- UTILITY FUNCTIONS ---
             const getMoodColor = (mood) => ({
@@ -224,56 +665,377 @@
                 vermelho: 'Mal'
             }[mood] || 'N/A');
 
+            // Helper to check if two dates are on the same day
+            const isSameDay = (d1, d2) =>
+                d1.getFullYear() === d2.getFullYear() &&
+                d1.getMonth() === d2.getMonth() &&
+                d1.getDate() === d2.getDate();
+
+            // Helper to check if d2 is the day right after d1
+            const isConsecutiveDay = (d1, d2) => {
+                if (!d1 || !d2) return false;
+                const nextDay = new Date(d1);
+                nextDay.setHours(0, 0, 0, 0);
+                nextDay.setDate(d1.getDate() + 1);
+                return isSameDay(nextDay, d2);
+            };
+
+            const triggerConfetti = () => {
+                confetti({
+                    particleCount: 150,
+                    spread: 90,
+                    origin: { y: 0.6 }
+                });
+            };
+
             // --- DATA PERSISTENCE (localStorage) ---
             const loadState = () => {
-                const savedCheckins = localStorage.getItem('sinais-checkins');
-                if (savedCheckins) {
-                    state.checkins = JSON.parse(savedCheckins).map(c => ({...c, createdAt: new Date(c.createdAt)}));
-                }
-                const authStatus = localStorage.getItem('sinais-auth');
-                state.isAuthenticated = authStatus === 'true';
+                // Para o modo de exposição, os dados não são carregados para garantir
+                // que a tela de boas-vindas seja sempre exibida no início.
+                // O estado inicial padrão será usado a cada recarga.
             };
 
             const saveState = () => {
-                localStorage.setItem('sinais-checkins', JSON.stringify(state.checkins));
-                localStorage.setItem('sinais-auth', state.isAuthenticated);
+                // Para o modo de exposição, os dados não são salvos para garantir
+                // que cada sessão seja nova e independente, sem persistir informações.
+            };
+
+            const applyTheme = (theme) => {
+                document.documentElement.dataset.theme = theme;
+                updateThemeSelector();
             };
 
             // --- RENDERING & UI UPDATES ---
             const navigateTo = (screenId) => {
                 state.currentScreen = screenId;
                 screens.forEach(s => s.style.display = 'none');
-                document.getElementById(screenId).style.display = 'block';
+                const screenEl = document.getElementById(screenId);
 
+                // Use 'flex' for screens that are designed as flex containers for centering
+                if (screenEl.classList.contains('flex')) {
+                    screenEl.style.display = 'flex';
+                } else {
+                    screenEl.style.display = 'block';
+                }
                 // Update nav button styles
                 navButtons.forEach(btn => {
                     if (btn.dataset.screen === screenId) {
-                        btn.classList.add('text-teal-500');
-                        btn.classList.remove('text-gray-500');
+                        btn.classList.add('text-accent');
+                        btn.classList.remove('text-text-muted');
                     } else {
-                        btn.classList.add('text-gray-500');
-                        btn.classList.remove('text-teal-500');
+                        btn.classList.add('text-text-muted');
+                        btn.classList.remove('text-accent');
                     }
                 });
 
                 // Update header title
                 const titles = {
                     'checkin-screen': 'Como você está?',
+                    'mandatory-contact-screen': 'Rede de Apoio',
+                    'journey-screen': 'Sua Jornada',
                     'history-screen': 'Meu Histórico',
-                    'resources-screen': 'Recursos de Apoio',
-                    'emergency-screen': 'Ajuda Urgente'
+                    'goals-screen': 'Minhas Metas',
+                    'gratitude-journal-screen': 'Diário de Gratidão',
+                    'achievements-screen': 'Minhas Conquistas',
+                    'contextual-tips-screen': 'Dicas para Você',
+                    'diagnosis-screen': 'Diagnóstico Semanal',
+                    'resources-screen': 'Recursos e Ajuda',
+                    'settings-screen': 'Ajustes',
                 };
                 headerTitle.textContent = titles[screenId] || '';
+
+                if (screenId === 'details-screen') {
+                    renderPredefinedTags('predefined-tags-container', state.currentTags);
+                }
+                if (screenId === 'journey-screen') {
+                    feather.replace();
+                }
+                if (screenId === 'settings-screen') {
+                    renderTagManagement();
+                }
+                if (screenId === 'achievements-screen') {
+                    renderAchievements();
+                }
+                if (screenId === 'goals-screen') {
+                    renderGoals();
+                }
+                if (screenId === 'gratitude-journal-screen') {
+                    renderGratitudeJournal();
+                }
+                if (screenId === 'history-screen') {
+                    renderHistory();
+                }
+                if (screenId === 'resources-screen') {
+                    renderResources();
+                    renderEmergencyContacts();
+                }
+                if (screenId === 'diagnosis-screen') {
+                    renderDiagnosis();
+                }
             };
-            
-            const renderTags = () => {
-                const container = document.getElementById('tags-container');
-                container.innerHTML = state.currentTags.map(tag => `
-                    <div class="bg-teal-100 text-teal-800 text-sm font-semibold px-3 py-1 rounded-full flex items-center gap-2">
-                        <span>${tag}</span>
-                        <button data-tag="${tag}" class="remove-tag-btn">&times;</button>
+
+            const renderPredefinedTags = (containerId, selectedTags) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = state.predefinedTags.map(tag => {
+                    const isSelected = selectedTags.includes(tag);
+                    const baseClasses = 'px-4 py-2 rounded-full cursor-pointer transition-colors text-sm font-semibold';
+                    const selectedClasses = 'bg-accent text-accent-text';
+                    const unselectedClasses = 'bg-bg-tertiary text-text-primary hover:opacity-80';
+                    
+                    return `<button type="button" data-tag="${tag}" class="predefined-tag-btn ${baseClasses} ${isSelected ? selectedClasses : unselectedClasses}">${tag}</button>`;
+                }).join('');
+            };
+
+            const renderTagManagement = () => {
+                const container = document.getElementById('tag-management-list');
+                if (!container) return;
+                container.innerHTML = state.predefinedTags.map(tag => `
+                    <div class="bg-bg-secondary p-3 rounded-lg border border-border-primary flex justify-between items-center">
+                        <span class="font-semibold">${tag}</span>
+                        <button data-tag="${tag}" class="remove-managed-tag-btn text-text-muted hover:text-red-500">
+                            <i data-feather="x-circle" class="w-5 h-5"></i>
+                        </button>
                     </div>
                 `).join('');
+                feather.replace();
+            };
+
+            const renderEmergencyContacts = () => {
+                const container = document.getElementById('favorite-contacts-container');
+                if (state.favoriteContacts.length === 0) {
+                    container.innerHTML = `
+                        <div class="pt-6 border-t border-red-500/20">
+                            <p class="text-sm text-center text-text-secondary">Nenhum contato de apoio adicionado ainda.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                container.innerHTML = `
+                    <div class="pt-6 border-t border-red-500/20">
+                        <h3 class="text-xl font-bold mb-2 text-center text-text-primary">Sua Rede de Apoio</h3>
+                        <p class="text-sm text-center text-text-secondary mb-4">Lembre-se das pessoas que se importam. Uma conversa pode fazer toda a diferença.</p>
+                        <div id="resources-contacts-list" class="space-y-3">
+                            ${state.favoriteContacts.map(contact => `
+                                <div class="bg-bg-secondary p-2 rounded-lg border border-border-primary flex items-center justify-between gap-2">
+                                    <a href="tel:${contact.phone}" class="flex-grow flex items-center gap-3 p-2 rounded-md hover:bg-bg-tertiary">
+                                        <i data-feather="user" class="w-6 h-6 text-accent"></i>
+                                        <span class="text-lg font-semibold">${contact.name}</span>
+                                    </a>
+                                    <button data-id="${contact.id}" class="remove-resources-contact-btn text-text-muted hover:text-red-500 p-2 rounded-md hover:bg-bg-tertiary">
+                                        <i data-feather="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                feather.replace();
+            };
+
+            const renderContextualTips = () => {
+                const tipsContainer = document.getElementById('tips-container');
+                const lastCheckin = state.checkins.length > 0 ? [...state.checkins].sort((a, b) => b.createdAt - a.createdAt)[0] : null;
+                
+                if (!lastCheckin) {
+                    tipsContainer.innerHTML = '';
+                    return;
+                }
+
+                const checkinTags = lastCheckin.tags;
+                let tipsHTML = '';
+
+                const createTipCard = (tip) => {
+                    // Select a random tip text from the array
+                    const randomText = tip.texts[Math.floor(Math.random() * tip.texts.length)];
+                    return `
+                    <div class="bg-bg-tertiary p-5 rounded-lg">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-feather="${tip.icon}" class="w-6 h-6 text-accent"></i>
+                            <h4 class="text-xl font-bold">${tip.title}</h4>
+                        </div>
+                        <p class="text-text-primary">${randomText}</p>
+                    </div>
+                `;
+                };
+
+                if (checkinTags.length > 0) {
+                    checkinTags.forEach(tag => {
+                        if (contextualTipsData[tag]) {
+                            tipsHTML += createTipCard(contextualTipsData[tag]);
+                        }
+                    });
+                }
+
+                if (tipsHTML === '') {
+                    tipsHTML = createTipCard(contextualTipsData.generic);
+                }
+
+                tipsContainer.innerHTML = tipsHTML;
+                feather.replace();
+            };
+
+            const renderFeedbackScreen = (mood) => {
+                const iconEl = document.getElementById('feedback-icon');
+                const titleEl = document.getElementById('feedback-title');
+                const messageEl = document.getElementById('feedback-message');
+                const continueBtn = document.getElementById('feedback-continue-btn');
+
+                const feedbackData = {
+                    verde: {
+                        icon: 'smile',
+                        color: 'text-green-500',
+                        title: 'Que bom!',
+                        message: 'É ótimo ver que você está se sentindo bem. Continue assim!',
+                        btnClass: 'bg-green-500 hover:bg-green-600'
+                    },
+                    amarelo: {
+                        icon: 'meh',
+                        color: 'text-amber-400',
+                        title: 'Obrigado por registrar.',
+                        message: 'Reconhecer o que sentimos é um passo importante para o autocuidado.',
+                        btnClass: 'bg-amber-400 hover:bg-amber-500'
+                    },
+                    vermelho: {
+                        icon: 'frown',
+                        color: 'text-red-500',
+                        title: 'Sinto muito por isso.',
+                        message: 'Lembre-se de ser gentil com você mesmo. Se precisar, procure apoio nos Recursos.',
+                        btnClass: 'bg-red-500 hover:bg-red-600'
+                    }
+                };
+
+                const data = feedbackData[mood];
+                iconEl.dataset.feather = data.icon;
+                iconEl.className = `w-20 h-20 ${data.color} mb-6`;
+                titleEl.textContent = data.title;
+                messageEl.textContent = data.message;
+                continueBtn.className = `text-accent-text font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300 ${data.btnClass}`;
+                
+                feather.replace();
+            };
+
+            const openEditModal = (checkinId) => {
+                const checkinToEdit = state.checkins.find(c => c.id === checkinId);
+                if (!checkinToEdit) return;
+
+                state.editingCheckinId = checkinId;
+                state.editingTags = [...checkinToEdit.tags];
+
+                document.getElementById('edit-notes').value = checkinToEdit.notes;
+                renderPredefinedTags('edit-predefined-tags-container', state.editingTags);
+                
+                editModal.classList.remove('hidden');
+                const modalContent = document.getElementById('edit-modal-content');
+                modalContent.classList.remove('modal-leave');
+                modalContent.classList.add('modal-enter');
+            };
+
+            const closeEditModal = () => {
+                state.editingCheckinId = null;
+                state.editingTags = [];
+
+                const modalContent = document.getElementById('edit-modal-content');
+                modalContent.classList.remove('modal-enter');
+                modalContent.classList.add('modal-leave');
+
+                modalContent.addEventListener('animationend', (e) => {
+                    // Only hide if the close animation was the last one triggered
+                    if (modalContent.classList.contains('modal-leave')) {
+                        editModal.classList.add('hidden');
+                    }
+                }, { once: true });
+            };
+
+            const renderCalendar = () => {
+                const calendarGrid = document.getElementById('calendar-grid');
+                const monthYearEl = document.getElementById('calendar-month-year');
+                if (!calendarGrid || !monthYearEl) return;
+
+                const now = state.calendarDate;
+                const year = now.getFullYear();
+                const month = now.getMonth();
+
+                monthYearEl.textContent = now.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0=Sun, 1=Mon,...
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                calendarGrid.innerHTML = '';
+
+                // Day names header
+                const dayNames = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+                dayNames.forEach(day => {
+                    calendarGrid.innerHTML += `<div class="font-bold text-sm text-text-muted">${day}</div>`;
+                });
+
+                // Blank days for padding
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    calendarGrid.innerHTML += '<div></div>';
+                }
+
+                // Days of the month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDate = new Date(year, month, day);
+                    const checkinsForDay = state.checkins.filter(c => {
+                        const checkinDate = new Date(c.createdAt);
+                        return checkinDate.getFullYear() === year &&
+                               checkinDate.getMonth() === month &&
+                               checkinDate.getDate() === day;
+                    });
+
+                    let moodDot = '';
+                    if (checkinsForDay.length > 0) {
+                        let dayMood = 'verde'; // default to green
+                        if (checkinsForDay.some(c => c.mood === 'vermelho')) {
+                            dayMood = 'vermelho';
+                        } else if (checkinsForDay.some(c => c.mood === 'amarelo')) {
+                            dayMood = 'amarelo';
+                        }
+                        moodDot = `<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full ${getMoodColor(dayMood)}"></div>`;
+                    }
+                    
+                    const today = new Date();
+                    const isSelected = state.selectedDate && dayDate.toDateString() === state.selectedDate.toDateString();
+                    const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+                    const todayClass = isToday ? 'bg-accent-bg-light' : '';
+                    const selectedClass = isSelected ? 'border-2 border-accent' : '';
+
+                    calendarGrid.innerHTML += `
+                        <button data-date="${dayDate.toISOString()}" class="calendar-day relative h-10 flex items-center justify-center rounded-full ${todayClass} ${selectedClass} transition-colors hover:bg-bg-tertiary">
+                            <span>${day}</span>
+                            ${moodDot}
+                        </button>
+                    `;
+                }
+            };
+
+            const renderHistoryFilters = () => {
+                const container = document.getElementById('history-tags-filter');
+                const filterContainer = document.getElementById('history-filter-container');
+                if (!container || !filterContainer) return;
+
+                const allTags = [...new Set(state.checkins.flatMap(c => c.tags))];
+
+                if (allTags.length === 0) {
+                    filterContainer.style.display = 'none';
+                    return;
+                }
+                filterContainer.style.display = 'block';
+
+                let tagsHTML = '';
+                
+                const btnClasses = 'px-4 py-1.5 rounded-full cursor-pointer transition-colors text-sm font-semibold';
+                const selectedClasses = 'bg-accent text-accent-text';
+                const unselectedClasses = 'bg-bg-tertiary text-text-primary hover:opacity-80';
+                
+                tagsHTML += `<button type="button" data-tag="all" class="history-filter-btn ${btnClasses} ${state.historyFilterTag === null ? selectedClasses : unselectedClasses}">Todos</button>`;
+
+                allTags.sort().forEach(tag => {
+                    const isSelected = state.historyFilterTag === tag;
+                    tagsHTML += `<button type="button" data-tag="${tag}" class="history-filter-btn ${btnClasses} ${isSelected ? selectedClasses : unselectedClasses}">${tag}</button>`;
+                });
+
+                container.innerHTML = tagsHTML;
             };
 
             const renderHistory = () => {
@@ -281,41 +1043,186 @@
                 const noHistoryEl = document.getElementById('no-history');
                 const historyContentEl = document.getElementById('history-content');
 
-                if (state.checkins.length === 0) {
+                const chartsContainer = document.getElementById('charts-container');
+                const filterContainer = document.getElementById('history-filter-container');
+                const zenModeToggle = document.getElementById('zen-mode-toggle');
+
+                if (state.isZenMode) {
+                    chartsContainer.style.display = 'none';
+                    filterContainer.style.display = 'none';
+                    zenModeToggle.classList.add('text-accent');
+                    zenModeToggle.classList.remove('text-text-muted');
+                    if (state.trendChart) { state.trendChart.destroy(); state.trendChart = null; }
+                    if (state.pieChart) { state.pieChart.destroy(); state.pieChart = null; }
+                } else {
+                    chartsContainer.style.display = 'block';
+                    zenModeToggle.classList.remove('text-accent');
+                    zenModeToggle.classList.add('text-text-muted');
+                }
+
+                feather.replace();
+
+                renderCalendar();
+                renderHistoryFilters();
+
+                const year = state.calendarDate.getFullYear();
+                const month = state.calendarDate.getMonth();
+
+                // Filter checkins for the current calendar month to display
+                const monthCheckins = state.checkins.filter(c => {
+                    const checkinDate = new Date(c.createdAt);
+                    return checkinDate.getFullYear() === year && checkinDate.getMonth() === month;
+                });
+
+                // Data for charts is based on month + tag filter
+                const chartCheckins = state.historyFilterTag
+                    ? monthCheckins.filter(c => c.tags.includes(state.historyFilterTag))
+                    : monthCheckins;
+                
+                // Data for list is based on day filter (if active) or the same as charts
+                const listCheckins = state.selectedDate
+                    ? monthCheckins.filter(c => new Date(c.createdAt).getDate() === state.selectedDate.getDate())
+                    : chartCheckins;
+
+                if (monthCheckins.length === 0) {
+                    noHistoryEl.innerHTML = `
+                        <i data-feather="archive" class="w-16 h-16 mx-auto mb-4"></i>
+                        <p>Nenhum registro encontrado ainda.</p>
+                    `;
                     noHistoryEl.style.display = 'block';
                     historyContentEl.style.display = 'none';
+                    feather.replace();
                     return;
                 }
                 
+                if (listCheckins.length === 0) {
+                    noHistoryEl.innerHTML = `
+                        <i data-feather="filter" class="w-16 h-16 mx-auto mb-4"></i>
+                        <p>Nenhum registro encontrado para a seleção atual.</p>
+                    `;
+                    noHistoryEl.style.display = 'block';
+                    historyContentEl.style.display = 'none';
+                    feather.replace();
+                    return;
+                }
+
                 noHistoryEl.style.display = 'none';
                 historyContentEl.style.display = 'block';
                 
-                // Sort check-ins from newest to oldest
-                const sortedCheckins = [...state.checkins].sort((a, b) => b.createdAt - a.createdAt);
+                const sortedCheckins = [...listCheckins].sort((a, b) => b.createdAt - a.createdAt);
 
                 listContainer.innerHTML = sortedCheckins.map(checkin => `
-                    <div class="bg-white p-4 rounded-lg border ${getMoodBorderColor(checkin.mood)} flex items-start gap-4">
-                        <div class="w-3 h-3 rounded-full ${getMoodColor(checkin.mood)} mt-2"></div>
+                    <div class="bg-bg-secondary p-4 rounded-lg border ${getMoodBorderColor(checkin.mood)} flex items-start gap-4">
+                        <div class="w-3 h-3 rounded-full ${getMoodColor(checkin.mood)} mt-2 flex-shrink-0"></div>
                         <div class="flex-grow">
                             <p class="font-bold">${getMoodName(checkin.mood)} - ${checkin.createdAt.toLocaleDateString('pt-BR')}</p>
-                            <p class="text-gray-600 text-sm">${checkin.notes || 'Nenhuma nota adicionada.'}</p>
-                            ${checkin.tags.length > 0 ? `<div class="mt-2 flex flex-wrap gap-1">${checkin.tags.map(t => `<span class="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">${t}</span>`).join('')}</div>` : ''}
+                            <p class="text-text-secondary text-sm">${checkin.notes || 'Nenhuma nota adicionada.'}</p>
+                            ${checkin.tags.length > 0 ? `<div class="mt-2 flex flex-wrap gap-1">${checkin.tags.map(t => `<span class="text-xs bg-bg-tertiary text-text-primary px-2 py-0.5 rounded-full">${t}</span>`).join('')}</div>` : ''}
+                        </div>
+                        <div class="flex-shrink-0 flex items-center gap-3">
+                            <button data-action="edit" data-id="${checkin.id}" class="edit-btn text-text-muted hover:text-accent"><i data-feather="edit-2" class="w-5 h-5"></i></button>
+                            <button data-action="delete" data-id="${checkin.id}" class="delete-btn text-text-muted hover:text-red-500"><i data-feather="trash-2" class="w-5 h-5"></i></button>
                         </div>
                     </div>
                 `).join('');
                 
-                renderCharts();
+                feather.replace(); // Render edit/delete icons
+                if (!state.isZenMode) {
+                    renderCharts(chartCheckins);
+                }
             };
 
-            const renderCharts = () => {
+            const renderDiagnosis = () => {
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+                const weeklyCheckins = state.checkins.filter(c => c.createdAt >= oneWeekAgo);
+
+                const diagnosisContent = document.getElementById('diagnosis-content');
+                const noDataEl = document.getElementById('no-diagnosis-data');
+
+                if (weeklyCheckins.length === 0) {
+                    diagnosisContent.style.display = 'none';
+                    noDataEl.style.display = 'block';
+                    feather.replace();
+                    return;
+                }
+
+                diagnosisContent.style.display = 'block';
+                noDataEl.style.display = 'none';
+
+                const moodCounts = weeklyCheckins.reduce((acc, c) => {
+                    acc[c.mood] = (acc[c.mood] || 0) + 1;
+                    return acc;
+                }, { verde: 0, amarelo: 0, vermelho: 0 });
+
+                const barCtx = document.getElementById('weekly-bar-chart').getContext('2d');
+                if (state.weeklyBarChart) state.weeklyBarChart.destroy();
+
+                const rootStyles = getComputedStyle(document.documentElement);
+                const chartTextColor = `rgb(${rootStyles.getPropertyValue('--chart-text-rgb')})`;
+                const chartGridColor = rootStyles.getPropertyValue('--chart-grid-rgba');
+
+                state.weeklyBarChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Bem', 'Ok', 'Mal'],
+                        datasets: [{
+                            label: 'Contagem de Emoções',
+                            data: [moodCounts.verde, moodCounts.amarelo, moodCounts.vermelho],
+                            backgroundColor: [ 'rgb(34, 197, 94)', 'rgb(251, 191, 36)', 'rgb(239, 68, 68)' ],
+                            borderRadius: 5,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1, color: chartTextColor }, grid: { color: chartGridColor } },
+                            x: { ticks: { color: chartTextColor }, grid: { display: false } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+
+                const titleEl = document.getElementById('diagnosis-title');
+                const textEl = document.getElementById('diagnosis-text');
+                const total = weeklyCheckins.length;
+                const predominantMood = Object.keys(moodCounts).reduce((a, b) => moodCounts[a] > moodCounts[b] ? a : b);
+                let diagnosis = {};
+
+                if (moodCounts.vermelho >= total / 2 || (predominantMood === 'vermelho' && moodCounts.vermelho > 0)) {
+                    diagnosis = {
+                        title: "Uma Semana Desafiadora",
+                        text: "Parece que esta foi uma semana difícil. É importante reconhecer o peso que o cenário atual, social e político, pode ter sobre nós. Lembre-se que seu sentimento é válido. Considere se conectar com grupos de apoio ou canais que fortaleçam sua comunidade. Cuidar de si é também um ato de resistência."
+                    };
+                } else if (moodCounts.amarelo > total / 2 || predominantMood === 'amarelo') {
+                    diagnosis = {
+                        title: "Uma Semana de Alerta",
+                        text: "Sua semana teve momentos de atenção. Em um mundo com excesso de informações, é crucial filtrar o que consumimos. Que tal praticar o 'detox digital', checar as fontes das notícias e buscar conversas que construam, em vez de apenas drenar? O equilíbrio é fundamental para a ação consciente."
+                    };
+                } else {
+                    diagnosis = {
+                        title: "Uma Semana Positiva!",
+                        text: "Que ótimo ver uma semana com mais bem-estar! Essa energia positiva é um recurso valioso. Já pensou em usá-la para se engajar em uma causa local, aprender mais sobre os direitos da sua comunidade ou simplesmente compartilhar uma conversa construtiva com alguém? Pequenas ações fortalecem o coletivo."
+                    };
+                }
+
+                titleEl.textContent = diagnosis.title;
+                textEl.textContent = diagnosis.text;
+            };
+
+            const renderCharts = (checkinsToRender) => {
                 const trendCtx = document.getElementById('trend-chart').getContext('2d');
                 const pieCtx = document.getElementById('mood-pie-chart').getContext('2d');
+
+                const rootStyles = getComputedStyle(document.documentElement);
+                const chartTextColor = `rgb(${rootStyles.getPropertyValue('--chart-text-rgb')})`;
+                const chartGridColor = rootStyles.getPropertyValue('--chart-grid-rgba');
 
                 const moodToValue = (mood) => ({ verde: 3, amarelo: 2, vermelho: 1 }[mood]);
                 
                 // Trend Chart
-                const trendLabels = state.checkins.map(c => c.createdAt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
-                const trendData = state.checkins.map(c => moodToValue(c.mood));
+                const trendLabels = checkinsToRender.map(c => c.createdAt.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }));
+                const trendData = checkinsToRender.map(c => moodToValue(c.mood));
 
                 if (state.trendChart) state.trendChart.destroy();
                 state.trendChart = new Chart(trendCtx, {
@@ -325,8 +1232,8 @@
                         datasets: [{
                             label: 'Tendência Emocional',
                             data: trendData,
-                            borderColor: 'rgb(20, 184, 166)',
-                            backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                            borderColor: `rgb(${rootStyles.getPropertyValue('--color-accent')})`,
+                            backgroundColor: `rgba(${rootStyles.getPropertyValue('--color-accent')}, 0.1)`,
                             tension: 0.3,
                             fill: true,
                         }]
@@ -338,8 +1245,16 @@
                                 max: 4,
                                 ticks: {
                                     stepSize: 1,
-                                    callback: (value) => ['', 'Mal', 'Ok', 'Bem', ''][value]
+                                    callback: (value) => ['', 'Mal', 'Ok', 'Bem', ''][value],
+                                    color: chartTextColor,
+                                },
+                                grid: {
+                                    color: chartGridColor,
                                 }
+                            },
+                            x: {
+                                ticks: { color: chartTextColor },
+                                grid: { color: chartGridColor }
                             }
                         },
                         plugins: { legend: { display: false } }
@@ -347,7 +1262,7 @@
                 });
 
                 // Pie Chart
-                const moodCounts = state.checkins.reduce((acc, c) => {
+                const moodCounts = checkinsToRender.reduce((acc, c) => {
                     acc[c.mood] = (acc[c.mood] || 0) + 1;
                     return acc;
                 }, {});
@@ -366,7 +1281,14 @@
                             ],
                         }]
                     },
-                    options: { plugins: { legend: { position: 'bottom' } } }
+                    options: { 
+                        plugins: { 
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: chartTextColor }
+                            } 
+                        } 
+                    }
                 });
             };
 
@@ -375,44 +1297,251 @@
                 const suggestedContainer = document.getElementById('suggested-resources');
                 
                 const createResourceCard = (resource) => `
-                    <a href="${resource.contentUrl}" target="_blank" class="block bg-white p-4 rounded-lg border hover:shadow-lg transition-shadow">
+                    <a href="${resource.contentUrl}" target="_blank" class="block bg-bg-secondary p-4 rounded-lg border border-border-primary hover:shadow-lg transition-shadow">
                         <div class="flex items-center gap-3 mb-2">
-                            <i data-feather="${resource.icon}" class="w-5 h-5 text-teal-500"></i>
+                            <i data-feather="${resource.icon}" class="w-5 h-5 text-accent"></i>
                             <h4 class="font-bold text-lg">${resource.title}</h4>
                         </div>
-                        <p class="text-gray-600 text-sm">${resource.description}</p>
+                        <p class="text-text-secondary text-sm">${resource.description}</p>
                     </a>
                 `;
                 
                 allList.innerHTML = mockResources.map(createResourceCard).join('');
                 
-                // Suggest resources based on last check-in
-                const lastCheckin = state.checkins.length > 0 ? state.checkins[state.checkins.length - 1] : null;
+                let suggestionHTML = '';
+                const lastCheckin = state.checkins.length > 0 ? [...state.checkins].sort((a, b) => b.createdAt - a.createdAt)[0] : null;
+
                 if (lastCheckin && (lastCheckin.mood === 'vermelho' || lastCheckin.mood === 'amarelo')) {
-                    suggestedContainer.innerHTML = `
-                        <h3 class="text-xl font-bold mb-4">Sugestões para Você</h3>
-                        <div class="space-y-4">
-                            ${createResourceCard(mockResources[0])}
-                            ${createResourceCard(mockResources[3])}
-                        </div>
-                        <hr class="my-8">
-                    `;
+                    // 1. Contextual suggestions based on tags
+                    const checkinTags = lastCheckin.tags;
+                    const contextualResources = mockResources.filter(r => 
+                        r.category === 'contextual' && checkinTags.some(tag => r.tags.includes(tag))
+                    );
+
+                    if (contextualResources.length > 0) {
+                        suggestionHTML += `
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold mb-4">Sugestões para seu Contexto</h3>
+                                <div class="space-y-4">
+                                    ${contextualResources.map(createResourceCard).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // 2. General suggestions (Calm/Release)
+                    const calmResources = mockResources.filter(r => r.category === 'calm');
+                    const releaseResources = mockResources.filter(r => r.category === 'release');
+
+                    if (calmResources.length > 0) {
+                        suggestionHTML += `
+                            <div class="mb-8">
+                                <h3 class="text-xl font-bold mb-4">Para Acalmar a Mente</h3>
+                                <div class="space-y-4">${calmResources.map(createResourceCard).join('')}</div>
+                            </div>`;
+                    }
+                    if (releaseResources.length > 0) {
+                        suggestionHTML += `
+                            <div>
+                                <h3 class="text-xl font-bold mb-4">Para Extravasar o Emocional</h3>
+                                <div class="space-y-4">${releaseResources.map(createResourceCard).join('')}</div>
+                            </div>`;
+                    }
+                }
+
+                if (suggestionHTML) {
+                    suggestedContainer.innerHTML = suggestionHTML + '<hr class="my-8 border-border-primary">';
                 } else {
                     suggestedContainer.innerHTML = '';
                 }
+                
+                feather.replace(); // Garante que os ícones dinâmicos sejam renderizados
             };
             
+            const handleDeleteCheckin = (checkinId) => {
+                if (confirm('Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.')) {
+                    state.checkins = state.checkins.filter(c => c.id !== checkinId);
+                    saveState();
+                    renderHistory();
+                }
+            };
+
+          const updateThemeSelector = () => {
+     const themeButtons = document.querySelectorAll('.theme-btn');
+    themeButtons.forEach(btn => {
+        if (btn.dataset.theme === state.theme) {
+            btn.classList.add('border-accent', 'text-accent');
+            btn.classList.remove('border-border-primary');
+        } else {
+            btn.classList.remove('border-accent', 'text-accent');
+            btn.classList.add('border-border-primary');
+        }
+    });
+};
+            
+
+            const calculateStreaks = () => {
+                const checkins = state.checkins;
+                if (checkins.length === 0) {
+                    return { current: 0, longest: 0 };
+                }
+
+                const uniqueDays = [...new Set(checkins.map(c => new Date(c.createdAt).toDateString()))]
+                    .map(dateStr => new Date(dateStr))
+                    .sort((a, b) => a - b);
+
+                if (uniqueDays.length === 0) {
+                    return { current: 0, longest: 0 };
+                }
+
+                // Calculate longest streak
+                let longestStreak = 0;
+                let currentLongest = 1;
+                for (let i = 1; i < uniqueDays.length; i++) {
+                    if (isConsecutiveDay(uniqueDays[i - 1], uniqueDays[i])) {
+                        currentLongest++;
+                    } else {
+                        longestStreak = Math.max(longestStreak, currentLongest);
+                        currentLongest = 1;
+                    }
+                }
+                longestStreak = Math.max(longestStreak, currentLongest);
+
+                // Calculate current streak
+                let currentStreak = 0;
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                const lastCheckinDay = uniqueDays[uniqueDays.length - 1];
+
+                if (isSameDay(today, lastCheckinDay) || isConsecutiveDay(lastCheckinDay, today)) {
+                    currentStreak = 1;
+                    for (let i = uniqueDays.length - 2; i >= 0; i--) {
+                        if (isConsecutiveDay(uniqueDays[i], uniqueDays[i + 1])) {
+                            currentStreak++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                
+                return { current: currentStreak, longest: longestStreak };
+            };
+
+            const showAchievementUnlockedModal = (achievement) => {
+                document.getElementById('unlocked-achievement-title').textContent = achievement.title;
+                document.getElementById('unlocked-achievement-desc').textContent = achievement.description;
+                const modal = document.getElementById('achievement-unlocked-modal');
+                modal.classList.remove('hidden');
+                const modalContent = document.getElementById('achievement-modal-content');
+                modalContent.classList.add('modal-enter');
+                triggerConfetti();
+            };
+
+            const updateStreaksAndAchievements = () => {
+                const oldLongestStreak = state.streaks.longest;
+                state.streaks = calculateStreaks();
+
+                achievementsData.forEach(achievement => {
+                    if (achievement.requirement.type === 'streak' && !state.unlockedAchievements.includes(achievement.id)) {
+                        if (state.streaks.longest >= achievement.requirement.value) {
+                            state.unlockedAchievements.push(achievement.id);
+                            if (state.streaks.longest > oldLongestStreak) {
+                                showAchievementUnlockedModal(achievement);
+                            }
+                        }
+                    }
+                });
+            };
+
+            const renderAchievements = () => {
+                const list = document.getElementById('achievements-list');
+                list.innerHTML = achievementsData.map(ach => {
+                    const isUnlocked = state.unlockedAchievements.includes(ach.id);
+                    const unlockedClasses = 'bg-accent-bg-light border-accent text-accent-text-dark';
+                    const lockedClasses = 'bg-bg-tertiary border-border-primary text-text-muted opacity-60';
+                    return `
+                        <div class="p-4 rounded-lg border-2 ${isUnlocked ? unlockedClasses : lockedClasses} flex flex-col items-center text-center">
+                            <i data-feather="${ach.icon}" class="w-10 h-10 mb-3"></i>
+                            <h4 class="font-bold">${ach.title}</h4>
+                            <p class="text-xs">${ach.description}</p>
+                        </div>
+                    `;
+                }).join('');
+                feather.replace();
+            };
+
             // --- EVENT LISTENERS ---
             document.getElementById('get-started-btn').addEventListener('click', () => {
-                state.isAuthenticated = true;
-                saveState();
-                initializeApp();
+                navigateTo('mandatory-contact-screen');
+            });
+
+            const renderMandatoryContacts = () => {
+                const listContainer = document.getElementById('mandatory-contacts-list');
+                const continueBtn = document.getElementById('mandatory-contact-continue-btn');
+                
+                listContainer.innerHTML = state.favoriteContacts.map(contact => `
+                    <div class="bg-bg-tertiary p-3 rounded-lg flex justify-between items-center">
+                        <span class="font-semibold">${contact.name}</span>
+                        <button data-id="${contact.id}" class="remove-mandatory-contact-btn text-red-500 hover:text-red-600">
+                            <i data-feather="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                `).join('');
+                feather.replace();
+
+                if (state.favoriteContacts.length > 0) {
+                    continueBtn.disabled = false;
+                    continueBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    continueBtn.disabled = true;
+                    continueBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            };
+
+            document.getElementById('add-mandatory-contact-btn').addEventListener('click', () => {
+                const nameInput = document.getElementById('mandatory-contact-name-input');
+                const phoneInput = document.getElementById('mandatory-contact-phone-input');
+                const name = nameInput.value.trim();
+                const phone = phoneInput.value.trim();
+
+                if (name && phone) {
+                    state.favoriteContacts.push({ id: Date.now(), name, phone });
+                    renderMandatoryContacts();
+                    nameInput.value = '';
+                    phoneInput.value = '';
+                }
+            });
+
+            document.getElementById('mandatory-contacts-list').addEventListener('click', (e) => {
+                const removeBtn = e.target.closest('.remove-mandatory-contact-btn');
+                if (removeBtn) {
+                    const contactId = removeBtn.dataset.id;
+                    state.favoriteContacts = state.favoriteContacts.filter(c => c.id.toString() !== contactId);
+                    renderMandatoryContacts();
+                }
+            });
+
+            document.getElementById('mandatory-contact-continue-btn').addEventListener('click', () => {
+                if (state.favoriteContacts.length > 0) {
+                    state.isAuthenticated = true;
+                    header.style.display = 'block';
+                    bottomNav.style.display = 'flex';
+                    navSpacer.style.display = 'block';
+                    navigateTo('checkin-screen');
+                }
             });
 
             document.querySelectorAll('.mood-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     state.currentMood = e.currentTarget.dataset.mood;
-                    document.getElementById('save-checkin-btn').className = `w-full ${getMoodColor(state.currentMood)} text-white font-bold py-4 rounded-full shadow-lg transition-colors duration-300`;
+                    const moodColors = {
+                        verde: 'bg-green-500 hover:bg-green-600',
+                        amarelo: 'bg-amber-400 hover:bg-amber-500',
+                        vermelho: 'bg-red-500 hover:bg-red-600'
+                    };
+                    const moodColorClass = moodColors[state.currentMood] || 'bg-gray-500 hover:bg-gray-600';
+                    // Reconstrói a classe do botão para incluir o hover e manter a estrutura
+                    document.getElementById('save-checkin-btn').className = `w-full font-bold py-4 rounded-full shadow-lg transition-colors duration-300 ${moodColorClass} text-white`;
                     navigateTo('details-screen');
                 });
             });
@@ -420,29 +1549,21 @@
             navButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const screenId = e.currentTarget.dataset.screen;
-                    if (screenId === 'history-screen') renderHistory();
-                    if (screenId === 'resources-screen') renderResources();
                     navigateTo(screenId);
                 });
             });
 
-            document.getElementById('add-tag-btn').addEventListener('click', () => {
-                const tagInput = document.getElementById('tags-input');
-                const tag = tagInput.value.trim();
-                if (tag && !state.currentTags.includes(tag)) {
-                    state.currentTags.push(tag);
-                    renderTags();
-                }
-                tagInput.value = '';
-                tagInput.focus();
-            });
+            document.getElementById('predefined-tags-container').addEventListener('click', (e) => {
+                const target = e.target.closest('.predefined-tag-btn');
+                if (!target) return;
 
-            document.getElementById('tags-container').addEventListener('click', (e) => {
-                if (e.target.classList.contains('remove-tag-btn')) {
-                    const tagToRemove = e.target.dataset.tag;
-                    state.currentTags = state.currentTags.filter(t => t !== tagToRemove);
-                    renderTags();
+                const tag = target.dataset.tag;
+                if (state.currentTags.includes(tag)) {
+                    state.currentTags = state.currentTags.filter(t => t !== tag);
+                } else {
+                    state.currentTags.push(tag);
                 }
+                renderPredefinedTags('predefined-tags-container', state.currentTags);
             });
 
             document.getElementById('details-form').addEventListener('submit', (e) => {
@@ -455,26 +1576,291 @@
                     createdAt: new Date(),
                 };
                 state.checkins.push(newCheckin);
+                updateStreaksAndAchievements();
                 saveState();
 
                 // Reset form state
                 document.getElementById('notes').value = '';
-                document.getElementById('tags-input').value = '';
                 state.currentTags = [];
-                renderTags();
-                
+
+                // Render and navigate to feedback screen
+                renderFeedbackScreen(state.currentMood);
+                navigateTo('feedback-screen');
+            });
+
+            document.getElementById('feedback-continue-btn').addEventListener('click', () => {
+                const lastCheckin = state.checkins.length > 0 ? [...state.checkins].sort((a, b) => b.createdAt - a.createdAt)[0] : null;
+                if (lastCheckin && (lastCheckin.mood === 'amarelo' || lastCheckin.mood === 'vermelho')) {
+                    renderContextualTips();
+                    navigateTo('contextual-tips-screen');
+                } else {
+                    navigateTo('checkin-screen');
+                }
+            });
+
+            document.getElementById('app-container').addEventListener('click', (e) => {
+                const journeyLink = e.target.closest('.journey-link');
+                if (journeyLink) {
+                    const screenId = journeyLink.dataset.screen;
+                    navigateTo(screenId);
+                }
+            });
+
+            document.getElementById('add-resources-contact-btn').addEventListener('click', () => {
+                const nameInput = document.getElementById('resources-contact-name-input');
+                const phoneInput = document.getElementById('resources-contact-phone-input');
+                const name = nameInput.value.trim();
+                const phone = phoneInput.value.trim();
+
+                if (name && phone) {
+                    state.favoriteContacts.push({ id: Date.now(), name, phone });
+                    renderEmergencyContacts();
+                    nameInput.value = '';
+                    phoneInput.value = '';
+                }
+            });
+
+            document.getElementById('emergency-help-section').addEventListener('click', (e) => {
+                const removeBtn = e.target.closest('.remove-resources-contact-btn');
+                if (removeBtn) {
+                    const contactId = removeBtn.dataset.id;
+                    state.favoriteContacts = state.favoriteContacts.filter(c => c.id.toString() !== contactId);
+                    renderEmergencyContacts();
+                }
+            });
+
+            document.getElementById('history-filter-container').addEventListener('click', (e) => {
+                const filterBtn = e.target.closest('.history-filter-btn');
+                if (filterBtn) {
+                    const tag = filterBtn.dataset.tag;
+                    state.historyFilterTag = tag === 'all' ? null : tag;
+                    state.selectedDate = null; // Reset day selection
+                    renderHistory();
+                }
+            });
+
+            document.getElementById('zen-mode-toggle').addEventListener('click', () => {
+                state.isZenMode = !state.isZenMode;
+                renderHistory();
+            });
+
+            document.getElementById('prev-month-btn').addEventListener('click', () => {
+                state.calendarDate.setMonth(state.calendarDate.getMonth() - 1);
+                state.selectedDate = null;
+                state.historyFilterTag = null;
+                renderHistory();
+            });
+
+            document.getElementById('next-month-btn').addEventListener('click', () => {
+                state.calendarDate.setMonth(state.calendarDate.getMonth() + 1);
+                state.selectedDate = null;
+                state.historyFilterTag = null;
+                renderHistory();
+            });
+
+            document.getElementById('calendar-grid').addEventListener('click', (e) => {
+                const dayBtn = e.target.closest('.calendar-day');
+                if (!dayBtn || !dayBtn.dataset.date) return;
+
+                const clickedDate = new Date(dayBtn.dataset.date);
+
+                state.selectedDate = (state.selectedDate && state.selectedDate.getTime() === clickedDate.getTime()) ? null : clickedDate;
+                state.historyFilterTag = null;
+                renderHistory();
+            });
+
+            document.getElementById('history-list').addEventListener('click', (e) => {
+                const targetButton = e.target.closest('button[data-action]');
+                if (!targetButton) return;
+
+                const action = targetButton.dataset.action;
+                const checkinId = targetButton.dataset.id;
+
+                if (action === 'edit') {
+                    openEditModal(checkinId);
+                } else if (action === 'delete') {
+                    handleDeleteCheckin(checkinId);
+                }
+            });
+
+            document.getElementById('tips-continue-btn').addEventListener('click', () => {
                 navigateTo('checkin-screen');
+            });
+
+            document.getElementById('cancel-edit-btn').addEventListener('click', closeEditModal);
+
+            document.getElementById('edit-predefined-tags-container').addEventListener('click', (e) => {
+                const target = e.target.closest('.predefined-tag-btn');
+                if (!target) return;
+
+                const tag = target.dataset.tag;
+                if (state.editingTags.includes(tag)) {
+                    state.editingTags = state.editingTags.filter(t => t !== tag);
+                } else {
+                    state.editingTags.push(tag);
+                }
+                renderPredefinedTags('edit-predefined-tags-container', state.editingTags);
+            });
+            document.getElementById('edit-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const checkinIndex = state.checkins.findIndex(c => c.id === state.editingCheckinId);
+                if (checkinIndex === -1) return;
+                state.checkins[checkinIndex].notes = document.getElementById('edit-notes').value;
+                state.checkins[checkinIndex].tags = [...state.editingTags];
+                saveState();
+                renderHistory();
+                closeEditModal();
+            });
+
+            document.getElementById('close-achievement-modal-btn').addEventListener('click', () => {
+                const modal = document.getElementById('achievement-unlocked-modal');
+                const modalContent = document.getElementById('achievement-modal-content');
+                modalContent.classList.add('modal-leave');
+                modalContent.addEventListener('animationend', () => modal.classList.add('hidden'), { once: true });
+            });
+
+            document.getElementById('add-new-goal-btn').addEventListener('click', () => {
+                const input = document.getElementById('new-goal-input');
+                const text = input.value.trim();
+                if (text) {
+                    state.goals.push({ id: Date.now(), text, completed: false });
+                    saveState();
+                    renderGoals();
+                    input.value = '';
+                }
+            });
+
+            document.getElementById('goals-list').addEventListener('click', (e) => {
+                const checkbox = e.target.closest('.goal-checkbox');
+                const removeBtn = e.target.closest('.remove-goal-btn');
+
+                if (checkbox) {
+                    const goalId = checkbox.dataset.id;
+                    const goal = state.goals.find(g => g.id.toString() === goalId);
+                    if (goal) {
+                        goal.completed = !goal.completed;
+                        if (goal.completed) {
+                            triggerConfetti();
+                        }
+                        saveState();
+                        renderGoals();
+                    }
+                }
+
+                if (removeBtn) {
+                    const goalId = removeBtn.dataset.id;
+                    state.goals = state.goals.filter(g => g.id.toString() !== goalId);
+                    saveState();
+                    renderGoals();
+                }
+            });
+
+            const renderGoals = () => {
+                const list = document.getElementById('goals-list');
+                if (!list) return;
+
+                if (state.goals.length === 0) {
+                    list.innerHTML = `<div class="text-center text-text-muted p-8">
+                        <i data-feather="target" class="w-12 h-12 mx-auto mb-4"></i>
+                        <p>Nenhuma meta definida ainda. Adicione uma acima!</p>
+                    </div>`;
+                    feather.replace();
+                    return;
+                }
+
+                list.innerHTML = state.goals.map(goal => {
+                    const completedClass = goal.completed ? 'line-through text-text-muted' : '';
+                    return `
+                        <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex items-center gap-4">
+                            <input type="checkbox" data-id="${goal.id}" class="goal-checkbox h-6 w-6 rounded text-accent focus:ring-accent border-border-primary" ${goal.completed ? 'checked' : ''}>
+                            <span class="flex-grow ${completedClass}">${goal.text}</span>
+                            <button data-id="${goal.id}" class="remove-goal-btn text-text-muted hover:text-red-500">
+                                <i data-feather="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                feather.replace();
+            };
+
+            const renderGratitudeJournal = () => {
+                const list = document.getElementById('gratitude-entries-list');
+                if (!list) return;
+
+                if (state.gratitudeEntries.length === 0) {
+                    list.innerHTML = `<div class="text-center text-text-muted p-8">
+                        <i data-feather="sun" class="w-12 h-12 mx-auto mb-4"></i>
+                        <p>Nenhum registro de gratidão ainda. Adicione um para começar!</p>
+                    </div>`;
+                    feather.replace();
+                    return;
+                }
+
+                const sortedEntries = [...state.gratitudeEntries].sort((a, b) => b.createdAt - a.createdAt);
+
+                list.innerHTML = sortedEntries.map(entry => `
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary animate-fadeIn">
+                        <p class="text-text-primary">${entry.text}</p>
+                        <p class="text-xs text-text-muted mt-2 text-right">${new Date(entry.createdAt).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                `).join('');
+            };
+
+            document.getElementById('add-new-gratitude-entry-btn').addEventListener('click', () => {
+                const input = document.getElementById('new-gratitude-entry-input');
+                const text = input.value.trim();
+                if (text) {
+                    state.gratitudeEntries.push({ id: Date.now(), text, createdAt: new Date() });
+                    saveState();
+                    renderGratitudeJournal();
+                    input.value = '';
+                    triggerConfetti();
+                }
+            });
+
+            document.getElementById('theme-selector').addEventListener('click', (e) => {
+                const themeBtn = e.target.closest('.theme-btn');
+                if (themeBtn) {
+                    state.theme = themeBtn.dataset.theme;
+                    applyTheme(state.theme);
+                    saveState();
+                    if (state.currentScreen === 'history-screen' || state.currentScreen === 'diagnosis-screen') {
+                        navigateTo(state.currentScreen); // Re-render to update charts
+                    }
+                }
+            });
+
+            document.getElementById('add-new-tag-btn').addEventListener('click', () => {
+                const input = document.getElementById('new-tag-input');
+                const newTag = input.value.trim();
+                if (newTag && !state.predefinedTags.find(t => t.toLowerCase() === newTag.toLowerCase())) {
+                    state.predefinedTags.push(newTag);
+                    saveState();
+                    renderTagManagement();
+                    input.value = '';
+                }
+            });
+
+            document.getElementById('settings-screen').addEventListener('click', (e) => {
+                const removeBtn = e.target.closest('.remove-managed-tag-btn');
+                if (removeBtn) {
+                    const tagToRemove = removeBtn.dataset.tag;
+                    state.predefinedTags = state.predefinedTags.filter(t => t !== tagToRemove);
+                    saveState();
+                    renderTagManagement();
+                }
             });
 
             // --- APP INITIALIZATION ---
             const initializeApp = () => {
+                applyTheme(state.theme);
                 if (state.isAuthenticated) {
                     header.style.display = 'block';
                     bottomNav.style.display = 'flex';
                     navSpacer.style.display = 'block';
                     navigateTo('checkin-screen');
                 } else {
-                    document.getElementById('welcome-screen').style.display = 'flex';
+                    navigateTo('welcome-screen');
                 }
                 feather.replace(); // Initialize icons
             };
