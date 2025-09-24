@@ -6,529 +6,245 @@
     <title>Sinais de Emoções</title>
     
     <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            // darkMode is handled by a 'data-theme' attribute now
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-primary': 'rgb(var(--color-bg-primary) / <alpha-value>)',
+                        'bg-secondary': 'rgb(var(--color-bg-secondary) / <alpha-value>)',
+                        'bg-tertiary': 'rgb(var(--color-bg-tertiary) / <alpha-value>)',
+                        'bg-input': 'rgb(var(--color-bg-input) / <alpha-value>)',
+                        'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
+                        'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
+                        'text-muted': 'rgb(var(--color-text-muted) / <alpha-value>)',
+                        'border-primary': 'rgb(var(--color-border-primary) / <alpha-value>)',
+                        'accent': 'rgb(var(--color-accent) / <alpha-value>)',
+                        'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
+                        'accent-text': 'rgb(var(--color-accent-text) / <alpha-value>)',
+                        'accent-bg-light': 'rgb(var(--color-accent-bg-light) / <alpha-value>)',
+                        'accent-text-dark': 'rgb(var(--color-accent-text-dark) / <alpha-value>)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* --- FONT-FACE DEFINITIONS --- */
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: url('./fonts/poppins-v21-latin-regular.woff2') format('woff2');
-        }
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 600;
-            font-display: swap;
-            src: url('./fonts/poppins-v21-latin-600.woff2') format('woff2');
-        }
-        @font-face {
-            font-family: 'Poppins';
-            font-style: normal;
-            font-weight: 700;
-            font-display: swap;
-            src: url('./fonts/poppins-v21-latin-700.woff2') format('woff2');
-        }
-
-        /* --- THEME VARIABLES --- */
         :root {
-            --color-bg-primary: 249 250 251;
-            --color-bg-secondary: 255 255 255;
-            --color-bg-tertiary: 243 244 246;
-            --color-bg-input: 255 255 255;
-            --color-text-primary: 17 24 39;
-            --color-text-secondary: 107 114 128;
-            --color-text-muted: 156 163 175;
-            --color-border-primary: 229 231 235;
-            --color-accent: 20 184 166;
-            --color-accent-hover: 15 159 132;
-            --color-accent-text: 255 255 255;
-            --color-accent-bg-light: 204 251 241;
-            --color-accent-text-dark: 15 118 110;
+            --color-bg-primary: 249 250 251; /* gray-50 */
+            --color-bg-secondary: 255 255 255; /* white */
+            --color-bg-tertiary: 243 244 246; /* gray-100 */
+            --color-bg-input: 255 255 255; /* white */
+            --color-text-primary: 17 24 39; /* gray-900 */
+            --color-text-secondary: 107 114 128; /* gray-600 */
+            --color-text-muted: 156 163 175; /* gray-400 */
+            --color-border-primary: 229 231 235; /* gray-200 */
+            --color-accent: 20 184 166; /* teal-500 */
+            --color-accent-hover: 15 159 132; /* teal-600 */
+            --color-accent-text: 255 255 255; /* white */
+            --color-accent-bg-light: 204 251 241; /* teal-100 */
+            --color-accent-text-dark: 15 118 110; /* teal-800 */
+            --chart-text-rgb: 55, 65, 81; /* gray-700 */
+            --chart-grid-rgba: rgba(0, 0, 0, 0.1);
         }
         [data-theme="dark"] {
-            --color-bg-primary: 17 24 39;
-            --color-bg-secondary: 31 41 55;
-            --color-bg-tertiary: 55 65 81;
-            --color-bg-input: 55 65 81;
-            --color-text-primary: 229 231 235;
-            --color-text-secondary: 156 163 175;
-            --color-text-muted: 107 114 128;
-            --color-border-primary: 55 65 81;
-            --color-accent-bg-light: 13 47 42;
-            --color-accent-text-dark: 107 235 208;
+            --color-bg-primary: 17 24 39; /* gray-900 */
+            --color-bg-secondary: 31 41 55; /* gray-800 */
+            --color-bg-tertiary: 55 65 81; /* gray-700 */
+            --color-bg-input: 55 65 81; /* gray-700 */
+            --color-text-primary: 229 231 235; /* gray-200 */
+            --color-text-secondary: 156 163 175; /* gray-400 */
+            --color-text-muted: 107 114 128; /* gray-500 */
+            --color-border-primary: 55 65 81; /* gray-700 */
+            --color-accent-bg-light: 13 47 42; /* teal-900 */
+            --color-accent-text-dark: 107 235 208; /* teal-300 */
+            --chart-text-rgb: 209, 213, 219; /* gray-300 */
+            --chart-grid-rgba: rgba(255, 255, 255, 0.1);
         }
         [data-theme="ocean"] {
-            --color-bg-primary: 15 23 42;
-            --color-bg-secondary: 30 41 59;
-            --color-bg-tertiary: 51 65 85;
-            --color-bg-input: 51 65 85;
-            --color-text-primary: 226 232 240;
-            --color-text-secondary: 148 163 184;
-            --color-text-muted: 100 116 139;
-            --color-border-primary: 71 85 105;
-            --color-accent: 34 211 238;
-            --color-accent-hover: 6 182 212;
-            --color-accent-text: 15 23 42;
-            --color-accent-bg-light: 165 243 252;
-            --color-accent-text-dark: 22 78 99;
+            --color-bg-primary: 15 23 42; /* slate-900 */
+            --color-bg-secondary: 30 41 59; /* slate-800 */
+            --color-bg-tertiary: 51 65 85; /* slate-700 */
+            --color-bg-input: 51 65 85; /* slate-700 */
+            --color-text-primary: 226 232 240; /* slate-200 */
+            --color-text-secondary: 148 163 184; /* slate-400 */
+            --color-text-muted: 100 116 139; /* slate-500 */
+            --color-border-primary: 71 85 105; /* slate-600 */
+            --color-accent: 34 211 238; /* cyan-400 */
+            --color-accent-hover: 6 182 212; /* cyan-500 */
+            --color-accent-text: 15 23 42; /* slate-900 */
+            --color-accent-bg-light: 165 243 252; /* cyan-200 */
+            --color-accent-text-dark: 22 78 99; /* cyan-800 */
+            --chart-text-rgb: 203, 213, 225; /* slate-300 */
+            --chart-grid-rgba: rgba(255, 255, 255, 0.1);
         }
-
-        /* --- GENERAL RESETS & BODY STYLING --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Custom styles to apply the Poppins font */
         body {
             font-family: 'Poppins', sans-serif;
             -webkit-tap-highlight-color: transparent;
-            background-color: rgb(var(--color-bg-primary));
-            color: rgb(var(--color-text-primary));
-            line-height: 1.6;
         }
-        .hidden { display: none !important; }
-
-        /* --- SCROLLBAR --- */
+        /* Custom scrollbar for a cleaner look */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: rgb(var(--color-bg-tertiary));
+            background: #f1f1f1;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgb(var(--color-text-muted));
+            background: #888;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgb(var(--color-text-secondary));
+            background: #555;
         }
-
-        /* --- LAYOUT & STRUCTURE --- */
-        #app-container {
-            max-width: 512px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background-color: rgb(var(--color-bg-secondary));
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-        }
-        #app-header {
-            padding: 1rem;
-            border-bottom: 1px solid rgb(var(--color-border-primary));
-        }
-        #app-header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            text-align: center;
-            color: rgb(var(--color-text-primary));
-        }
-        main {
-            flex-grow: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
-
-        /* --- SCREEN & ANIMATIONS --- */
+        /* Enhanced transition for screen changes */
         .screen {
             display: none;
             animation: fadeIn 0.5s;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        /* --- TYPOGRAPHY --- */
-        h1, h2, h3, h4 { color: rgb(var(--color-text-primary)); }
-        h1 { font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; }
-        h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-        h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
-        h4 { font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem; }
-        p { margin-bottom: 1rem; color: rgb(var(--color-text-secondary)); }
-        .text-center { text-align: center; }
-        .text-left { text-align: left; }
-        .text-muted { color: rgb(var(--color-text-muted)); }
-        .font-bold { font-weight: 700; }
-        .font-semibold { font-weight: 600; }
-
-        /* --- BUTTONS --- */
-        button {
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            transition: opacity 0.2s, background-color 0.2s, border-color 0.2s;
-        }
-        .button-primary {
-            background-color: rgb(var(--color-accent));
-            color: rgb(var(--color-accent-text));
-            font-weight: 700;
-            padding: 0.75rem 2rem;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-        }
-        .button-primary:hover { background-color: rgb(var(--color-accent-hover)); }
-        .button-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Subtle pulse animation for mood buttons */
         .mood-btn {
-            width: 100%;
-            color: white;
-            font-weight: 700;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            transition: transform 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            animation: pulse-grow 2s infinite ease-in-out;
         }
-        .mood-btn:hover { transform: scale(1.05); }
-        .mood-btn.green { background-color: #16a34a; } .mood-btn.green:hover { background-color: #15803d; }
-        .mood-btn.amber { background-color: #d97706; } .mood-btn.amber:hover { background-color: #b45309; }
-        .mood-btn.red { background-color: #dc2626; } .mood-btn.red:hover { background-color: #b91c1c; }
-
-        /* --- FORMS & INPUTS --- */
-        .input-group { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
-        .input-field, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid rgb(var(--color-border-primary));
-            border-radius: 0.5rem;
-            background-color: rgb(var(--color-bg-input));
-            color: rgb(var(--color-text-primary));
+        @keyframes pulse-grow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            75% { transform: scale(1); }
         }
-        textarea { resize: vertical; }
-        .input-field:focus, textarea:focus {
-            outline: none;
-            border-color: rgb(var(--color-accent));
-            box-shadow: 0 0 0 2px rgba(var(--color-accent), 0.3);
-        }
-
-        /* --- ICONS --- */
-        .icon {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            stroke-width: 2;
-            stroke: currentColor;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        /* --- NAVIGATION --- */
-        #bottom-nav-bar {
-            width: 100%;
-            max-width: 512px;
-            margin: 0 auto;
-            background-color: rgb(var(--color-bg-secondary));
-            border-top: 1px solid rgb(var(--color-border-primary));
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-        #bottom-nav {
-            display: flex;
-            justify-content: space-around;
-        }
-        .nav-btn {
-            flex: 1;
-            padding: 0.75rem 0;
-            text-align: center;
-            color: rgb(var(--color-text-muted));
-        }
-        .nav-btn .icon { margin: 0 auto 0.25rem; width: 24px; height: 24px; }
-        .nav-btn span { font-size: 0.75rem; display: block; }
-        .nav-btn.active { color: rgb(var(--color-accent)); }
-        #nav-spacer { height: 80px; }
-
-        /* --- MODALS --- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            z-index: 50;
-        }
-        .modal-content {
-            background-color: rgb(var(--color-bg-secondary));
-            border-radius: 0.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            width: 100%;
-            max-width: 448px;
-            padding: 1.5rem;
-        }
+        /* Modal animations */
         .modal-enter {
             animation: modal-in 0.3s ease-out;
         }
         .modal-leave {
-            animation: modal-out 0.3s ease-in forwards;
+            animation: modal-out 0.3s ease-in forwards; /* 'forwards' keeps the final state */
         }
         @keyframes modal-in {
             from { opacity: 0; transform: scale(0.95) translateY(10px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
         @keyframes modal-out {
-            from { opacity: 1; transform: scale(1) translateY(0); } to { opacity: 0; transform: scale(0.95) translateY(10px); }
+            from { opacity: 1; transform: scale(1) translateY(0); }
+            to { opacity: 0; transform: scale(0.95) translateY(10px); }
         }
-
-        /* --- LIST ITEM ANIMATIONS --- */
-        .list-item-enter {
-            animation: slideIn 0.4s ease-out forwards;
-        }
-        .list-item-leave {
-            animation: slideOut 0.4s ease-in forwards;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideOut {
-            from { opacity: 1; transform: scale(1); }
-            to {
-                opacity: 0;
-                transform: scale(0.9);
-                height: 0;
-                padding-top: 0;
-                padding-bottom: 0;
-                margin-bottom: 0;
-                border-width: 0;
-            }
-        }
-        /* --- SPECIFIC SCREEN STYLES --- */
-        .welcome-screen { text-align: center; }
-        .welcome-screen .icon { width: 5rem; height: 5rem; color: rgb(var(--color-accent)); margin-bottom: 1.5rem; }
-        .welcome-screen h1 { font-size: 2rem; }
-        .welcome-screen p { font-size: 1.125rem; max-width: 448px; margin-left: auto; margin-right: auto; }
-        .welcome-screen .button-primary { margin-top: 1rem; }
-
-        .contact-card {
-            background-color: rgb(var(--color-bg-tertiary));
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-            overflow: hidden; /* For animations */
-        }
-
-        .tag-container { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-        .tag-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            background-color: rgb(var(--color-bg-tertiary));
-            color: rgb(var(--color-text-primary));
-        }
-        .tag-btn.selected {
-            background-color: rgb(var(--color-accent));
-            color: rgb(var(--color-accent-text));
-        }
-
-        .journey-link {
-            width: 100%;
-            background-color: rgb(var(--color-bg-secondary));
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid rgb(var(--color-border-primary));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-align: left;
-        }
-        .journey-link:hover { border-color: rgb(var(--color-accent)); }
-        .journey-link .icon { width: 2rem; height: 2rem; color: rgb(var(--color-accent)); margin-right: 1rem; }
-        .journey-link h4 { margin-bottom: 0.25rem; }
-        .journey-link p { margin-bottom: 0; font-size: 0.875rem; }
-
-        #calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.25rem;
-            text-align: center;
-        }
-        .calendar-day {
-            position: relative;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 9999px;
-        }
-        .calendar-day.today { background-color: rgb(var(--color-accent-bg-light)); }
-        .calendar-day.selected { border: 2px solid rgb(var(--color-accent)); }
-        .mood-dot {
+        /* Navigation indicator styles */
+        #nav-indicator {
             position: absolute;
-            bottom: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .history-item {
-            background-color: rgb(var(--color-bg-secondary));
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border-left: 4px solid;
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-        .history-item-content { flex-grow: 1; }
-        .history-item-actions { display: flex; gap: 0.75rem; }
-
-        .simple-bar-chart {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            height: 150px;
-            padding: 1rem;
-            border: 1px solid rgb(var(--color-border-primary));
-            border-radius: 0.5rem;
-        }
-        .bar-item { text-align: center; width: 50px; }
-        .bar {
-            width: 100%;
+            bottom: 4px; /* Adjust vertical position */
+            height: 6px;
+            width: 6px;
             background-color: rgb(var(--color-accent));
-            border-radius: 4px 4px 0 0;
-            transition: height 0.5s ease-out;
+            border-radius: 50%;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transition */
+            will-change: left;
         }
-        .bar-item span { font-size: 0.875rem; margin-top: 0.5rem; display: block; }
-
-        .simple-pie-chart {
+        /* Guided Tour styles */
+        #tour-spotlight {
+            position: absolute;
+            border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+            transition: all 0.4s ease-in-out;
+            pointer-events: none; /* Allows clicks to go through if needed, but not for the tour */
+        }
+        #tour-tooltip {
+            transition: all 0.4s ease-in-out;
+            will-change: top, left;
+            z-index: 101; /* Ensure tooltip is above the shadow */
+        }
+        /* Focus Mode Toggle Switch */
+        #focus-mode-toggle {
             background-color: rgb(var(--color-bg-tertiary));
-            padding: 1rem;
-            border-radius: 0.5rem;
+        }
+        #focus-mode-toggle[aria-checked="true"] {
+            background-color: rgb(var(--color-accent));
+        }
+        #focus-mode-toggle[aria-checked="true"] > span {
+            transform: translateX(1.25rem); /* 20px */
         }
 
-        .theme-btn {
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 2px solid rgb(var(--color-border-primary));
-            font-weight: 600;
-        }
-        .theme-btn.active {
-            border-color: rgb(var(--color-accent));
-            color: rgb(var(--color-accent));
-        }
 
-        .space-y-2 > *:not(:first-child) { margin-top: 0.5rem; }
-        .space-y-3 > *:not(:first-child) { margin-top: 0.75rem; }
-        .space-y-4 > *:not(:first-child) { margin-top: 1rem; }
-        .space-y-6 > *:not(:first-child) { margin-top: 1.5rem; }
-
-        .gratitude-item, .goal-item, .tag-management-item {
-            overflow: hidden; /* For animations */
-        }
-        .gratitude-item {
-            background-color: rgb(var(--color-bg-secondary)); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary));
-            margin-bottom: 0.75rem;
-        }
-        .goal-item {
-            background-color: rgb(var(--color-bg-secondary)); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary)); display: flex; align-items: center; gap: 1rem;
-            margin-bottom: 0.75rem;
-        }
-        .tag-management-item {
-            background-color: rgb(var(--color-bg-secondary)); padding: 0.75rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary)); display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        #gratitude-entries-list > *:last-child, #goals-list > *:last-child, #tag-management-list > *:last-child {
-            margin-bottom: 0;
-        }
-
-        .data-management-section {
-            margin-top: 2rem;
-            background-color: rgb(var(--color-bg-secondary));
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid rgb(var(--color-border-primary));
-        }
-        .data-management-section .button-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .data-management-section .button-group button {
-            flex: 1;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            background-color: rgb(var(--color-bg-tertiary));
-            color: rgb(var(--color-text-primary));
-        }
-
-        .button-primary.feedback-green { background-color: #22c55e; }
-        .button-primary.feedback-green:hover { background-color: #16a34a; }
-        .button-primary.feedback-amber { background-color: #f59e0b; }
-        .button-primary.feedback-amber:hover { background-color: #b45309; }
-        .button-primary.feedback-red { background-color: #ef4444; }
-        .button-primary.feedback-red:hover { background-color: #b91c1c; }
     </style>
 </head>
-<body>
+<body class="bg-bg-primary text-text-primary">
 
-    <div id="app-container">
+    <div id="app-container" class="max-w-lg mx-auto min-h-screen bg-bg-secondary shadow-lg flex flex-col">
         
         <!-- App Header -->
-        <header id="app-header" class="hidden">
-            <h1></h1>
+        <header id="app-header" class="p-4 border-b border-border-primary hidden">
+            <h1 class="text-xl font-bold text-center text-text-primary"></h1>
         </header>
 
-        <main>
+        <main class="flex-grow p-6 overflow-y-auto">
             <!-- Welcome Screen -->
-            <div id="welcome-screen" class="screen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-                <svg class="icon" style="width: 5rem; height: 5rem; color: rgb(var(--color-accent)); margin-bottom: 1.5rem;" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                <h1 style="font-size: 2rem;">Bem-vindo(a) ao<br>Sinais de Emoções</h1>
-                <p style="font-size: 1.125rem; max-width: 448px; margin-left: auto; margin-right: auto;">Seu espaço seguro para navegar pelas emoções.</p>
-                <p style="max-width: 448px; margin-left: auto; margin-right: auto; margin-bottom: 2rem;">Aqui, você pode registrar o que sente, entender seus padrões e encontrar recursos para cuidar do seu bem-estar.</p>
-
-                <button id="get-started-btn" class="button-primary">
+            <div id="welcome-screen" class="screen flex flex-col items-center justify-center h-full text-center">
+                <i data-feather="heart" class="w-20 h-20 text-accent mb-6"></i>
+                <h1 class="text-3xl font-bold mb-4 text-text-primary">Bem-vindo(a) ao<br>Sinais de Emoções</h1>
+                <p class="text-lg text-text-secondary mb-2">Seu espaço seguro para navegar pelas emoções.</p>
+                <p class="text-text-secondary mb-8 max-w-md">Aqui, você pode registrar o que sente, entender seus padrões e encontrar recursos para cuidar do seu bem-estar.</p>
+                <!-- Applied gradient to the main call-to-action button -->
+                <button id="get-started-btn" class="bg-gradient-to-br from-accent to-accent-hover text-accent-text font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
                     Começar
                 </button>
             </div>
 
             <!-- Mandatory Contact Screen -->
             <div id="mandatory-contact-screen" class="screen">
-                <div class="text-center" style="margin-bottom: 1.5rem;">
-                    <svg class="icon" style="width: 4rem; height: 4rem; color: rgb(var(--color-accent)); margin: 0 auto 1rem;" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    <h2>Crie sua Rede de Apoio</h2>
-                    <p>Recomendamos fortemente que adicione um contato de confiança. Em momentos difíceis, ter alguém para conversar pode fazer toda a diferença. Você pode pular esta etapa e adicionar contatos mais tarde nos Ajustes.</p>
+                <div class="text-center">
+                    <i data-feather="users" class="w-16 h-16 text-accent mx-auto mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">Sua Rede de Apoio</h2>
+                    <p class="text-text-secondary mb-6">Adicionar pelo menos um contato de confiança é um passo importante. Em momentos difíceis, ter alguém para conversar pode fazer toda a diferença.</p>
                 </div>
-                <div id="mandatory-contacts-list" style="margin-bottom: 1.5rem;"></div>
-                <div style="background-color: rgb(var(--color-bg-secondary)); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary));">
-                    <h4 class="font-semibold" style="margin-bottom: 0.75rem;">Adicionar Contato</h4>
-                    <div class="input-group">
-                        <input type="text" id="mandatory-contact-name-input" class="input-field" placeholder="Nome (Ex: Mãe)">
-                        <input type="tel" id="mandatory-contact-phone-input" class="input-field" placeholder="Telefone">
+                <div id="mandatory-contacts-list" class="space-y-2 mb-6"></div>
+                <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                    <h3 class="text-lg font-semibold mb-3">Adicionar Contato</h3>
+                    <div class="flex items-center gap-2 mb-3">
+                        <input type="text" id="mandatory-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Nome (Ex: Mãe)">
+                        <input type="tel" id="mandatory-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Telefone">
                     </div>
-                    <button id="add-mandatory-contact-btn" style="width: 100%; background-color: rgb(var(--color-bg-tertiary)); color: rgb(var(--color-text-primary)); font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem;">
+                    <button id="add-mandatory-contact-btn" class="w-full bg-bg-tertiary text-text-primary font-semibold py-2 px-4 rounded-lg hover:opacity-80 transition-opacity">
                         Adicionar
                     </button>
                 </div>
-                <button id="mandatory-contact-continue-btn" class="button-primary" style="width: 100%; padding: 1rem; margin-top: 2rem;">
-                    Concluir
+                <button id="mandatory-contact-continue-btn" class="w-full bg-accent text-accent-text font-bold py-4 rounded-full shadow-lg mt-8 transition-opacity duration-300 opacity-50 cursor-not-allowed" disabled>
+                    Continuar
                 </button>
-                <button id="skip-contact-btn" style="width: 100%; text-align: center; margin-top: 1rem; color: rgb(var(--color-text-muted)); font-weight: 600;">Pular por agora</button>
+                <button id="skip-mandatory-contact-btn" class="w-full text-text-muted font-semibold py-2 mt-4 rounded-lg hover:text-accent transition-colors">
+                    Pular por agora <span class="text-xs">(não recomendado)</span>
+                </button>
             </div>
 
             <!-- Emotional Check-in Screen -->
-            <div id="checkin-screen" class="screen text-center" style="padding-top: 2rem;">
-                <p style="font-size: 1.125rem; margin-bottom: 2rem;">Escolha a cor que melhor representa seu sentimento agora.</p>
+            <div id="checkin-screen" class="screen text-center">
+                <p class="text-lg text-text-secondary mb-8">Escolha a cor que melhor representa seu sentimento agora.</p>
                 <div class="space-y-4">
-                    <button data-mood="verde" class="mood-btn green">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5-2 4-2 4 2 4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg> Siga em Frente
+                    <button data-mood="verde" class="mood-btn w-full bg-gradient-to-br from-green-400 to-green-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                        <i data-feather="smile" class="inline-block mr-2"></i> Siga em Frente
                     </button>
-                    <button data-mood="amarelo" class="mood-btn amber">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg> Atenção
+                    <button data-mood="amarelo" class="mood-btn w-full bg-gradient-to-br from-amber-300 to-amber-500 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                        <i data-feather="meh" class="inline-block mr-2"></i> Atenção
                     </button>
-                    <button data-mood="vermelho" class="mood-btn red">
-                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg> Pare
+                    <button data-mood="vermelho" class="mood-btn w-full bg-gradient-to-br from-red-400 to-red-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                        <i data-feather="frown" class="inline-block mr-2"></i> Pare
                     </button>
                 </div>
             </div>
@@ -536,16 +252,16 @@
             <!-- Check-in Details Screen -->
             <div id="details-screen" class="screen">
                 <form id="details-form">
-                    <div style="margin-bottom: 1.5rem;">
-                        <label class="font-semibold" style="display: block; font-size: 1.125rem; margin-bottom: 0.5rem;">Tags de Contexto</label>
-                        <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.75rem;">Selecione uma ou mais tags que se aplicam.</p>
-                        <div id="predefined-tags-container" class="tag-container"></div>
+                    <div class="mb-6">
+                        <label class="block text-lg font-semibold mb-2">Tags de Contexto</label>
+                        <p class="text-sm text-text-muted mb-3">Selecione uma ou mais tags que se aplicam.</p>
+                        <div id="predefined-tags-container" class="flex flex-wrap gap-2"></div>
                     </div>
-                    <div style="margin-bottom: 1.5rem;">
-                        <label for="notes" class="font-semibold" style="display: block; font-size: 1.125rem; margin-bottom: 0.5rem;">Notas (Opcional)</label>
-                        <textarea id="notes" rows="5" class="input-field" placeholder="O que aconteceu? Descreva a situação ou o sentimento."></textarea>
+                    <div class="mb-6">
+                        <label for="notes" class="block text-lg font-semibold mb-2">Notas (Opcional)</label>
+                        <textarea id="notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="O que aconteceu? Descreva a situação ou o sentimento."></textarea>
                     </div>
-                    <button type="submit" id="save-checkin-btn" class="button-primary" style="width: 100%; padding: 1rem;">
+                    <button type="submit" id="save-checkin-btn" class="w-full text-accent-text font-bold py-4 rounded-full shadow-lg transition-all duration-300 bg-accent hover:shadow-xl transform hover:-translate-y-1">
                         Salvar Registro
                     </button>
                 </form>
@@ -553,10 +269,10 @@
 
             <!-- Feedback Screen -->
             <div id="feedback-screen" class="screen flex flex-col items-center justify-center h-full text-center">
-                <div id="feedback-icon-container" style="width: 5rem; height: 5rem; margin-bottom: 1.5rem;"></div>
-                <h1 id="feedback-title">Que bom!</h1>
-                <p id="feedback-message" style="margin-bottom: 2rem;">É ótimo ver que você está se sentindo bem. Continue assim!</p>
-                <button id="feedback-continue-btn" class="button-primary">
+                <i id="feedback-icon" data-feather="smile" class="w-20 h-20 text-accent mb-6"></i>
+                <h2 id="feedback-title" class="text-3xl font-bold mb-4 text-text-primary">Que bom!</h2>
+                <p id="feedback-message" class="text-text-secondary mb-8">É ótimo ver que você está se sentindo bem. Continue assim!</p>
+                <button id="feedback-continue-btn" class="text-accent-text font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300">
                     Continuar
                 </button>
             </div>
@@ -564,11 +280,11 @@
             <!-- Contextual Tips Screen -->
             <div id="contextual-tips-screen" class="screen">
                 <h2 class="text-2xl font-bold mb-4 text-center">Dicas para seu Momento</h2>
-                <p class="text-center" style="margin-bottom: 2rem;">Com base no que você compartilhou, aqui estão algumas sugestões.</p>
-                <div id="tips-container" class="space-y-6" style="margin-bottom: 2rem;">
+                <p class="text-text-secondary mb-8 text-center">Com base no que você compartilhou, aqui estão algumas sugestões.</p>
+                <div id="tips-container" class="space-y-6 mb-8">
                     <!-- Tips will be rendered here by JS -->
                 </div>
-                <button id="tips-continue-btn" class="button-primary" style="width: 100%;">
+                <button id="tips-continue-btn" class="w-full bg-accent text-accent-text font-bold py-3 px-8 rounded-full shadow-lg hover:bg-accent-hover transition-colors duration-300">
                     Entendido
                 </button>
             </div>
@@ -576,20 +292,20 @@
             <!-- Weekly Diagnosis Screen -->
             <div id="diagnosis-screen" class="screen">
                 <h3 class="text-2xl font-bold mb-2 text-center">Diagnóstico Semanal</h3>
-                <p class="text-muted text-center" style="margin-bottom: 2rem;">Um resumo dos seus sentimentos nos últimos 7 dias.</p>
+                <p class="text-text-muted text-center mb-8">Um resumo dos seus sentimentos nos últimos 7 dias.</p>
                 
                 <div id="diagnosis-content" class="hidden">
-                    <div style="margin-bottom: 2rem;">
+                    <div class="mb-8">
                         <h4 class="text-xl font-bold mb-4 text-center">Balanço da Semana</h4>
-                        <div id="weekly-bar-chart-container"></div>
+                        <canvas id="weekly-bar-chart"></canvas>
                     </div>
-                    <div id="diagnosis-feedback" style="background-color: rgb(var(--color-bg-tertiary)); padding: 1.5rem; border-radius: 0.5rem;">
+                    <div id="diagnosis-feedback" class="bg-bg-tertiary p-6 rounded-lg">
                         <h4 id="diagnosis-title" class="text-xl font-bold mb-3"></h4>
                         <p id="diagnosis-text" class="text-text-primary"></p>
                     </div>
                 </div>
-                <div id="no-diagnosis-data" class="text-center text-muted hidden" style="padding: 4rem 0;">
-                    <svg class="icon" style="width: 4rem; height: 4rem; margin: 0 auto 1rem;" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <div id="no-diagnosis-data" class="text-center text-text-muted py-16 hidden">
+                    <i data-feather="calendar" class="w-16 h-16 mx-auto mb-4"></i>
                     <p>Não há registros suficientes na última semana para gerar um diagnóstico.</p>
                 </div>
             </div>
@@ -597,208 +313,273 @@
             <!-- Gratitude Journal Screen -->
             <div id="gratitude-journal-screen" class="screen">
                 <h3 class="text-2xl font-bold mb-2 text-center">Diário de Gratidão</h3>
-                <p class="text-muted text-center" style="margin-bottom: 2rem;">Registre as coisas pelas quais você é grato(a) hoje.</p>
-                <div style="margin-bottom: 1.5rem;">
-                    <textarea id="new-gratitude-entry-input" rows="3" class="input-field" placeholder="Hoje sou grato(a) por..."></textarea>
-                    <button type="button" id="add-new-gratitude-entry-btn" class="button-primary" style="width: 100%; margin-top: 0.75rem; border-radius: 0.5rem; padding: 0.75rem;">
+                <p class="text-text-muted text-center mb-8">Registre as coisas pelas quais você é grato(a) hoje.</p>
+                <div class="mb-6">
+                    <textarea id="new-gratitude-entry-input" rows="3" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Hoje sou grato(a) por..."></textarea>
+                    <button type="button" id="add-new-gratitude-entry-btn" class="w-full mt-3 bg-accent text-accent-text font-bold py-3 rounded-lg hover:bg-accent-hover transition-colors">
                         Adicionar Gratidão
                     </button>
                 </div>
-                <div id="gratitude-entries-list">
+                <div id="gratitude-entries-list" class="space-y-3">
                     <!-- Entries will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Statistics Screen -->
+            <div id="stats-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-8 text-center">Estatísticas Detalhadas</h3>
+                <div id="stats-content" class="space-y-6">
+                    <!-- General Stats -->
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                        <h4 class="text-lg font-bold mb-2">Resumo da Jornada</h4>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-text-secondary">Total de Registros:</span>
+                            <span id="stats-total-checkins" class="font-bold"></span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-text-secondary">Primeiro Registro:</span>
+                            <span id="stats-first-checkin" class="font-bold"></span>
+                        </div>
+                    </div>
+                    <!-- Mood-Tag Correlations -->
+                    <div id="stats-mood-tags" class="space-y-4"></div>
+                </div>
+                <div id="no-stats-data" class="text-center text-text-muted py-16 hidden">
+                    <i data-feather="pie-chart" class="w-16 h-16 mx-auto mb-4 text-accent"></i>
+                    <h4 class="text-xl font-bold text-text-primary mb-2">Ainda sem estatísticas</h4>
+                    <p class="mb-6">Continue registrando suas emoções para desbloquear insights detalhados sobre seus padrões.</p>
                 </div>
             </div>
 
             <!-- Journey Hub Screen -->
             <div id="journey-screen" class="screen">
-                <h3 class="text-center" style="margin-bottom: 2rem;">Sua Jornada</h3>
+                <h3 class="text-2xl font-bold mb-8 text-center">Sua Jornada</h3>
                 <div class="space-y-4">
-                    <button data-screen="history-screen" class="journey-link">
-                        <div style="display: flex; align-items: center;">
-                            <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <button data-screen="history-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="bar-chart-2" class="w-8 h-8 text-accent"></i>
                             <div>
-                                <h4>Histórico</h4>
-                                <p>Veja seus registros e padrões.</p>
+                                <h4 class="text-lg font-bold text-left">Histórico</h4>
+                                <p class="text-sm text-text-secondary text-left">Veja seus registros e padrões.</p>
                             </div>
                         </div>
-                        <svg class="icon" style="width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
                     </button>
-                    <button data-screen="diagnosis-screen" class="journey-link">
-                        <div style="display: flex; align-items: center;">
-                            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                    <button data-screen="stats-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="pie-chart" class="w-8 h-8 text-accent"></i>
                             <div>
-                                <h4>Diagnóstico</h4>
-                                <p>Análise do seu humor semanal.</p>
+                                <h4 class="text-lg font-bold text-left">Estatísticas</h4>
+                                <p class="text-sm text-text-secondary text-left">Insights sobre suas emoções.</p>
                             </div>
                         </div>
-                        <svg class="icon" style="width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
                     </button>
-                    <button data-screen="achievements-screen" class="journey-link">
-                        <div style="display: flex; align-items: center;">
-                            <svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <button data-screen="diagnosis-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="compass" class="w-8 h-8 text-accent"></i>
                             <div>
-                                <h4>Conquistas</h4>
-                                <p>Acompanhe seu progresso.</p>
+                                <h4 class="text-lg font-bold text-left">Diagnóstico</h4>
+                                <p class="text-sm text-text-secondary text-left">Análise do seu humor semanal.</p>
                             </div>
                         </div>
-                        <svg class="icon" style="width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
                     </button>
-                    <button data-screen="goals-screen" class="journey-link">
-                        <div style="display: flex; align-items: center;">
-                            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                    <button data-screen="achievements-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="star" class="w-8 h-8 text-accent"></i>
                             <div>
-                                <h4>Metas</h4>
-                                <p>Defina seus objetivos.</p>
+                                <h4 class="text-lg font-bold text-left">Conquistas</h4>
+                                <p class="text-sm text-text-secondary text-left">Acompanhe seu progresso.</p>
                             </div>
                         </div>
-                        <svg class="icon" style="width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
                     </button>
-                    <button data-screen="gratitude-journal-screen" class="journey-link">
-                        <div style="display: flex; align-items: center;">
-                            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <button data-screen="goals-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="target" class="w-8 h-8 text-accent"></i>
                             <div>
-                                <h4>Diário de Gratidão</h4>
-                                <p>Foque nos pontos positivos.</p>
+                                <h4 class="text-lg font-bold text-left">Metas</h4>
+                                <p class="text-sm text-text-secondary text-left">Defina seus objetivos.</p>
                             </div>
                         </div>
-                        <svg class="icon" style="width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                    <button data-screen="gratitude-journal-screen" class="journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="sun" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Diário de Gratidão</h4>
+                                <p class="text-sm text-text-secondary text-left">Foque nos pontos positivos.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
                     </button>
                 </div>
             </div>
 
             <!-- History Dashboard Screen -->
             <div id="history-screen" class="screen">
-                <div id="calendar-view" style="margin-bottom: 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <button id="prev-month-btn" style="padding: 0.5rem; border-radius: 50%;"><svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-                        <h3 id="calendar-month-year" style="font-size: 1.25rem; text-transform: capitalize; margin: 0;"></h3>
-                        <button id="next-month-btn" style="padding: 0.5rem; border-radius: 50%;"><svg class="icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                <div id="calendar-view" class="mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="prev-month-btn" class="p-2 rounded-full hover:bg-bg-tertiary"><i data-feather="chevron-left"></i></button>
+                        <h3 id="calendar-month-year" class="text-xl font-bold capitalize"></h3>
+                        <button id="next-month-btn" class="p-2 rounded-full hover:bg-bg-tertiary"><i data-feather="chevron-right"></i></button>
                     </div>
-                    <div id="calendar-grid">
+                    <div id="calendar-grid" class="grid grid-cols-7 gap-1 text-center">
                         <!-- Calendar will be rendered here by JS -->
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-                    <button id="zen-mode-toggle" title="Modo Zen" style="display: flex; align-items: center; gap: 0.5rem; color: rgb(var(--color-text-muted)); padding: 0.5rem; border-radius: 0.5rem;">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>
-                        <span style="font-size: 0.875rem; font-weight: 600;">Modo Zen</span>
+                <div class="flex justify-end mb-4">
+                    <button id="zen-mode-toggle" title="Modo Zen" class="flex items-center gap-2 text-text-muted hover:text-accent p-2 rounded-lg transition-colors">
+                        <i data-feather="leaf"></i>
+                        <span class="text-sm font-semibold">Modo Zen</span>
                     </button>
                 </div>
 
-                <div id="history-filter-container" style="margin-bottom: 1.5rem; display: none;">
-                    <h4 class="font-semibold text-center" style="margin-bottom: 0.75rem;">Filtrar por Tag</h4>
-                    <div id="history-tags-filter" class="tag-container" style="justify-content: center;">
+                <div id="history-filter-container" class="mb-6" style="display: none;">
+                    <h3 class="text-lg font-semibold mb-3 text-center">Filtrar por Tag</h3>
+                    <div id="history-tags-filter" class="flex flex-wrap justify-center gap-2">
                         <!-- Filter tags will be rendered here by JS -->
                     </div>
                 </div>
                 <div id="history-content">
                     <div id="charts-container">
-                        <div style="margin-bottom: 2rem;">
-                            <h4 class="text-center">Tendência Emocional</h4>
-                            <div id="trend-chart-container"></div>
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold mb-4 text-center">Frequência de Emoções</h3>
+                            <div class="max-w-xs mx-auto">
+                                <canvas id="mood-pie-chart"></canvas>
+                            </div>
                         </div>
-                        <div style="margin-bottom: 2rem;">
-                            <h4 class="text-center">Frequência de Emoções</h4>
-                            <div id="mood-pie-chart-container" style="max-width: 288px; margin: 0 auto;"></div>
+                        <div id="tag-cloud-container" class="mb-8">
+                            <!-- Tag cloud will be rendered here -->
                         </div>
                     </div>
                     <div>
-                        <h4 class="text-center">Registros Recentes</h4>
+                        <h3 class="text-xl font-bold mb-4 text-center">Registros Recentes</h3>
                         <div id="history-list" class="space-y-3"></div>
                     </div>
                 </div>
-                <div id="no-history" class="text-center text-muted hidden" style="padding: 4rem 0;">
-                    <svg class="icon" style="width: 4rem; height: 4rem; margin: 0 auto 1rem;" viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
-                    <p>Nenhum registro encontrado ainda.</p>
+                <div id="no-history" class="text-center text-text-muted py-16 hidden">
+                    <i data-feather="archive" class="w-16 h-16 mx-auto mb-4 text-accent"></i>
+                    <h4 class="text-xl font-bold text-text-primary mb-2">Seu histórico começa aqui</h4>
+                    <p class="mb-6">Ao registrar suas emoções, você poderá ver seus padrões e progresso ao longo do tempo.</p>
+                    <button class="go-to-checkin-btn bg-accent text-accent-text font-semibold py-2 px-6 rounded-full">Registrar primeira emoção</button>
                 </div>
             </div>
 
             <!-- Resource Library Screen -->
             <div id="resources-screen" class="screen">
-                <div id="emergency-help-section" style="margin-bottom: 2rem; padding: 1.5rem; border-radius: 0.5rem; background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); text-align: center;">
-                    <h3 style="color: #ef4444; margin-bottom: 0.5rem;">Ajuda Urgente</h3>
-                    <p style="margin-bottom: 1rem;">Se você está em uma crise, ligue para o Centro de Valorização da Vida (CVV).</p>
-                    <a href="tel:188" class="button-primary" style="background-color: #ef4444; display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 0.75rem;">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> Ligar para CVV - 188
+                <div id="emergency-help-section" class="mb-8 p-6 rounded-lg bg-red-500/10 border border-red-500/20 text-center">
+                    <h3 class="text-xl font-bold mb-2 text-red-500">Ajuda Urgente</h3>
+                    <p class="text-text-secondary mb-4">Se você está em uma crise, ligue para o Centro de Valorização da Vida (CVV).</p>
+                    <a href="tel:188" class="w-full bg-red-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-600 transition-colors duration-300 flex items-center justify-center gap-3">
+                        <i data-feather="phone-call"></i> Ligar para CVV - 188
                     </a>
-                    <div id="favorite-contacts-container" style="width: 100%; margin-top: 1.5rem;">
+                    <div id="favorite-contacts-container" class="w-full mt-6">
                         <!-- Favorite contacts will be rendered here -->
                     </div>
-                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(239, 68, 68, 0.2);">
-                        <h4 class="font-semibold text-left" style="margin-bottom: 0.75rem;">Adicionar Novo Contato</h4>
-                        <div class="input-group">
-                            <input type="text" id="resources-contact-name-input" class="input-field" placeholder="Nome">
-                            <input type="tel" id="resources-contact-phone-input" class="input-field" placeholder="Telefone">
+                    <div class="mt-6 pt-6 border-t border-red-500/20">
+                        <h3 class="text-lg font-semibold mb-3 text-left">Adicionar Novo Contato</h3>
+                        <div class="flex items-center gap-2 mb-3">
+                            <input type="text" id="resources-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Nome">
+                            <input type="tel" id="resources-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Telefone">
                         </div>
-                        <button id="add-resources-contact-btn" class="button-primary" style="width: 100%; border-radius: 0.5rem; padding: 0.5rem 1rem;">
+                        <button id="add-resources-contact-btn" class="w-full bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-opacity">
                             Adicionar à Rede
                         </button>
                     </div>
                 </div>
-                <div id="suggested-resources" style="margin-bottom: 2rem;"></div>
+                <div id="suggested-resources" class="mb-8"></div>
                 <div id="all-resources">
-                    <h4>Biblioteca Completa</h4>
+                    <h3 class="text-xl font-bold mb-4">Biblioteca Completa</h3>
                     <div id="resources-list" class="space-y-4"></div>
                 </div>
             </div>
 
             <!-- Settings Screen -->
             <div id="settings-screen" class="screen">
-                <h3>Configurações</h3>
+                <h3 class="text-xl font-bold mb-6">Configurações</h3>
                 <div class="space-y-4">
-                    <div style="background-color: rgb(var(--color-bg-secondary)); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary));">
-                        <h4>Tema</h4>
-                        <div id="theme-selector" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                            <button data-theme="light" class="theme-btn">Claro</button>
-                            <button data-theme="dark" class="theme-btn">Escuro</button>
-                            <button data-theme="ocean" class="theme-btn">Oceano</button>
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                        <h4 class="text-lg font-bold mb-4">Tema</h4>
+                        <div id="theme-selector" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button data-theme="auto" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Automático</button>
+                            <button data-theme="light" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Claro</button>
+                            <button data-theme="dark" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Escuro</button>
+                            <button data-theme="ocean" class="theme-btn p-3 rounded-lg border-2 border-border-primary">Oceano</button>
                         </div>
                     </div>
-                    <div style="margin-top: 2rem;">
-                        <h4>Gerenciar Tags</h4>
-                        <div class="input-group" style="margin-bottom: 1rem;">
-                            <input type="text" id="new-tag-input" class="input-field" placeholder="Adicionar nova tag...">
-                            <button type="button" id="add-new-tag-btn" class="button-primary" style="padding: 0.75rem; border-radius: 0.5rem; flex-shrink: 0;">
-                                <svg class="icon" style="color: rgb(var(--color-accent-text));" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex justify-between items-center">
+                        <div>
+                            <h4 class="text-lg font-bold">Modo Foco</h4>
+                            <p class="text-sm text-text-secondary">Desativa vibrações e pop-ups.</p>
+                        </div>
+                        <button id="focus-mode-toggle" role="switch" aria-checked="false" class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent">
+                            <span class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform"></span>
+                        </button>
+                    </div>
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-lg font-bold">Lembrete Diário</h4>
+                                <p class="text-sm text-text-secondary">Receba uma notificação para seu check-in.</p>
+                            </div>
+                            <button id="reminder-toggle" role="switch" aria-checked="false" class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent">
+                                <span class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform"></span>
                             </button>
                         </div>
-                        <div id="tag-management-list">
-                            <!-- Tags will be rendered here by JS -->
+                        <div id="reminder-time-container" class="mt-4 hidden">
+                            <input type="time" id="reminder-time-input" class="w-full p-2 border border-border-primary rounded-lg bg-bg-input text-text-primary">
                         </div>
                     </div>
-                    <div class="data-management-section">
-                        <h4>Gerenciamento de Dados</h4>
-                        <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 0;">Salve seus dados em um arquivo ou restaure um backup.</p>
-                        <div class="button-group">
-                            <button id="export-data-btn">Exportar Dados</button>
-                            <button id="import-data-btn">Importar Dados</button>
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                        <h4 class="text-lg font-bold">Exportar Seus Dados</h4>
+                        <p class="text-sm text-text-secondary my-2">Guarde um backup seguro dos seus registros ou compartilhe com seu psicólogo para um acompanhamento profissional. Seus dados, seu controle.</p>
+                        <p class="text-xs text-text-muted mb-4">Acreditamos que esta ferramenta pode ser uma ponte entre você e seu terapeuta, facilitando a visualização de padrões e progressos.</p>
+                        <button id="export-data-btn" class="w-full bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-colors flex items-center justify-center gap-2">
+                            <i data-feather="download"></i>
+                            Baixar arquivo JSON
+                        </button>
+                    </div>
+
+
+                    <div class="mt-8">
+                        <h4 class="text-lg font-bold mb-4">Gerenciar Tags</h4>
+                        <div class="flex items-center gap-2 mb-4">
+                            <input type="text" id="new-tag-input" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Adicionar nova tag...">
+                            <button type="button" id="add-new-tag-btn" class="bg-accent text-accent-text p-3 rounded-lg hover:bg-accent-hover transition-colors flex-shrink-0">
+                                <i data-feather="plus"></i>
+                            </button>
                         </div>
-                        <input type="file" id="import-file-input" class="hidden" accept="application/json">
+                        <div id="tag-management-list" class="space-y-2">
+                            <!-- Tags will be rendered here by JS -->
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Achievements Screen -->
             <div id="achievements-screen" class="screen">
-                <h3 class="text-center">Minhas Conquistas</h3>
-                <p class="text-muted text-center" style="margin-bottom: 2rem;">Continue registrando para desbloquear todas!</p>
-                <div id="achievements-list" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <h3 class="text-2xl font-bold mb-2 text-center">Minhas Conquistas</h3>
+                <p class="text-text-muted text-center mb-8">Continue registrando para desbloquear todas!</p>
+                <div id="achievements-list" class="grid grid-cols-2 gap-4">
                     <!-- Achievements will be rendered here -->
                 </div>
             </div>
 
             <!-- Goals Screen -->
             <div id="goals-screen" class="screen">
-                <h3 class="text-center">Minhas Metas</h3>
-                <p class="text-muted text-center" style="margin-bottom: 2rem;">Defina objetivos para seu bem-estar emocional.</p>
-                <div class="input-group" style="margin-bottom: 1.5rem;">
-                    <input type="text" id="new-goal-input" class="input-field" placeholder="Ex: Meditar 5 minutos por dia">
-                    <button type="button" id="add-new-goal-btn" class="button-primary" style="padding: 0.75rem; border-radius: 0.5rem; flex-shrink: 0;">
-                        <svg class="icon" style="color: rgb(var(--color-accent-text));" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <h3 class="text-2xl font-bold mb-2 text-center">Minhas Metas</h3>
+                <p class="text-text-muted text-center mb-8">Defina objetivos para seu bem-estar emocional.</p>
+                <div class="flex items-center gap-2 mb-6">
+                    <input type="text" id="new-goal-input" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Ex: Meditar 5 minutos por dia">
+                    <button type="button" id="add-new-goal-btn" class="bg-accent text-accent-text p-3 rounded-lg hover:bg-accent-hover transition-colors flex-shrink-0">
+                        <i data-feather="plus"></i>
                     </button>
                 </div>
-                <div id="goals-list">
+                <div id="goals-list" class="space-y-3">
                     <!-- Goals will be rendered here -->
                 </div>
             </div>
@@ -806,57 +587,73 @@
         </main>
 
         <!-- Bottom Navigation Bar -->
-        <nav id="bottom-nav-bar" class="hidden">
-            <div id="bottom-nav">
+        <nav class="w-full max-w-lg mx-auto bg-bg-secondary border-t border-border-primary fixed bottom-0 left-0 right-0">
+            <div id="bottom-nav" class="relative flex justify-around hidden">
+                <div id="nav-indicator" style="left: 12.5%;"></div>
                 <button data-screen="checkin-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Início</span>
+                    <i data-feather="home" class="mx-auto"></i><span class="text-xs block">Início</span>
                 </button>
                 <button data-screen="journey-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
-                    <svg class="icon" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg><span>Jornada</span>
+                    <i data-feather="trending-up" class="mx-auto"></i><span class="text-xs block">Jornada</span>
                 </button>
                 <button data-screen="resources-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><span>Recursos</span>
+                    <i data-feather="book-open" class="mx-auto"></i><span class="text-xs block">Recursos</span>
                 </button>
                 <button data-screen="settings-screen" class="nav-btn flex-1 py-3 text-center text-text-muted">
-                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span>Ajustes</span>
+                    <i data-feather="settings" class="mx-auto"></i><span class="text-xs block">Ajustes</span>
                 </button>
             </div>
         </nav>
         
         <!-- Spacer to prevent content from being hidden by the nav bar -->
-        <div id="nav-spacer" class="hidden"></div>
+        <div id="nav-spacer" class="h-20 hidden"></div>
 
         <!-- Edit Modal -->
-        <div id="edit-modal" class="modal-overlay hidden">
-            <div id="edit-modal-content" class="modal-content">
-                <h3>Editar Registro</h3>
+        <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+            <div id="edit-modal-content" class="bg-bg-secondary rounded-lg shadow-xl w-full max-w-md p-6">
+                <h3 class="text-xl font-bold mb-4">Editar Registro</h3>
                 <form id="edit-form">
-                    <div style="margin-bottom: 1.5rem;">
-                        <label for="edit-notes" class="font-semibold" style="display: block; font-size: 1.125rem; margin-bottom: 0.5rem;">Notas</label>
-                        <textarea id="edit-notes" rows="5" class="input-field"></textarea>
+                    <div class="mb-6">
+                        <label for="edit-notes" class="block text-lg font-semibold mb-2">Notas</label>
+                        <textarea id="edit-notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted"></textarea>
                     </div>
-                    <div style="margin-bottom: 1.5rem;">
-                        <label class="font-semibold" style="display: block; font-size: 1.125rem; margin-bottom: 0.5rem;">Tags</label>
-                        <div id="edit-predefined-tags-container" class="tag-container"></div>
+                    <div class="mb-6">
+                        <label class="block text-lg font-semibold mb-2">Tags</label>
+                        <div id="edit-predefined-tags-container" class="flex flex-wrap gap-2"></div>
                     </div>
-                    <div style="display: flex; justify-content: flex-end; gap: 1rem;">
-                        <button type="button" id="cancel-edit-btn" style="padding: 0.5rem 1.5rem; background-color: rgb(var(--color-bg-tertiary)); color: rgb(var(--color-text-primary)); border-radius: 0.5rem;">Cancelar</button>
-                        <button type="submit" id="save-edit-btn" class="button-primary" style="padding: 0.5rem 1.5rem; border-radius: 0.5rem;">Salvar</button>
+                    <div class="flex justify-end gap-4">
+                        <button type="button" id="cancel-edit-btn" class="px-6 py-2 bg-bg-tertiary text-text-primary rounded-lg hover:opacity-80 transition-opacity">Cancelar</button>
+                        <button type="submit" id="save-edit-btn" class="px-6 py-2 bg-accent text-accent-text rounded-lg hover:bg-accent-hover">Salvar</button>
                     </div>
                 </form>
             </div>
         </div>
 
         <!-- Achievement Unlocked Modal -->
-        <div id="achievement-unlocked-modal" class="modal-overlay hidden">
-            <div id="achievement-modal-content" class="modal-content text-center" style="max-width: 384px;">
-                <svg class="icon" style="width: 4rem; height: 4rem; color: rgb(var(--color-accent)); margin: 0 auto 1rem;" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                <h2>Conquista Desbloqueada!</h2>
-                <p id="unlocked-achievement-title" class="font-semibold" style="color: rgb(var(--color-accent)); font-size: 1.125rem;"></p>
-                <p id="unlocked-achievement-desc" style="margin-bottom: 1.5rem;"></p>
-                <button id="close-achievement-modal-btn" class="button-primary" style="width: 100%; padding: 0.5rem 1rem; border-radius: 0.5rem;">
+        <div id="achievement-unlocked-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
+            <div id="achievement-modal-content" class="bg-bg-secondary rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
+                <i data-feather="award" class="w-16 h-16 text-accent mx-auto mb-4"></i>
+                <h3 class="text-2xl font-bold mb-2">Conquista Desbloqueada!</h3>
+                <p id="unlocked-achievement-title" class="text-lg font-semibold text-accent"></p>
+                <p id="unlocked-achievement-desc" class="text-text-secondary mb-6"></p>
+                <button id="close-achievement-modal-btn" class="w-full bg-accent text-accent-text font-bold py-2 px-4 rounded-lg hover:bg-accent-hover">
                     Legal!
                 </button>
+            </div>
+        </div>
+
+        <!-- Guided Tour Overlay -->
+        <div id="tour-overlay" class="fixed inset-0 z-[100] hidden">
+            <div id="tour-spotlight"></div>
+            <div id="tour-tooltip" class="absolute bg-bg-secondary p-5 rounded-lg shadow-2xl w-72 max-w-[80vw]">
+                <h4 id="tour-title" class="font-bold text-lg mb-2 text-text-primary"></h4>
+                <p id="tour-text" class="text-sm text-text-secondary mb-4"></p>
+                <div class="flex justify-between items-center">
+                    <button id="tour-skip-btn" class="text-sm font-semibold text-text-muted hover:text-accent transition-colors">Pular Tour</button>
+                    <button id="tour-next-btn" class="bg-accent text-accent-text font-semibold py-2 px-5 rounded-lg hover:bg-accent-hover transition-colors">
+                        Próximo
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -867,7 +664,11 @@
             const state = {
                 currentScreen: 'welcome-screen',
                 checkins: [],
+                currentMood: null,
+                currentTags: [],
                 isAuthenticated: false,
+                pieChart: null,
+                weeklyBarChart: null,
                 editingCheckinId: null,
                 editingTags: [],
                 calendarDate: new Date(),
@@ -878,31 +679,14 @@
                 gratitudeEntries: [],
                 goals: [],
                 historyFilterTag: null,
-                favoriteContacts: [],
-                theme: 'light',
+                favoriteContacts: [], // Contatos de confiança
+                theme: 'auto', // Default to auto-detect system theme
                 predefinedTags: ["Trabalho", "Família", "Relacionamentos", "Saúde", "Lazer", "Estudos", "Finanças", "Pessoal"], // Default tags
-                currentMood: null,
-                currentTags: [],
-            };
-
-            const iconLibrary = {
-                'award': '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
-                'calendar': '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>',
-                'trending-up': '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>',
-                'shield': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
-                'briefcase': '<rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>',
-                'users': '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
-                'heart': '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>',
-                'dollar-sign': '<line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>',
-                'wind': '<path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>',
-                'headphones': '<path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H2z"></path>',
-                'edit-3': '<path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>',
-                'activity': '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
-                'youtube': '<path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29 29 0 0 0 23 11.75a29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>',
-                'book-open': '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>',
-                'life-buoy': '<circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"></line><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"></line>',
-                'archive': '<polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line>',
-                'filter': '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>',
+                tourStep: -1,
+                isFocusMode: false,
+                reminderEnabled: false,
+                reminderTime: '20:00', // Default reminder time
+                nextNotificationTimeoutId: null,
             };
 
             // --- MOCK DATA ---
@@ -916,17 +700,17 @@
             // A lista de tags foi movida para o objeto 'state' para ser personalizável
             const mockResources = [
                 // Contextual resources based on tags
-                { id: "10", title: "Lidando com Pressão no Trabalho", description: "Estratégias para gerenciar o estresse profissional.", type: "article", contentUrl: "#", icon: "briefcase", category: "contextual", tags: ["Trabalho"] },
-                { id: "11", title: "Comunicação Familiar Positiva", description: "Dicas para melhorar o diálogo com seus familiares.", type: "article", contentUrl: "#", icon: "users", category: "contextual", tags: ["Família"] },
-                { id: "12", title: "Cuidando da Saúde Mental", description: "Um guia para priorizar seu bem-estar emocional.", type: "video", contentUrl: "#", icon: "heart", category: "contextual", tags: ["Saúde", "Pessoal"] },
-                { id: "13", title: "Finanças e Bem-estar", description: "Como a organização financeira impacta suas emoções.", type: "article", contentUrl: "#", icon: "dollar-sign", category: "contextual", tags: ["Finanças"] },
+                { id: "10", title: "Lidando com Pressão no Trabalho", description: "Estratégias para gerenciar o estresse profissional.", type: "article", contentUrl: "https://g1.globo.com/economia/concursos-e-emprego/noticia/2022/09/12/pressao-no-trabalho-veja-dicas-de-especialistas-para-lidar-com-o-problema.ghtml", icon: "briefcase", category: "contextual", tags: ["Trabalho"] },
+                { id: "11", title: "Comunicação Familiar Positiva", description: "Dicas para melhorar o diálogo com seus familiares.", type: "article", contentUrl: "https://www.psicologosberrini.com.br/blog/comunicacao-familiar/", icon: "users", category: "contextual", tags: ["Família"] },
+                { id: "12", title: "Cuidando da Saúde Mental", description: "Um guia para priorizar seu bem-estar emocional.", type: "video", contentUrl: "https://www.youtube.com/watch?v=s_41-PA-45Q", icon: "heart", category: "contextual", tags: ["Saúde", "Pessoal"] },
+                { id: "13", title: "Finanças e Bem-estar", description: "Como a organização financeira impacta suas emoções.", type: "article", contentUrl: "https://mepoupenaweb.uol.com.br/saude-financeira/saude-financeira-e-emocional/", icon: "dollar-sign", category: "contextual", tags: ["Finanças"] },
                 // General Calm/Release resources
-                { id: "1", title: "Técnicas de Respiração", description: "Aprenda a controlar a ansiedade com exercícios simples.", type: "article", contentUrl: "#", icon: "wind", category: "calm", tags: [] },
-                { id: "2", title: "Meditação Guiada para Acalmar", description: "Relaxe e encontre seu centro com esta meditação.", type: "audio", contentUrl: "#", icon: "headphones", category: "calm", tags: [] },
-                { id: "3", title: "Diário Expressivo", description: "Escreva sobre seus sentimentos sem julgamento para clarear a mente.", type: "activity", contentUrl: "#", icon: "edit-3", category: "release", tags: [] },
-                { id: "4", title: "Movimente o Corpo", description: "Uma caminhada rápida ou dança pode ajudar a aliviar o estresse.", type: "activity", contentUrl: "#", icon: "activity", category: "release", tags: [] },
+                { id: "1", title: "Respiração Diafragmática", description: "Aprenda a controlar a ansiedade com este exercício simples.", type: "video", contentUrl: "https://www.youtube.com/watch?v=4go_sY-I2Qc", icon: "wind", category: "calm", tags: [] },
+                { id: "2", title: "Meditação Guiada para Acalmar", description: "Relaxe e encontre seu centro com esta meditação de 5 minutos.", type: "audio", contentUrl: "https://www.youtube.com/watch?v=inpok4MKV-w", icon: "headphones", category: "calm", tags: [] },
+                { id: "3", title: "O Poder da Escrita Terapêutica", description: "Entenda como escrever sobre seus sentimentos pode clarear a mente.", type: "article", contentUrl: "https://www.psicologosberrini.com.br/blog/escrita-terapeutica-o-que-e-e-como-fazer/", icon: "edit-3", category: "release", tags: [] },
+                { id: "4", title: "Movimente o Corpo", description: "Uma caminhada ou dança pode ajudar a aliviar o estresse. Veja os benefícios.", type: "article", contentUrl: "https://www.cnnbrasil.com.br/saude/os-beneficios-para-a-saude-mental-de-se-movimentar-por-apenas-10-minutos/", icon: "activity", category: "release", tags: [] },
                 // General resources
-                { id: "9", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "#", icon: "youtube", category: "general", tags: [] },
+                { id: "9", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "https://www.youtube.com/watch?v=2z3yB3i-2Yg", icon: "youtube", category: "general", tags: [] },
             ];
             const contextualTipsData = {
                 "Estudos": {
@@ -993,24 +777,46 @@
                 },
             };
 
+            const tourSteps = [
+                {
+                    element: '.mood-btn[data-mood="verde"]',
+                    title: 'Registre seu Humor',
+                    text: 'Tudo começa aqui. Escolha a cor que melhor representa como você se sente para fazer um registro rápido.',
+                },
+                {
+                    element: '.nav-btn[data-screen="journey-screen"]',
+                    title: 'Sua Jornada',
+                    text: 'Navegue por seu histórico, metas, conquistas e muito mais. Tudo sobre seu progresso fica aqui.',
+                    action: () => navigateTo('checkin-screen') // Ensure we are on a main screen
+                },
+                {
+                    element: '.journey-link[data-screen="history-screen"]',
+                    title: 'Acesse seu Histórico',
+                    text: 'Veja seus registros passados, gráficos de tendência e entenda seus padrões emocionais ao longo do tempo.',
+                    action: () => navigateTo('journey-screen')
+                },
+                {
+                    element: '.nav-btn[data-screen="resources-screen"]',
+                    title: 'Recursos e Ajuda',
+                    text: 'Encontre artigos, vídeos e contatos de apoio para momentos em que precisar de uma força extra.'
+                }
+            ];
             // --- DOM ELEMENTS ---
             const screens = document.querySelectorAll('.screen');
             const navButtons = document.querySelectorAll('.nav-btn');
             const header = document.getElementById('app-header');
-            const headerTitle = document.querySelector('#app-header h1');
+            const headerTitle = header.querySelector('h1');
             const bottomNav = document.getElementById('bottom-nav');
-            const bottomNavBar = document.getElementById('bottom-nav-bar');
             const navSpacer = document.getElementById('nav-spacer');
             const editModal = document.getElementById('edit-modal');
             
-            const renderEmptyState = (element, iconKey, message) => {
-                element.innerHTML = `
-                    <svg class="icon" style="width: 4rem; height: 4rem; margin: 0 auto 1rem;" viewBox="0 0 24 24">${iconLibrary[iconKey] || ''}</svg>
-                    <p>${message}</p>
-                `;
-            };
-
             // --- UTILITY FUNCTIONS ---
+            const getMoodColor = (mood) => ({
+                verde: 'bg-green-500',
+                amarelo: 'bg-amber-400',
+                vermelho: 'bg-red-500'
+            }[mood] || 'bg-gray-400');
+
             const getMoodBorderColor = (mood) => ({
                 verde: 'border-green-500',
                 amarelo: 'border-amber-400',
@@ -1038,6 +844,20 @@
                 return isSameDay(nextDay, d2);
             };
 
+            const triggerConfetti = () => {
+                confetti({
+                    particleCount: 150,
+                    spread: 90,
+                    origin: { y: 0.6 }
+                });
+            };
+
+            const vibrate = (duration = 50) => {
+                if (state.isFocusMode) return;
+                if (navigator.vibrate) {
+                    navigator.vibrate(duration);
+                }
+            };
             // --- DATA PERSISTENCE (localStorage) ---
             const loadState = () => {
                 // Para o modo de exposição, os dados não são carregados para garantir
@@ -1051,23 +871,55 @@
             };
 
             const applyTheme = (theme) => {
-                document.documentElement.dataset.theme = theme;
+                if (theme === 'auto') {
+                    // Check system preference and apply light or dark
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    document.documentElement.dataset.theme = prefersDark ? 'dark' : 'light';
+                } else {
+                    document.documentElement.dataset.theme = theme;
+                }
                 updateThemeSelector();
             };
+
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (state.theme === 'auto') {
+                    document.documentElement.dataset.theme = event.matches ? "dark" : "light";
+                }
+            });
 
             // --- RENDERING & UI UPDATES ---
             const navigateTo = (screenId) => {
                 state.currentScreen = screenId;
+                let activeNavIndex = -1;
                 screens.forEach(s => s.style.display = 'none');
                 const screenEl = document.getElementById(screenId);
 
                 // Use 'flex' for screens that are designed as flex containers for centering
-                screenEl.style.display = screenEl.style.flexDirection ? 'flex' : 'block';
-
+                if (screenEl.classList.contains('flex')) {
+                    screenEl.style.display = 'flex';
+                } else {
+                    screenEl.style.display = 'block';
+                }
                 // Update nav button styles
-                navButtons.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.screen === screenId);
+                navButtons.forEach((btn, index) => {
+                    if (btn.dataset.screen === screenId) {
+                        btn.classList.add('text-accent');
+                        btn.classList.remove('text-text-muted');
+                        activeNavIndex = index;
+                    } else {
+                        btn.classList.add('text-text-muted');
+                        btn.classList.remove('text-accent');
+                    }
                 });
+
+                // Update navigation indicator position
+                const indicator = document.getElementById('nav-indicator');
+                if (activeNavIndex !== -1) {
+                    const percentage = (activeNavIndex * 25) + 12.5; // 12.5%, 37.5%, 62.5%, 87.5%
+                    indicator.style.left = `calc(${percentage}% - 3px)`; // Center the 6px dot
+                }
+
 
                 // Update header title
                 const titles = {
@@ -1081,14 +933,21 @@
                     'contextual-tips-screen': 'Dicas para Você',
                     'diagnosis-screen': 'Diagnóstico Semanal',
                     'resources-screen': 'Recursos e Ajuda',
+                    'stats-screen': 'Estatísticas',
                     'settings-screen': 'Ajustes',
                 };
                 headerTitle.textContent = titles[screenId] || '';
+                feather.replace(); // Ensure icons are always rendered on navigation
 
                 if (screenId === 'details-screen') {
                     renderPredefinedTags('predefined-tags-container', state.currentTags);
                 }
+                if (screenId === 'journey-screen') {
+                    feather.replace();
+                }
                 if (screenId === 'settings-screen') {
+                    renderFocusModeToggle();
+                    renderReminderSettings();
                     renderTagManagement();
                 }
                 if (screenId === 'achievements-screen') {
@@ -1110,32 +969,35 @@
                 if (screenId === 'diagnosis-screen') {
                     renderDiagnosis();
                 }
+                if (screenId === 'stats-screen') {
+                    renderStatistics();
+                }
             };
 
             const renderPredefinedTags = (containerId, selectedTags) => {
                 const container = document.getElementById(containerId);
                 container.innerHTML = state.predefinedTags.map(tag => {
                     const isSelected = selectedTags.includes(tag);
-                    return `<button type="button" data-tag="${tag}" class="tag-btn ${isSelected ? 'selected' : ''}">${tag}</button>`;
+                    const baseClasses = 'px-4 py-2 rounded-full cursor-pointer transition-colors text-sm font-semibold';
+                    const selectedClasses = 'bg-accent text-accent-text';
+                    const unselectedClasses = 'bg-bg-tertiary text-text-primary hover:opacity-80';
+                    
+                    return `<button type="button" data-tag="${tag}" class="predefined-tag-btn ${baseClasses} ${isSelected ? selectedClasses : unselectedClasses}">${tag}</button>`;
                 }).join('');
-            };
-
-            const createTagManagementElement = (tag) => {
-                const div = document.createElement('div');
-                div.className = 'tag-management-item';
-                div.innerHTML = `
-                    <span class="font-semibold" style="flex-grow: 1;">${tag}</span>
-                    <button data-tag="${tag}" class="remove-managed-tag-btn text-text-muted hover:text-red-500">
-                        <svg class="icon" style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                    </button>
-                `;
-                return div;
             };
 
             const renderTagManagement = () => {
                 const container = document.getElementById('tag-management-list');
                 if (!container) return;
-                container.innerHTML = state.predefinedTags.map(tag => createTagManagementElement(tag).outerHTML).join('');
+                container.innerHTML = state.predefinedTags.map(tag => `
+                    <div class="bg-bg-secondary p-3 rounded-lg border border-border-primary flex justify-between items-center">
+                        <span class="font-semibold">${tag}</span>
+                        <button data-tag="${tag}" class="remove-managed-tag-btn text-text-muted hover:text-red-500">
+                            <i data-feather="x-circle" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                `).join('');
+                feather.replace();
             };
 
             const renderEmergencyContacts = () => {
@@ -1150,23 +1012,24 @@
                 }
                 container.innerHTML = `
                     <div class="pt-6 border-t border-red-500/20">
-                        <h4 class="text-center text-text-primary">Sua Rede de Apoio</h4>
-                        <p class="text-sm text-center text-text-secondary" style="margin-bottom: 1rem;">Lembre-se das pessoas que se importam. Uma conversa pode fazer toda a diferença.</p>
+                        <h3 class="text-xl font-bold mb-2 text-center text-text-primary">Sua Rede de Apoio</h3>
+                        <p class="text-sm text-center text-text-secondary mb-4">Lembre-se das pessoas que se importam. Uma conversa pode fazer toda a diferença.</p>
                         <div id="resources-contacts-list" class="space-y-3">
                             ${state.favoriteContacts.map(contact => `
-                                <div style="background-color: rgb(var(--color-bg-secondary)); padding: 0.5rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary)); display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
-                                    <a href="tel:${contact.phone}" style="flex-grow: 1; display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; border-radius: 0.25rem; text-decoration: none;">
-                                        <svg class="icon" style="width: 1.5rem; height: 1.5rem; color: rgb(var(--color-accent));" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                        <span class="font-semibold" style="font-size: 1.125rem; color: rgb(var(--color-text-primary));">${contact.name}</span>
+                                <div class="bg-bg-secondary p-2 rounded-lg border border-border-primary flex items-center justify-between gap-2">
+                                    <a href="tel:${contact.phone}" class="flex-grow flex items-center gap-3 p-2 rounded-md hover:bg-bg-tertiary">
+                                        <i data-feather="user" class="w-6 h-6 text-accent"></i>
+                                        <span class="text-lg font-semibold">${contact.name}</span>
                                     </a>
-                                    <button data-id="${contact.id}" class="remove-resources-contact-btn" style="color: rgb(var(--color-text-muted)); padding: 0.5rem; border-radius: 0.25rem;">
-                                        <svg class="icon" style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    <button data-id="${contact.id}" class="remove-resources-contact-btn text-text-muted hover:text-red-500 p-2 rounded-md hover:bg-bg-tertiary">
+                                        <i data-feather="trash-2" class="w-5 h-5"></i>
                                     </button>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 `;
+                feather.replace();
             };
 
             const renderContextualTips = () => {
@@ -1185,10 +1048,10 @@
                     // Select a random tip text from the array
                     const randomText = tip.texts[Math.floor(Math.random() * tip.texts.length)];
                     return `
-                    <div style="background-color: rgb(var(--color-bg-tertiary)); padding: 1.25rem; border-radius: 0.5rem;">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                            <svg class="icon" style="width: 1.5rem; height: 1.5rem; color: rgb(var(--color-accent));" viewBox="0 0 24 24">${iconLibrary[tip.icon] || ''}</svg>
-                            <h4>${tip.title}</h4>
+                    <div class="bg-bg-tertiary p-5 rounded-lg">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i data-feather="${tip.icon}" class="w-6 h-6 text-accent"></i>
+                            <h4 class="text-xl font-bold">${tip.title}</h4>
                         </div>
                         <p class="text-text-primary">${randomText}</p>
                     </div>
@@ -1208,43 +1071,47 @@
                 }
 
                 tipsContainer.innerHTML = tipsHTML;
+                feather.replace();
             };
 
             const renderFeedbackScreen = (mood) => {
-                const iconContainer = document.getElementById('feedback-icon-container');
+                const iconEl = document.getElementById('feedback-icon');
                 const titleEl = document.getElementById('feedback-title');
                 const messageEl = document.getElementById('feedback-message');
                 const continueBtn = document.getElementById('feedback-continue-btn');
 
                 const feedbackData = {
                     verde: {
-                        iconSvg: '<svg class="icon" style="color: #22c55e;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5-2 4-2 4 2 4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+                        icon: 'smile',
                         color: 'text-green-500',
                         title: 'Que bom!',
                         message: 'É ótimo ver que você está se sentindo bem. Continue assim!',
-                        btnClass: 'feedback-green'
+                        btnClass: 'bg-green-500 hover:bg-green-600'
                     },
                     amarelo: {
-                        iconSvg: '<svg class="icon" style="color: #f59e0b;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+                        icon: 'meh',
                         color: 'text-amber-400',
                         title: 'Obrigado por registrar.',
                         message: 'Reconhecer o que sentimos é um passo importante para o autocuidado.',
-                        btnClass: 'feedback-amber'
+                        btnClass: 'bg-amber-400 hover:bg-amber-500'
                     },
                     vermelho: {
-                        iconSvg: '<svg class="icon" style="color: #ef4444;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
+                        icon: 'frown',
                         color: 'text-red-500',
                         title: 'Sinto muito por isso.',
                         message: 'Lembre-se de ser gentil com você mesmo. Se precisar, procure apoio nos Recursos.',
-                        btnClass: 'feedback-red'
+                        btnClass: 'bg-red-500 hover:bg-red-600'
                     }
                 };
 
                 const data = feedbackData[mood];
-                iconContainer.innerHTML = data.iconSvg;
+                iconEl.dataset.feather = data.icon;
+                iconEl.className = `w-20 h-20 ${data.color} mb-6`;
                 titleEl.textContent = data.title;
                 messageEl.textContent = data.message;
-                continueBtn.className = `button-primary ${data.btnClass}`;
+                continueBtn.className = `text-accent-text font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300 ${data.btnClass}`;
+                
+                feather.replace();
             };
 
             const openEditModal = (checkinId) => {
@@ -1319,22 +1186,22 @@
                     let moodDot = '';
                     if (checkinsForDay.length > 0) {
                         let dayMood = 'verde'; // default to green
-                        if (checkinsForDay.some(c => c.mood === 'vermelho')) dayMood = 'vermelho';
-                        else if (checkinsForDay.some(c => c.mood === 'amarelo')) dayMood = 'amarelo';
-                        
-                        const moodColor = { verde: '#22c55e', amarelo: '#f59e0b', vermelho: '#ef4444' }[dayMood];
-                        moodDot = `<div class="mood-dot" style="background-color: ${moodColor};"></div>`;
+                        if (checkinsForDay.some(c => c.mood === 'vermelho')) {
+                            dayMood = 'vermelho';
+                        } else if (checkinsForDay.some(c => c.mood === 'amarelo')) {
+                            dayMood = 'amarelo';
+                        }
+                        moodDot = `<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full ${getMoodColor(dayMood)}"></div>`;
                     }
                     
                     const today = new Date();
-                    const isSelected = state.selectedDate && dayDate.toDateString() === state.selectedDate.toDateString();
                     const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
-                    let dayClasses = 'calendar-day';
-                    if (isToday) dayClasses += ' today';
-                    if (isSelected) dayClasses += ' selected';
+                    const isSelected = state.selectedDate && isSameDay(dayDate, state.selectedDate);
+                    const todayClass = isToday && !isSelected ? 'bg-accent-bg-light !text-accent-text-dark font-bold' : '';
+                    const selectedClass = isSelected ? 'bg-accent text-accent-text font-bold' : '';
 
                     calendarGrid.innerHTML += `
-                        <button data-date="${dayDate.toISOString()}" class="${dayClasses}">
+                        <button data-date="${dayDate.toISOString()}" class="calendar-day relative h-10 flex items-center justify-center rounded-full ${todayClass} ${selectedClass} transition-colors hover:bg-bg-tertiary">
                             <span>${day}</span>
                             ${moodDot}
                         </button>
@@ -1357,12 +1224,15 @@
 
                 let tagsHTML = '';
                 
-                const allSelected = state.historyFilterTag === null;
-                tagsHTML += `<button type="button" data-tag="all" class="tag-btn history-filter-btn ${allSelected ? 'selected' : ''}">Todos</button>`;
+                const btnClasses = 'px-4 py-1.5 rounded-full cursor-pointer transition-colors text-sm font-semibold';
+                const selectedClasses = 'bg-accent text-accent-text';
+                const unselectedClasses = 'bg-bg-tertiary text-text-primary hover:opacity-80';
+                
+                tagsHTML += `<button type="button" data-tag="all" class="history-filter-btn ${btnClasses} ${state.historyFilterTag === null ? selectedClasses : unselectedClasses}">Todos</button>`;
 
                 allTags.sort().forEach(tag => {
                     const isSelected = state.historyFilterTag === tag;
-                    tagsHTML += `<button type="button" data-tag="${tag}" class="tag-btn history-filter-btn ${isSelected ? 'selected' : ''}">${tag}</button>`;
+                    tagsHTML += `<button type="button" data-tag="${tag}" class="history-filter-btn ${btnClasses} ${isSelected ? selectedClasses : unselectedClasses}">${tag}</button>`;
                 });
 
                 container.innerHTML = tagsHTML;
@@ -1380,13 +1250,16 @@
                 if (state.isZenMode) {
                     chartsContainer.style.display = 'none';
                     filterContainer.style.display = 'none';
-                    zenModeToggle.classList.add('active');
+                    zenModeToggle.classList.add('text-accent');
+                    zenModeToggle.classList.remove('text-text-muted');
+                    if (state.pieChart) { state.pieChart.destroy(); state.pieChart = null; }
                 } else {
                     chartsContainer.style.display = 'block';
-                    zenModeToggle.classList.remove('active');
+                    zenModeToggle.classList.remove('text-accent');
+                    zenModeToggle.classList.add('text-text-muted');
                 }
 
-
+                feather.replace();
 
                 renderCalendar();
                 renderHistoryFilters();
@@ -1411,16 +1284,21 @@
                     : chartCheckins;
 
                 if (monthCheckins.length === 0) {
-                    renderEmptyState(noHistoryEl, 'archive', 'Nenhum registro encontrado ainda.');
+                    // The content is now static HTML, we just need to show/hide it.
                     noHistoryEl.style.display = 'block';
                     historyContentEl.style.display = 'none';
+                    feather.replace();
                     return;
                 }
                 
                 if (listCheckins.length === 0) {
-                    renderEmptyState(noHistoryEl, 'filter', 'Nenhum registro encontrado para a seleção atual.');
+                    noHistoryEl.innerHTML = `
+                        <i data-feather="filter" class="w-16 h-16 mx-auto mb-4"></i>
+                        <p>Nenhum registro encontrado para a seleção atual.</p>
+                    `;
                     noHistoryEl.style.display = 'block';
                     historyContentEl.style.display = 'none';
+                    feather.replace();
                     return;
                 }
 
@@ -1430,19 +1308,21 @@
                 const sortedCheckins = [...listCheckins].sort((a, b) => b.createdAt - a.createdAt);
 
                 listContainer.innerHTML = sortedCheckins.map(checkin => `
-                    <div class="history-item" style="border-left-color: ${getMoodBorderColor(checkin.mood)};">
-                        <div class="history-item-content">
+                    <div class="bg-bg-secondary p-4 rounded-lg border ${getMoodBorderColor(checkin.mood)} flex items-start gap-4">
+                        <div class="w-3 h-3 rounded-full ${getMoodColor(checkin.mood)} mt-2 flex-shrink-0"></div>
+                        <div class="flex-grow">
                             <p class="font-bold">${getMoodName(checkin.mood)} - ${checkin.createdAt.toLocaleDateString('pt-BR')}</p>
-                            <p class="text-secondary" style="font-size: 0.875rem;">${checkin.notes || 'Nenhuma nota adicionada.'}</p>
-                            ${checkin.tags.length > 0 ? `<div style="margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.25rem;">${checkin.tags.map(t => `<span style="font-size: 0.75rem; background-color: rgb(var(--color-bg-tertiary)); color: rgb(var(--color-text-primary)); padding: 0.125rem 0.5rem; border-radius: 9999px;">${t}</span>`).join('')}</div>` : ''}
+                            <p class="text-text-secondary text-sm">${checkin.notes || 'Nenhuma nota adicionada.'}</p>
+                            ${checkin.tags.length > 0 ? `<div class="mt-2 flex flex-wrap gap-1">${checkin.tags.map(t => `<span class="text-xs bg-bg-tertiary text-text-primary px-2 py-0.5 rounded-full">${t}</span>`).join('')}</div>` : ''}
                         </div>
-                        <div class="history-item-actions">
-                            <button data-action="edit" data-id="${checkin.id}" class="edit-btn"><svg class="icon" style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
-                            <button data-action="delete" data-id="${checkin.id}" class="delete-btn"><svg class="icon" style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+                        <div class="flex-shrink-0 flex items-center gap-3">
+                            <button data-action="edit" data-id="${checkin.id}" class="edit-btn text-text-muted hover:text-accent"><i data-feather="edit-2" class="w-5 h-5"></i></button>
+                            <button data-action="delete" data-id="${checkin.id}" class="delete-btn text-text-muted hover:text-red-500"><i data-feather="trash-2" class="w-5 h-5"></i></button>
                         </div>
                     </div>
                 `).join('');
                 
+                feather.replace(); // Render edit/delete icons
                 if (!state.isZenMode) {
                     renderCharts(chartCheckins);
                 }
@@ -1460,6 +1340,7 @@
                 if (weeklyCheckins.length === 0) {
                     diagnosisContent.style.display = 'none';
                     noDataEl.style.display = 'block';
+                    feather.replace();
                     return;
                 }
 
@@ -1471,25 +1352,32 @@
                     return acc;
                 }, { verde: 0, amarelo: 0, vermelho: 0 });
 
-                const barContainer = document.getElementById('weekly-bar-chart-container');
-                const maxCount = Math.max(1, moodCounts.verde, moodCounts.amarelo, moodCounts.vermelho);
-                barContainer.innerHTML = `
-                    <div class="simple-bar-chart">
-                        <div class="bar-item">
-                            <div class="bar" style="height: ${ (moodCounts.verde / maxCount) * 100 }%; background-color: #22c55e;"></div>
-                            <span>Bem</span>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: ${ (moodCounts.amarelo / maxCount) * 100 }%; background-color: #f59e0b;"></div>
-                            <span>Ok</span>
-                        </div>
-                        <div class="bar-item">
-                            <div class="bar" style="height: ${ (moodCounts.vermelho / maxCount) * 100 }%; background-color: #ef4444;"></div>
-                            <span>Mal</span>
-                        </div>
-                    </div>
-                `;
+                const barCtx = document.getElementById('weekly-bar-chart').getContext('2d');
+                if (state.weeklyBarChart) state.weeklyBarChart.destroy();
 
+                const rootStyles = getComputedStyle(document.documentElement);
+                const chartTextColor = `rgb(${rootStyles.getPropertyValue('--chart-text-rgb')})`;
+                const chartGridColor = rootStyles.getPropertyValue('--chart-grid-rgba');
+
+                state.weeklyBarChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Bem', 'Ok', 'Mal'],
+                        datasets: [{
+                            label: 'Contagem de Emoções',
+                            data: [moodCounts.verde, moodCounts.amarelo, moodCounts.vermelho],
+                            backgroundColor: [ 'rgb(34, 197, 94)', 'rgb(251, 191, 36)', 'rgb(239, 68, 68)' ],
+                            borderRadius: 5,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1, color: chartTextColor }, grid: { color: chartGridColor } },
+                            x: { ticks: { color: chartTextColor }, grid: { display: false } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
 
                 const titleEl = document.getElementById('diagnosis-title');
                 const textEl = document.getElementById('diagnosis-text');
@@ -1518,39 +1406,140 @@
                 textEl.textContent = diagnosis.text;
             };
 
-            const renderCharts = (checkinsToRender) => {
-                const trendContainer = document.getElementById('trend-chart-container');
-                const pieContainer = document.getElementById('mood-pie-chart-container');
-                
-                // Trend Chart
-                if (checkinsToRender.length > 0) {
-                    trendContainer.innerHTML = `<ul style="list-style: none; padding: 1rem; background-color: rgb(var(--color-bg-tertiary)); border-radius: 0.5rem;">${[...checkinsToRender].sort((a,b) => a.createdAt - b.createdAt).map(c => `<li>${c.createdAt.toLocaleDateString('pt-BR', {day: '2-digit', month: 'short'})}: <span style="font-weight: 600; color: ${getMoodBorderColor(c.mood).replace('border-', '')};">${getMoodName(c.mood)}</span></li>`).join('')}</ul>`;
-                } else {
-                    trendContainer.innerHTML = `<p class="text-muted text-center">Sem dados</p>`;
+            const renderStatistics = () => {
+                const statsContent = document.getElementById('stats-content');
+                const noStatsData = document.getElementById('no-stats-data');
+
+                if (state.checkins.length < 3) { // Require a few checkins for meaningful stats
+                    statsContent.style.display = 'none';
+                    noStatsData.style.display = 'block';
+                    feather.replace();
+                    return;
                 }
+
+                statsContent.style.display = 'block';
+                noStatsData.style.display = 'none';
+
+                // General Stats
+                document.getElementById('stats-total-checkins').textContent = state.checkins.length;
+                const firstCheckin = [...state.checkins].sort((a, b) => a.createdAt - b.createdAt)[0];
+                document.getElementById('stats-first-checkin').textContent = firstCheckin.createdAt.toLocaleDateString('pt-BR');
+
+                // Mood-Tag Correlation
+                const moodTagCounts = { verde: {}, amarelo: {}, vermelho: {} };
+
+                state.checkins.forEach(checkin => {
+                    if (checkin.tags.length > 0) {
+                        checkin.tags.forEach(tag => {
+                            moodTagCounts[checkin.mood][tag] = (moodTagCounts[checkin.mood][tag] || 0) + 1;
+                        });
+                    }
+                });
+
+                const getMostCommonTag = (tagCountObject) => {
+                    const tags = Object.keys(tagCountObject);
+                    if (tags.length === 0) return 'Nenhuma tag registrada';
+                    return tags.reduce((a, b) => tagCountObject[a] > tagCountObject[b] ? a : b);
+                };
+
+                const moodStats = [
+                    { mood: 'verde', title: 'Quando você se sente Bem', icon: 'smile', color: 'green-500' },
+                    { mood: 'amarelo', title: 'Quando você está em Atenção', icon: 'meh', color: 'amber-400' },
+                    { mood: 'vermelho', title: 'Quando você se sente Mal', icon: 'frown', color: 'red-500' }
+                ];
+
+                const moodTagsContainer = document.getElementById('stats-mood-tags');
+                moodTagsContainer.innerHTML = moodStats.map(stat => {
+                    const mostCommonTag = getMostCommonTag(moodTagCounts[stat.mood]);
+                    return `
+                        <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
+                            <div class="flex items-center gap-3 mb-3">
+                                <i data-feather="${stat.icon}" class="w-6 h-6 text-${stat.color}"></i>
+                                <h4 class="text-lg font-bold">${stat.title}</h4>
+                            </div>
+                            <p class="text-text-secondary">A tag mais associada a este humor é:</p>
+                            <p class="text-2xl font-bold text-accent mt-1">${mostCommonTag}</p>
+                        </div>
+                    `;
+                }).join('');
+
+                feather.replace();
+            };
+
+
+            const renderCharts = (checkinsToRender) => {
+                const pieCtx = document.getElementById('mood-pie-chart').getContext('2d');
+
+                const rootStyles = getComputedStyle(document.documentElement);
+                const chartTextColor = `rgb(${rootStyles.getPropertyValue('--chart-text-rgb')})`;
+                const chartGridColor = rootStyles.getPropertyValue('--chart-grid-rgba');
+
+                const moodToValue = (mood) => ({ verde: 3, amarelo: 2, vermelho: 1 }[mood]);
 
                 // Pie Chart
                 const moodCounts = checkinsToRender.reduce((acc, c) => {
                     acc[c.mood] = (acc[c.mood] || 0) + 1;
                     return acc;
                 }, {});
-                const total = checkinsToRender.length;
 
-                if (total > 0) {
-                    pieContainer.innerHTML = `
-                        <div class="simple-pie-chart">
-                            ${Object.keys(moodCounts).map(mood => {
-                                const percentage = ((moodCounts[mood] / total) * 100).toFixed(0);
-                                const color = { verde: '#22c55e', amarelo: '#f59e0b', vermelho: '#ef4444' }[mood];
-                                return `<div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
-                                    <span style="width: 12px; height: 12px; border-radius: 50%; background-color: ${color}; margin-right: 0.5rem;"></span>
-                                    <span>${getMoodName(mood)}: <strong>${percentage}%</strong></span>
-                                </div>`;
-                            }).join('')}
-                        </div>
+                if (state.pieChart) state.pieChart.destroy();
+                state.pieChart = new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(moodCounts).map(getMoodName),
+                        datasets: [{
+                            data: Object.values(moodCounts),
+                            backgroundColor: [
+                                'rgb(34, 197, 94)',  // green
+                                'rgb(251, 191, 36)', // amber
+                                'rgb(239, 68, 68)',   // red
+                            ],
+                        }]
+                    },
+                    options: { 
+                        plugins: { 
+                            legend: { 
+                                position: 'bottom',
+                                labels: { color: chartTextColor }
+                            } 
+                        } 
+                    }
+                });
+
+                // Tag Cloud
+                const tagCloudContainer = document.getElementById('tag-cloud-container');
+                const tagCounts = {};
+                checkinsToRender.forEach(checkin => {
+                    checkin.tags.forEach(tag => {
+                        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                    });
+                });
+
+                const sortedTags = Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a]);
+                
+                if (sortedTags.length > 0) {
+                    const maxCount = tagCounts[sortedTags[0]];
+                    const minCount = tagCounts[sortedTags[sortedTags.length - 1]];
+
+                    // Function to map count to font size
+                    const getFontSize = (count) => {
+                        const minSize = 14; // min font size in px
+                        const maxSize = 32; // max font size in px
+                        if (maxCount === minCount) return (minSize + maxSize) / 2;
+                        // Scale font size linearly between min and max
+                        return minSize + (maxSize - minSize) * (count - minCount) / (maxCount - minCount);
+                    };
+
+                    const tagCloudHTML = sortedTags.map(tag => 
+                        `<span class="inline-block m-1 p-1 font-bold" style="font-size: ${getFontSize(tagCounts[tag])}px; color: rgb(var(--color-accent)); opacity: ${0.6 + (0.4 * (getFontSize(tagCounts[tag])-14)/(32-14))};">${tag}</span>`
+                    ).join('');
+
+                    tagCloudContainer.innerHTML = `
+                        <h3 class="text-xl font-bold mb-4 text-center">Tags Mais Usadas</h3>
+                        <div class="p-4 bg-bg-tertiary rounded-lg text-center">${tagCloudHTML}</div>
                     `;
                 } else {
-                    pieContainer.innerHTML = `<p class="text-muted text-center">Sem dados</p>`;
+                    tagCloudContainer.innerHTML = ''; // Clear if no tags
                 }
             };
 
@@ -1559,12 +1548,12 @@
                 const suggestedContainer = document.getElementById('suggested-resources');
                 
                 const createResourceCard = (resource) => `
-                    <a href="${resource.contentUrl}" target="_blank" style="display: block; background-color: rgb(var(--color-bg-secondary)); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgb(var(--color-border-primary)); text-decoration: none;">
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            <svg class="icon" style="width: 1.25rem; height: 1.25rem; color: rgb(var(--color-accent));" viewBox="0 0 24 24">${iconLibrary[resource.icon] || ''}</svg>
-                            <h4 style="font-size: 1.125rem; margin: 0;">${resource.title}</h4>
+                    <a href="${resource.contentUrl}" target="_blank" class="block bg-bg-secondary p-4 rounded-lg border border-border-primary hover:shadow-lg transition-shadow">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i data-feather="${resource.icon}" class="w-5 h-5 text-accent"></i>
+                            <h4 class="font-bold text-lg">${resource.title}</h4>
                         </div>
-                        <p style="font-size: 0.875rem; margin: 0;">${resource.description}</p>
+                        <p class="text-text-secondary text-sm">${resource.description}</p>
                     </a>
                 `;
                 
@@ -1582,7 +1571,7 @@
 
                     if (contextualResources.length > 0) {
                         suggestionHTML += `
-                            <div style="margin-bottom: 2rem;">
+                            <div class="mb-8">
                                 <h3 class="text-xl font-bold mb-4">Sugestões para seu Contexto</h3>
                                 <div class="space-y-4">
                                     ${contextualResources.map(createResourceCard).join('')}
@@ -1597,14 +1586,14 @@
 
                     if (calmResources.length > 0) {
                         suggestionHTML += `
-                            <div style="margin-bottom: 2rem;">
+                            <div class="mb-8">
                                 <h3 class="text-xl font-bold mb-4">Para Acalmar a Mente</h3>
                                 <div class="space-y-4">${calmResources.map(createResourceCard).join('')}</div>
                             </div>`;
                     }
                     if (releaseResources.length > 0) {
                         suggestionHTML += `
-                            <div style="margin-bottom: 2rem;">
+                            <div>
                                 <h3 class="text-xl font-bold mb-4">Para Extravasar o Emocional</h3>
                                 <div class="space-y-4">${releaseResources.map(createResourceCard).join('')}</div>
                             </div>`;
@@ -1612,11 +1601,12 @@
                 }
 
                 if (suggestionHTML) {
-                    suggestedContainer.innerHTML = suggestionHTML + '<hr style="margin: 2rem 0; border-color: rgb(var(--color-border-primary));">';
+                    suggestedContainer.innerHTML = suggestionHTML + '<hr class="my-8 border-border-primary">';
                 } else {
                     suggestedContainer.innerHTML = '';
                 }
                 
+                feather.replace(); // Garante que os ícones dinâmicos sejam renderizados
             };
             
             const handleDeleteCheckin = (checkinId) => {
@@ -1627,11 +1617,19 @@
                 }
             };
 
-            const updateThemeSelector = () => {
-                document.querySelectorAll('.theme-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.theme === state.theme);
+          const updateThemeSelector = () => {
+                const themeButtons = document.querySelectorAll('.theme-btn');
+                themeButtons.forEach(btn => {
+                    if (btn.dataset.theme === state.theme) {
+                        btn.classList.add('border-accent', 'text-accent');
+                        btn.classList.remove('border-border-primary');
+                    } else {
+                        btn.classList.remove('border-accent', 'text-accent');
+                        btn.classList.add('border-border-primary');
+                    }
                 });
             };
+
             
 
             const calculateStreaks = () => {
@@ -1682,11 +1680,14 @@
             };
 
             const showAchievementUnlockedModal = (achievement) => {
+                if (state.isFocusMode) return;
                 document.getElementById('unlocked-achievement-title').textContent = achievement.title;
                 document.getElementById('unlocked-achievement-desc').textContent = achievement.description;
                 const modal = document.getElementById('achievement-unlocked-modal');
                 modal.classList.remove('hidden');
-                document.getElementById('achievement-modal-content').classList.add('modal-enter');
+                const modalContent = document.getElementById('achievement-modal-content');
+                modalContent.classList.add('modal-enter');
+                triggerConfetti();
             };
 
             const updateStreaksAndAchievements = () => {
@@ -1709,16 +1710,17 @@
                 const list = document.getElementById('achievements-list');
                 list.innerHTML = achievementsData.map(ach => {
                     const isUnlocked = state.unlockedAchievements.includes(ach.id);
-                    const unlockedStyle = 'background-color: rgb(var(--color-accent-bg-light)); border-color: rgb(var(--color-accent)); color: rgb(var(--color-accent-text-dark));';
-                    const lockedStyle = 'background-color: rgb(var(--color-bg-tertiary)); border-color: rgb(var(--color-border-primary)); color: rgb(var(--color-text-muted)); opacity: 0.6;';
+                    const unlockedClasses = 'bg-accent-bg-light border-accent text-accent-text-dark';
+                    const lockedClasses = 'bg-bg-tertiary border-border-primary text-text-muted opacity-60';
                     return `
-                        <div style="padding: 1rem; border-radius: 0.5rem; border: 2px solid; display: flex; flex-direction: column; align-items: center; text-align: center; ${isUnlocked ? unlockedStyle : lockedStyle}">
-                            <svg class="icon" style="width: 2.5rem; height: 2.5rem; margin-bottom: 0.75rem;" viewBox="0 0 24 24">${iconLibrary[ach.icon] || ''}</svg>
+                        <div class="p-4 rounded-lg border-2 ${isUnlocked ? unlockedClasses : lockedClasses} flex flex-col items-center text-center">
+                            <i data-feather="${ach.icon}" class="w-10 h-10 mb-3"></i>
                             <h4 class="font-bold">${ach.title}</h4>
-                            <p style="font-size: 0.75rem;">${ach.description}</p>
+                            <p class="text-xs">${ach.description}</p>
                         </div>
                     `;
                 }).join('');
+                feather.replace();
             };
 
             // --- EVENT LISTENERS ---
@@ -1728,15 +1730,25 @@
 
             const renderMandatoryContacts = () => {
                 const listContainer = document.getElementById('mandatory-contacts-list');
+                const continueBtn = document.getElementById('mandatory-contact-continue-btn');
                 
                 listContainer.innerHTML = state.favoriteContacts.map(contact => `
-                    <div class="contact-card">
-                        <span class="font-semibold" style="flex-grow: 1;">${contact.name}</span>
-                        <button data-id="${contact.id}" class="remove-mandatory-contact-btn" style="color: #ef4444;">
-                            <svg class="icon" style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <div class="bg-bg-tertiary p-3 rounded-lg flex justify-between items-center">
+                        <span class="font-semibold">${contact.name}</span>
+                        <button data-id="${contact.id}" class="remove-mandatory-contact-btn text-red-500 hover:text-red-600">
+                            <i data-feather="x" class="w-5 h-5"></i>
                         </button>
                     </div>
                 `).join('');
+                feather.replace();
+
+                if (state.favoriteContacts.length > 0) {
+                    continueBtn.disabled = false;
+                    continueBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    continueBtn.disabled = true;
+                    continueBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
             };
 
             document.getElementById('add-mandatory-contact-btn').addEventListener('click', () => {
@@ -1755,28 +1767,37 @@
 
             document.getElementById('mandatory-contacts-list').addEventListener('click', (e) => {
                 const removeBtn = e.target.closest('.remove-mandatory-contact-btn');
-                if (removeBtn) { // This list is simple, so a full re-render is acceptable.
+                if (removeBtn) {
                     const contactId = removeBtn.dataset.id;
                     state.favoriteContacts = state.favoriteContacts.filter(c => c.id.toString() !== contactId);
                     renderMandatoryContacts();
                 }
             });
 
-            const proceedToMainApp = () => {
-                state.isAuthenticated = true;
-                header.classList.remove('hidden');
-                bottomNavBar.classList.remove('hidden');
+            document.getElementById('mandatory-contact-continue-btn').addEventListener('click', () => {
+                if (state.favoriteContacts.length > 0) {
+                    finishOnboarding();
+                }
+            });
+
+            document.getElementById('skip-mandatory-contact-btn').addEventListener('click', () => {
+                finishOnboarding();
+                header.style.display = 'block';
+                bottomNav.style.display = 'flex';
                 navSpacer.style.display = 'block';
                 navigateTo('checkin-screen');
-            };
-
-            document.getElementById('mandatory-contact-continue-btn').addEventListener('click', proceedToMainApp);
-            document.getElementById('skip-contact-btn').addEventListener('click', proceedToMainApp);
+            });
 
             document.querySelectorAll('.mood-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     state.currentMood = e.currentTarget.dataset.mood;
-                    document.getElementById('save-checkin-btn').className = `button-primary ${state.currentMood}`;
+                    const moodColors = {
+                        verde: 'bg-gradient-to-br from-green-400 to-green-600',
+                        amarelo: 'bg-gradient-to-br from-amber-300 to-amber-500',
+                        vermelho: 'bg-gradient-to-br from-red-400 to-red-600'
+                    };
+                    const moodColorClass = moodColors[state.currentMood] || 'bg-gray-500 hover:bg-gray-600';
+                    document.getElementById('save-checkin-btn').className = `w-full text-accent-text font-bold py-4 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${moodColorClass}`;
                     navigateTo('details-screen');
                 });
             });
@@ -1789,7 +1810,7 @@
             });
 
             document.getElementById('predefined-tags-container').addEventListener('click', (e) => {
-                const target = e.target.closest('.tag-btn');
+                const target = e.target.closest('.predefined-tag-btn');
                 if (!target) return;
 
                 const tag = target.dataset.tag;
@@ -1812,6 +1833,7 @@
                 };
                 state.checkins.push(newCheckin);
                 updateStreaksAndAchievements();
+                vibrate(100); // Vibrate on successful save
                 saveState();
 
                 // Reset form state
@@ -1829,6 +1851,13 @@
                     renderContextualTips();
                     navigateTo('contextual-tips-screen');
                 } else {
+                    navigateTo('checkin-screen');
+                }
+            });
+
+            document.getElementById('app-container').addEventListener('click', (e) => {
+                const goToBtn = e.target.closest('.go-to-checkin-btn');
+                if (goToBtn) {
                     navigateTo('checkin-screen');
                 }
             });
@@ -1954,51 +1983,13 @@
                 modalContent.addEventListener('animationend', () => modal.classList.add('hidden'), { once: true });
             });
 
-            const createGoalElement = (goal) => {
-                const div = document.createElement('div');
-                div.className = 'goal-item';
-                const completedStyle = goal.completed ? 'text-decoration: line-through; color: rgb(var(--color-text-muted));' : '';
-                div.innerHTML = `
-                    <input type="checkbox" data-id="${goal.id}" class="goal-checkbox" style="width: 1.5rem; height: 1.5rem; border-radius: 0.25rem; color: rgb(var(--color-accent));" ${goal.completed ? 'checked' : ''}>
-                    <span style="flex-grow: 1; ${completedStyle}">${goal.text}</span>
-                    <button data-id="${goal.id}" class="remove-goal-btn" style="color: rgb(var(--color-text-muted));">
-                        <svg class="icon" style="width: 1.25rem; height: 1.25rem;" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                    </button>
-                `;
-                return div;
-            };
-
-            const renderGoals = () => {
-                const list = document.getElementById('goals-list');
-                if (!list) return;
-
-                if (state.goals.length === 0) {
-                    list.innerHTML = `<div class="text-center text-muted" style="padding: 2rem;">
-                        <svg class="icon" style="width: 3rem; height: 3rem; margin: 0 auto 1rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                        <p>Nenhuma meta definida ainda. Adicione uma acima!</p>
-                    </div>`;
-                    return;
-                }
-
-                list.innerHTML = state.goals.map(goal => createGoalElement(goal).outerHTML).join('');
-            };
-
             document.getElementById('add-new-goal-btn').addEventListener('click', () => {
                 const input = document.getElementById('new-goal-input');
                 const text = input.value.trim();
                 if (text) {
-                    const newGoal = { id: Date.now(), text, completed: false };
-                    state.goals.push(newGoal);
+                    state.goals.push({ id: Date.now(), text, completed: false });
                     saveState();
-
-                    const list = document.getElementById('goals-list');
-                    if (state.goals.length === 1) {
-                        list.innerHTML = ''; // Clear "empty" message
-                    }
-                    const goalElement = createGoalElement(newGoal);
-                    goalElement.classList.add('list-item-enter');
-                    list.appendChild(goalElement);
-
+                    renderGoals();
                     input.value = '';
                 }
             });
@@ -2012,66 +2003,84 @@
                     const goal = state.goals.find(g => g.id.toString() === goalId);
                     if (goal) {
                         goal.completed = !goal.completed;
+                        if (goal.completed) {
+                            vibrate();
+                            triggerConfetti();
+                        }
                         saveState();
-                        const span = checkbox.nextElementSibling;
-                        span.style.textDecoration = goal.completed ? 'line-through' : 'none';
-                        span.style.color = goal.completed ? 'rgb(var(--color-text-muted))' : 'rgb(var(--color-text-primary))';
+                        renderGoals();
                     }
                 }
 
                 if (removeBtn) {
                     const goalId = removeBtn.dataset.id;
-                    const goalElement = removeBtn.closest('.goal-item');
-                    goalElement.classList.add('list-item-leave');
-                    goalElement.addEventListener('animationend', () => {
-                        state.goals = state.goals.filter(g => g.id.toString() !== goalId);
-                        saveState();
-                        goalElement.remove();
-                        if (state.goals.length === 0) { renderGoals(); }
-                    }, { once: true });
+                    state.goals = state.goals.filter(g => g.id.toString() !== goalId);
+                    saveState();
+                    renderGoals();
                 }
             });
 
-            const createGratitudeElement = (entry) => {
-                const div = document.createElement('div');
-                div.className = 'gratitude-item';
-                div.innerHTML = `
-                    <p style="color: rgb(var(--color-text-primary)); margin: 0;">${entry.text}</p>
-                    <p style="font-size: 0.75rem; color: rgb(var(--color-text-muted)); margin-top: 0.5rem; text-align: right;">${new Date(entry.createdAt).toLocaleDateString('pt-BR')}</p>
-                `;
-                return div;
+            const renderGoals = () => {
+                const list = document.getElementById('goals-list');
+                if (!list) return;
+
+                if (state.goals.length === 0) {
+                    list.innerHTML = `<div class="text-center text-text-muted p-8">
+                        <i data-feather="target" class="w-12 h-12 mx-auto mb-4"></i>
+                        <p>Nenhuma meta definida ainda. Adicione uma acima!</p>
+                    </div>`;
+                    feather.replace();
+                    return;
+                }
+
+                list.innerHTML = state.goals.map(goal => {
+                    const completedClass = goal.completed ? 'line-through text-text-muted' : '';
+                    return `
+                        <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex items-center gap-4">
+                            <input type="checkbox" data-id="${goal.id}" class="goal-checkbox h-6 w-6 rounded text-accent focus:ring-accent border-border-primary" ${goal.completed ? 'checked' : ''}>
+                            <span class="flex-grow ${completedClass}">${goal.text}</span>
+                            <button data-id="${goal.id}" class="remove-goal-btn text-text-muted hover:text-red-500">
+                                <i data-feather="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                feather.replace();
             };
+
             const renderGratitudeJournal = () => {
                 const list = document.getElementById('gratitude-entries-list');
                 if (!list) return;
 
                 if (state.gratitudeEntries.length === 0) {
-                    list.innerHTML = `<div class="text-center text-muted" style="padding: 2rem;">
-                        <svg class="icon" style="width: 3rem; height: 3rem; margin: 0 auto 1rem;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    list.innerHTML = `<div class="text-center text-text-muted p-8">
+                        <i data-feather="sun" class="w-12 h-12 mx-auto mb-4"></i>
                         <p>Nenhum registro de gratidão ainda. Adicione um para começar!</p>
                     </div>`;
+                    feather.replace();
                     return;
                 }
 
                 const sortedEntries = [...state.gratitudeEntries].sort((a, b) => b.createdAt - a.createdAt);
-                list.innerHTML = sortedEntries.map(entry => createGratitudeElement(entry).outerHTML).join('');
+
+                list.innerHTML = sortedEntries.map(entry => `
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary animate-fadeIn">
+                        <p class="text-text-primary">${entry.text}</p>
+                        <p class="text-xs text-text-muted mt-2 text-right">${new Date(entry.createdAt).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                `).join('');
             };
 
             document.getElementById('add-new-gratitude-entry-btn').addEventListener('click', () => {
                 const input = document.getElementById('new-gratitude-entry-input');
                 const text = input.value.trim();
                 if (text) {
-                    const newEntry = { id: Date.now(), text, createdAt: new Date() };
-                    state.gratitudeEntries.push(newEntry);
+                    state.gratitudeEntries.push({ id: Date.now(), text, createdAt: new Date() });
                     saveState();
-                    
-                    const list = document.getElementById('gratitude-entries-list');
-                    if (state.gratitudeEntries.length === 1) { list.innerHTML = ''; }
-                    const entryElement = createGratitudeElement(newEntry);
-                    entryElement.classList.add('list-item-enter');
-                    list.prepend(entryElement); // Prepend for journal style
-
+                    renderGratitudeJournal();
                     input.value = '';
+                    vibrate();
+                    triggerConfetti();
                 }
             });
 
@@ -2081,9 +2090,37 @@
                     state.theme = themeBtn.dataset.theme;
                     applyTheme(state.theme);
                     saveState();
-                    if (state.currentScreen === 'history-screen' || state.currentScreen === 'diagnosis-screen') {
+                    if (['history-screen', 'diagnosis-screen', 'stats-screen'].includes(state.currentScreen)) {
                         navigateTo(state.currentScreen); // Re-render to update charts
                     }
+                }
+            });
+
+            document.getElementById('focus-mode-toggle').addEventListener('click', () => {
+                state.isFocusMode = !state.isFocusMode;
+                saveState();
+                renderFocusModeToggle();
+            });
+
+            document.getElementById('reminder-toggle').addEventListener('click', () => {
+                const isEnabled = !state.reminderEnabled;
+                if (isEnabled) {
+                    requestNotificationPermission();
+                } else {
+                    state.reminderEnabled = false;
+                    renderReminderSettings();
+                    scheduleNextNotification(); // This will clear any pending notification
+                }
+            });
+
+            document.getElementById('reminder-time-input').addEventListener('change', (e) => {
+                state.reminderTime = e.target.value;
+                scheduleNextNotification();
+            });
+
+            document.getElementById('settings-screen').addEventListener('click', (e) => {
+                if (e.target.closest('#export-data-btn')) {
+                    exportDataAsJSON();
                 }
             });
 
@@ -2093,12 +2130,7 @@
                 if (newTag && !state.predefinedTags.find(t => t.toLowerCase() === newTag.toLowerCase())) {
                     state.predefinedTags.push(newTag);
                     saveState();
-                    
-                    const list = document.getElementById('tag-management-list');
-                    const tagElement = createTagManagementElement(newTag);
-                    tagElement.classList.add('list-item-enter');
-                    list.appendChild(tagElement);
-
+                    renderTagManagement();
                     input.value = '';
                 }
             });
@@ -2107,95 +2139,207 @@
                 const removeBtn = e.target.closest('.remove-managed-tag-btn');
                 if (removeBtn) {
                     const tagToRemove = removeBtn.dataset.tag;
-                    const tagElement = removeBtn.closest('.tag-management-item');
-                    tagElement.classList.add('list-item-leave');
-                    tagElement.addEventListener('animationend', () => {
-                        state.predefinedTags = state.predefinedTags.filter(t => t !== tagToRemove);
-                        saveState();
-                        tagElement.remove();
-                    }, { once: true });
+                    state.predefinedTags = state.predefinedTags.filter(t => t !== tagToRemove);
+                    saveState();
+                    renderTagManagement();
                 }
             });
 
-            // --- DATA EXPORT & IMPORT ---
-            const exportData = () => {
-                // Create a deep copy to avoid modifying the original state's Date objects
-                const dataToExport = JSON.parse(JSON.stringify({
+            const renderFocusModeToggle = () => {
+                const toggle = document.getElementById('focus-mode-toggle');
+                toggle.setAttribute('aria-checked', state.isFocusMode);
+            };
+
+            // --- NOTIFICATION LOGIC ---
+            const renderReminderSettings = () => {
+                const toggle = document.getElementById('reminder-toggle');
+                const timeContainer = document.getElementById('reminder-time-container');
+                const timeInput = document.getElementById('reminder-time-input');
+
+                toggle.setAttribute('aria-checked', state.reminderEnabled);
+                timeInput.value = state.reminderTime;
+
+                if (state.reminderEnabled) {
+                    timeContainer.style.display = 'block';
+                } else {
+                    timeContainer.style.display = 'none';
+                }
+            };
+
+            const requestNotificationPermission = async () => {
+                if (!('Notification' in window)) {
+                    alert('Este navegador não suporta notificações.');
+                    return;
+                }
+
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    state.reminderEnabled = true;
+                    scheduleNextNotification();
+                } else {
+                    state.reminderEnabled = false;
+                }
+                renderReminderSettings();
+            };
+
+            const scheduleNextNotification = () => {
+                // Clear any previously scheduled notification
+                if (state.nextNotificationTimeoutId) {
+                    clearTimeout(state.nextNotificationTimeoutId);
+                }
+
+                if (!state.reminderEnabled || Notification.permission !== 'granted') {
+                    return;
+                }
+
+                const [hours, minutes] = state.reminderTime.split(':').map(Number);
+                const now = new Date();
+                let notificationTime = new Date();
+                notificationTime.setHours(hours, minutes, 0, 0);
+
+                // If the time has already passed for today, schedule it for tomorrow
+                if (now > notificationTime) {
+                    notificationTime.setDate(notificationTime.getDate() + 1);
+                }
+
+                const timeToNotification = notificationTime.getTime() - now.getTime();
+
+                state.nextNotificationTimeoutId = setTimeout(() => {
+                    new Notification('Sinais de Emoções', {
+                        body: 'Como você está se sentindo agora? Tire um momento para registrar sua emoção.',
+                        icon: './favicon.ico' // Optional: Add an icon
+                    });
+                    scheduleNextNotification(); // Reschedule for the next day
+                }, timeToNotification);
+            };
+
+            const exportDataAsJSON = () => {
+                // Gather only the persistent and relevant user data
+                const dataToExport = {
                     checkins: state.checkins,
                     goals: state.goals,
                     gratitudeEntries: state.gratitudeEntries,
                     favoriteContacts: state.favoriteContacts,
                     predefinedTags: state.predefinedTags,
-                    theme: state.theme,
                     unlockedAchievements: state.unlockedAchievements,
                     streaks: state.streaks,
-                    isAuthenticated: state.isAuthenticated,
-                }));
-
-                const dataStr = JSON.stringify(dataToExport, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                const today = new Date().toISOString().split('T')[0];
-                link.download = `sinais-backup-${today}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-            };
-
-            const importFileInput = document.getElementById('import-file-input');
-            document.getElementById('export-data-btn').addEventListener('click', exportData);
-            document.getElementById('import-data-btn').addEventListener('click', () => importFileInput.click());
-
-            importFileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        if (!importedData || typeof importedData !== 'object' || !importedData.checkins) {
-                            alert('Arquivo de backup inválido ou corrompido.');
-                            return;
-                        }
-                        if (!confirm('Isso substituirá todos os seus dados atuais. Deseja continuar?')) return;
-
-                        // Restore state, converting date strings back to Date objects
-                        state.checkins = (importedData.checkins || []).map(c => ({ ...c, createdAt: new Date(c.createdAt) }));
-                        state.goals = importedData.goals || [];
-                        state.gratitudeEntries = (importedData.gratitudeEntries || []).map(g => ({ ...g, createdAt: new Date(g.createdAt) }));
-                        state.favoriteContacts = importedData.favoriteContacts || [];
-                        state.predefinedTags = importedData.predefinedTags || ["Trabalho", "Família", "Relacionamentos", "Saúde", "Lazer", "Estudos", "Finanças", "Pessoal"];
-                        state.theme = importedData.theme || 'light';
-                        state.unlockedAchievements = importedData.unlockedAchievements || [];
-                        state.streaks = importedData.streaks || { current: 0, longest: 0 };
-                        state.isAuthenticated = importedData.isAuthenticated || false;
-
-                        alert('Dados importados com sucesso!');
-                        initializeApp(); // Re-render everything
-                    } catch (error) {
-                        alert('Ocorreu um erro ao ler o arquivo de backup.');
-                    } finally {
-                        importFileInput.value = '';
+                    settings: {
+                        theme: state.theme,
+                        isFocusMode: state.isFocusMode,
                     }
                 };
-                reader.readAsText(file);
+
+                const jsonString = JSON.stringify(dataToExport, null, 2); // Pretty print JSON
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sinais_de_emocoes_backup_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                a.remove();
+            };
+
+            // --- TOUR LOGIC ---
+            const finishOnboarding = () => {
+                state.isAuthenticated = true;
+                header.style.display = 'block';
+                bottomNav.style.display = 'flex';
+                navSpacer.style.display = 'block';
+                navigateTo('checkin-screen');
+                startTour();
+            };
+
+            const startTour = () => {
+                state.tourStep = 0;
+                document.getElementById('tour-overlay').style.display = 'block';
+                showTourStep(state.tourStep);
+            };
+
+            const endTour = () => {
+                state.tourStep = -1;
+                document.getElementById('tour-overlay').style.display = 'none';
+            };
+
+            const showTourStep = async (stepIndex) => {
+                if (stepIndex < 0 || stepIndex >= tourSteps.length) {
+                    endTour();
+                    return;
+                }
+
+                const step = tourSteps[stepIndex];
+                
+                if (step.action) {
+                    await step.action();
+                    // Give the UI a moment to update after navigation
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+
+                const targetElement = document.querySelector(step.element);
+                if (!targetElement) {
+                    console.warn('Tour element not found:', step.element);
+                    endTour();
+                    return;
+                }
+
+                const rect = targetElement.getBoundingClientRect();
+                const spotlight = document.getElementById('tour-spotlight');
+                const tooltip = document.getElementById('tour-tooltip');
+
+                // Update spotlight
+                spotlight.style.top = `${rect.top - 8}px`;
+                spotlight.style.left = `${rect.left - 8}px`;
+                spotlight.style.width = `${rect.width + 16}px`;
+                spotlight.style.height = `${rect.height + 16}px`;
+
+                // Update tooltip content
+                document.getElementById('tour-title').textContent = step.title;
+                document.getElementById('tour-text').textContent = step.text;
+                const nextBtn = document.getElementById('tour-next-btn');
+                nextBtn.textContent = (stepIndex === tourSteps.length - 1) ? 'Finalizar' : 'Próximo';
+
+                // Position tooltip
+                const tooltipRect = tooltip.getBoundingClientRect();
+                let tooltipTop = rect.bottom + 15; // Default below
+                let tooltipLeft = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+
+                // Adjust if it goes off-screen
+                if (tooltipTop + tooltipRect.height > window.innerHeight) {
+                    tooltipTop = rect.top - tooltipRect.height - 15; // Position above
+                }
+                if (tooltipLeft < 10) {
+                    tooltipLeft = 10;
+                }
+                if (tooltipLeft + tooltipRect.width > window.innerWidth - 10) {
+                    tooltipLeft = window.innerWidth - tooltipRect.width - 10;
+                }
+
+                tooltip.style.top = `${tooltipTop}px`;
+                tooltip.style.left = `${tooltipLeft}px`;
+            };
+
+            document.getElementById('tour-next-btn').addEventListener('click', () => {
+                state.tourStep++;
+                showTourStep(state.tourStep);
+            });
+
+            document.getElementById('tour-skip-btn').addEventListener('click', () => {
+                endTour();
             });
 
             // --- APP INITIALIZATION ---
             const initializeApp = () => {
                 applyTheme(state.theme);
+                scheduleNextNotification(); // Check if a notification needs to be scheduled on app start
                 if (state.isAuthenticated) {
-                    header.classList.remove('hidden');
-                    bottomNavBar.classList.remove('hidden');
+                    header.style.display = 'block';
+                    bottomNav.style.display = 'flex';
                     navSpacer.style.display = 'block';
                     navigateTo('checkin-screen');
                 } else {
                     navigateTo('welcome-screen');
                 }
+                feather.replace(); // Initialize icons
             };
 
             loadState();
@@ -2204,3 +2348,4 @@
     </script>
 </body>
 </html>
+                
