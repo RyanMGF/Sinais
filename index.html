@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#14b8a6"/>
     <title>Sinais de Emoções</title>
+
+    <link rel="manifest" href="./manifest.json">
     
     <!-- Tailwind CSS -->
 
@@ -130,10 +133,10 @@
         /* --- SCREEN & ANIMATIONS --- */
         .screen {
             display: none;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); }
         }
 
         /* --- TYPOGRAPHY --- */
@@ -153,7 +156,7 @@
         button {
             border: none;
             background: none;
-            cursor: pointer;
+            cursor: pointer; /* Adicionado para consistência */
             font-family: 'Poppins', sans-serif;
             transition: opacity 0.2s, background-color 0.2s, border-color 0.2s;
         }
@@ -166,6 +169,9 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
         }
         .button-primary:hover { background-color: rgb(var(--color-accent-hover)); }
+        .button-primary:active {
+            transform: scale(0.98);
+        }
         .button-primary:disabled { opacity: 0.5; cursor: not-allowed; }
         .mood-btn {
             width: 100%;
@@ -179,7 +185,7 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-        }
+        } /* A transição já está no seletor 'button' geral */
         .mood-btn:hover { transform: scale(1.05); }
         .mood-btn.green { background-color: #16a34a; } .mood-btn.green:hover { background-color: #15803d; }
         .mood-btn.amber { background-color: #d97706; } .mood-btn.amber:hover { background-color: #b45309; }
@@ -235,6 +241,7 @@
             padding: 0.75rem 0;
             text-align: center;
             color: rgb(var(--color-text-muted));
+            transition: color 0.2s ease-in-out; /* Transição suave de cor */
         }
         .nav-btn .icon { margin: 0 auto 0.25rem; width: 24px; height: 24px; }
         .nav-btn span { font-size: 0.75rem; display: block; }
@@ -276,17 +283,17 @@
 
         /* --- LIST ITEM ANIMATIONS --- */
         .list-item-enter {
-            animation: slideIn 0.4s ease-out forwards;
+            animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         .list-item-leave {
-            animation: slideOut 0.4s ease-in forwards;
+            animation: slideOut 0.3s ease-out forwards;
         }
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(-20px); }
             to { opacity: 1; transform: translateX(0); }
         }
         @keyframes slideOut {
-            from { opacity: 1; transform: scale(1); }
+            from { opacity: 1; transform: scale(1); max-height: 100px; }
             to {
                 opacity: 0;
                 transform: scale(0.9);
@@ -312,6 +319,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 0.5rem;
+            transition: box-shadow 0.2s;
             overflow: hidden; /* For animations */
         }
 
@@ -323,6 +331,7 @@
             font-weight: 600;
             background-color: rgb(var(--color-bg-tertiary));
             color: rgb(var(--color-text-primary));
+            transition: background-color 0.2s, color 0.2s; /* Transição suave */
         }
         .tag-btn.selected {
             background-color: rgb(var(--color-accent));
@@ -339,6 +348,7 @@
             align-items: center;
             justify-content: space-between;
             text-align: left;
+            transition: border-color 0.2s; /* Transição suave */
         }
         .journey-link:hover { border-color: rgb(var(--color-accent)); }
         .journey-link .icon { width: 2rem; height: 2rem; color: rgb(var(--color-accent)); margin-right: 1rem; }
@@ -357,9 +367,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 9999px;
+            border-radius: 50%; /* Garante um círculo perfeito */
+            border: 2px solid transparent;
+            transition: background-color 0.2s, border-color 0.2s;
         }
-        .calendar-day.today { background-color: rgb(var(--color-accent-bg-light)); }
+        .calendar-day.today span {
+            font-weight: 700;
+            color: rgb(var(--color-accent));
+        }
         .calendar-day.selected { border: 2px solid rgb(var(--color-accent)); }
         .mood-dot {
             position: absolute;
@@ -379,6 +394,10 @@
             display: flex;
             gap: 1rem;
             align-items: flex-start;
+            transition: box-shadow 0.2s;
+        }
+        .history-item:hover {
+            box-shadow: 0 4px 10px -2px rgba(var(--color-text-primary), 0.05);
         }
         .history-item-content { flex-grow: 1; }
         .history-item-actions { display: flex; gap: 0.75rem; }
@@ -416,6 +435,27 @@
         .theme-btn.active {
             border-color: rgb(var(--color-accent));
             color: rgb(var(--color-accent));
+        }
+
+        /* --- SNACKBAR (Update Notification) --- */
+        .snackbar {
+            position: fixed;
+            bottom: 80px; /* Acima da barra de navegação */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(var(--color-bg-tertiary));
+            color: rgb(var(--color-text-primary));
+            padding: 1rem;
+            border-radius: 0.5rem;
+            z-index: 1000;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: snackbar-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes snackbar-in {
+            from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; }
         }
 
         .space-y-2 > *:not(:first-child) { margin-top: 0.5rem; }
@@ -1040,14 +1080,25 @@
 
             // --- DATA PERSISTENCE (localStorage) ---
             const loadState = () => {
-                // Para o modo de exposição, os dados não são carregados para garantir
-                // que a tela de boas-vindas seja sempre exibida no início.
-                // O estado inicial padrão será usado a cada recarga.
+                const savedState = localStorage.getItem('sinaisAppState');
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    // Converte as strings de data de volta para objetos Date
+                    parsedState.checkins = (parsedState.checkins || []).map(c => ({ ...c, createdAt: new Date(c.createdAt) }));
+                    parsedState.gratitudeEntries = (parsedState.gratitudeEntries || []).map(g => ({ ...g, createdAt: new Date(g.createdAt) }));
+                    
+                    // Mescla o estado salvo com o estado inicial, garantindo que novas propriedades sejam adicionadas
+                    Object.assign(state, parsedState);
+                }
             };
 
             const saveState = () => {
-                // Para o modo de exposição, os dados não são salvos para garantir
-                // que cada sessão seja nova e independente, sem persistir informações.
+                try {
+                    const stateToSave = JSON.stringify(state);
+                    localStorage.setItem('sinaisAppState', stateToSave);
+                } catch (error) {
+                    console.error("Não foi possível salvar o estado:", error);
+                }
             };
 
             const applyTheme = (theme) => {
