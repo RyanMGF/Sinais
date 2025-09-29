@@ -1,0 +1,285 @@
+:root {
+    --color-bg-primary: 249 250 251; /* gray-50 */
+    --color-bg-secondary: 255 255 255; /* white */
+    --color-bg-tertiary: 243 244 246; /* gray-100 */
+    --color-bg-input: 255 255 255; /* white */
+    --color-text-primary: 17 24 39; /* gray-900 */
+    --color-text-secondary: 107 114 128; /* gray-600 */
+    --color-text-muted: 156 163 175; /* gray-400 */
+    --color-border-primary: 229 231 235; /* gray-200 */
+    --color-accent: 20 184 166; /* teal-500 */
+    --color-accent-hover: 15 159 132; /* teal-600 */
+    --color-accent-text: 255 255 255; /* white */
+    --color-accent-bg-light: 204 251 241; /* teal-100 */
+    --color-accent-text-dark: 15 118 110; /* teal-800 */
+    --chart-text-rgb: 55, 65, 81; /* gray-700 */
+    --chart-grid-rgba: rgba(0, 0, 0, 0.1);
+}
+[data-theme="dark"] {
+    --color-bg-primary: 17 24 39; /* gray-900 */
+    --color-bg-secondary: 31 41 55; /* gray-800 */
+    --color-bg-tertiary: 55 65 81; /* gray-700 */
+    --color-bg-input: 55 65 81; /* gray-700 */
+    --color-text-primary: 229 231 235; /* gray-200 */
+    --color-text-secondary: 156 163 175; /* gray-400 */
+    --color-text-muted: 107 114 128; /* gray-500 */
+    --color-border-primary: 55 65 81; /* gray-700 */
+    --color-accent-bg-light: 13 47 42; /* teal-900 */
+    --color-accent-text-dark: 107 235 208; /* teal-300 */
+    --chart-text-rgb: 209, 213, 219; /* gray-300 */
+    --chart-grid-rgba: rgba(255, 255, 255, 0.1);
+}
+[data-theme="ocean"] {
+    --color-bg-primary: 15 23 42; /* slate-900 */
+    --color-bg-secondary: 30 41 59; /* slate-800 */
+    --color-bg-tertiary: 51 65 85; /* slate-700 */
+    --color-bg-input: 51 65 85; /* slate-700 */
+    --color-text-primary: 226 232 240; /* slate-200 */
+    --color-text-secondary: 148 163 184; /* slate-400 */
+    --color-text-muted: 100 116 139; /* slate-500 */
+    --color-border-primary: 71 85 105; /* slate-600 */
+    --color-accent: 34 211 238; /* cyan-400 */
+    --color-accent-hover: 6 182 212; /* cyan-500 */
+    --color-accent-text: 15 23 42; /* slate-900 */
+    --color-accent-bg-light: 165 243 252; /* cyan-200 */
+    --color-accent-text-dark: 22 78 99; /* cyan-800 */
+    --chart-text-rgb: 203, 213, 225; /* slate-300 */
+    --chart-grid-rgba: rgba(255, 255, 255, 0.1);
+}
+[data-theme="nature"] {
+    --color-bg-primary: 245 245 244; /* stone-100 */
+    --color-bg-secondary: 250 250 249; /* stone-50 */
+    --color-bg-tertiary: 231 229 228; /* stone-200 */
+    --color-bg-input: 255 255 255; /* white */
+    --color-text-primary: 41 37 36; /* stone-800 */
+    --color-text-secondary: 87 83 78; /* stone-600 */
+    --color-text-muted: 168 162 158; /* stone-400 */
+    --color-border-primary: 214 211 209; /* stone-300 */
+    --color-accent: 5 150 105; /* emerald-600 */
+    --color-accent-hover: 4 120 87; /* emerald-700 */
+    --color-accent-text: 255 255 255; /* white */
+    --color-accent-bg-light: 209 250 229; /* emerald-100 */
+    --color-accent-text-dark: 6 95 70; /* emerald-800 */
+    --chart-text-rgb: 68, 64, 60; /* stone-700 */
+    --chart-grid-rgba: rgba(0, 0, 0, 0.08);
+}
+/* Explicitly define the light theme to override system preferences when selected */
+[data-theme="light"] {
+    --color-bg-primary: 249 250 251; /* gray-50 */
+    --color-bg-secondary: 255 255 255; /* white */
+    --color-bg-tertiary: 243 244 246; /* gray-100 */
+    --color-bg-input: 255 255 255; /* white */
+    --color-text-primary: 17 24 39; /* gray-900 */
+    --color-text-secondary: 107 114 128; /* gray-600 */
+    --color-text-muted: 156 163 175; /* gray-400 */
+    --color-border-primary: 229 231 235; /* gray-200 */
+    --color-accent: 20 184 166; /* teal-500 */
+    --color-accent-hover: 15 159 132; /* teal-600 */
+    --color-accent-text: 255 255 255; /* white */
+    --color-accent-bg-light: 204 251 241; /* teal-100 */
+    --color-accent-text-dark: 15 118 110; /* teal-800 */
+    --chart-text-rgb: 55, 65, 81; /* gray-700 */
+    --chart-grid-rgba: rgba(0, 0, 0, 0.1);
+}
+/* Custom styles to apply the Poppins font */
+body {
+    font-family: 'Poppins', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    background-color: rgb(var(--color-bg-primary));
+    color: rgb(var(--color-text-primary));
+}
+/* Custom scrollbar for a cleaner look */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgb(var(--color-bg-tertiary));
+}
+::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-text-muted) / 0.5);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/* Enhanced transition for screen changes */
+.screen {
+    display: none;
+    animation: screen-enter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes screen-enter {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Subtle pulse animation for mood buttons */
+.mood-btn {
+    animation: pulse-grow 2s infinite ease-in-out;
+}
+@keyframes pulse-grow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    75% { transform: scale(1); }
+}
+/* Add a "press" effect to interactive buttons */
+.interactive-btn:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+}
+/* Modal animations */
+.modal-enter {
+    animation: modal-in 0.3s ease-out;
+}
+.modal-leave {
+    animation: modal-out 0.3s ease-in forwards; /* 'forwards' keeps the final state */
+}
+@keyframes modal-in {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes modal-out {
+    from { opacity: 1; transform: scale(1) translateY(0); }
+    to { opacity: 0; transform: scale(0.95) translateY(10px); }
+}
+/* Navigation indicator styles */
+#nav-indicator {
+    position: absolute;
+    bottom: 4px;
+    height: 4px;
+    width: 20px;
+    background-color: rgb(var(--color-accent));
+    border-radius: 2px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: left;
+}
+/* Guided Tour styles */
+#tour-spotlight {
+    position: absolute;
+    border-radius: 8px;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none; /* Allows clicks to go through if needed, but not for the tour */
+}
+#tour-tooltip {
+    transition: all 0.4s ease-in-out;
+    will-change: top, left;
+    z-index: 101; /* Ensure tooltip is above the shadow */
+}
+#tour-progress-bar {
+    height: 4px;
+    background-color: rgb(var(--color-accent));
+    transition: width 0.3s ease-in-out;
+}
+.tour-active-element {
+    z-index: 1001; /* Bring the interactive element above the overlay shadow */
+    position: relative;
+}
+/* Focus Mode Toggle Switch */
+.toggle-switch {
+    background-color: rgb(var(--color-bg-tertiary));
+}
+.toggle-switch[aria-checked="true"] {
+    background-color: rgb(var(--color-accent));
+}
+.toggle-switch[aria-checked="true"] > span {
+    transform: translateX(1.25rem); /* 20px */
+}
+/* ==========================================================================
+   Onboarding Screen Enhancements
+   ========================================================================== */
+@keyframes content-in-from-right {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes content-out-to-left {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-40px); }
+}
+@keyframes content-in-from-left {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes content-out-to-right {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(40px); }
+}
+.onboarding-content-enter-next {
+    animation: content-in-from-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.onboarding-content-exit-next {
+    animation: content-out-to-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.onboarding-content-enter-prev {
+    animation: content-in-from-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.onboarding-content-exit-prev {
+    animation: content-out-to-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Smooth visibility for prev button */
+#onboarding-prev-btn {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Animation for list items entering the view */
+.list-item-enter {
+    animation: list-item-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+}
+@keyframes list-item-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Styling for SortableJS dragging */
+.goal-item.sortable-ghost {
+    background: rgb(var(--color-bg-tertiary));
+    opacity: 0.7;
+}
+
+.tag-item.sortable-ghost {
+    background: rgb(var(--color-bg-tertiary));
+    opacity: 0.7;
+}
+
+/* Custom styling for the color input */
+.tag-color-picker {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+.tag-color-picker::-webkit-color-swatch {
+    border-radius: 50%;
+    border: 2px solid rgb(var(--color-border-primary));
+}
+.tag-color-picker::-moz-color-swatch {
+    border-radius: 50%;
+    border: 2px solid rgb(var(--color-border-primary));
+}
+
+/* ==========================================================================
+   Media Queries for Mobile Responsiveness
+   ========================================================================== */
+@media (max-width: 420px) {
+    /* Reduce padding on main container for smaller screens */
+    main.p-6 {
+        padding: 1rem; /* 16px */
+    }
+
+    /* Adjust typography for better readability on small devices */
+    h1.text-3xl {
+        font-size: 1.5rem; /* 24px */
+        line-height: 2rem; /* 32px */
+    }
+    h2.text-2xl {
+        font-size: 1.25rem; /* 20px */
+        line-height: 1.75rem; /* 28px */
+    }
+    p.text-lg {
+        font-size: 1rem; /* 16px */
+    }
+}
