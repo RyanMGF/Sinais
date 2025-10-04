@@ -101,6 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
         reminderEnabled: false,
         reminderTime: '20:00', // Default reminder time
         nextNotificationTimeoutId: null,
+        motivationalQuotes: [
+            { quote: "Acredite em você mesmo e tudo será possível.", author: "Autor Desconhecido", userAdded: false },
+            { quote: "O único modo de fazer um excelente trabalho é amar o que você faz.", author: "Steve Jobs", userAdded: false },
+            { quote: "A persistência realiza o impossível.", author: "Provérbio Chinês", userAdded: false },
+            { quote: "Não espere por uma crise para descobrir o que é importante em sua vida.", author: "Platão", userAdded: false },
+            { quote: "Sua única limitação é você mesmo.", author: "Autor Desconhecido", userAdded: false },
+            { quote: "Comece onde você está. Use o que você tem. Faça o que você pode.", author: "Arthur Ashe", userAdded: false },
+            { quote: "A jornada de mil milhas começa com um único passo.", author: "Lao Tsé", userAdded: false },
+            { quote: "A felicidade não é algo pronto. Ela vem de suas próprias ações.", author: "Dalai Lama", userAdded: false },
+            { quote: "O sucesso é a soma de pequenos esforços repetidos dia após dia.", author: "Robert Collier", userAdded: false },
+            { quote: "Se você pode sonhar, você pode realizar.", author: "Walt Disney", userAdded: false },
+            { quote: "A melhor maneira de prever o futuro é criá-lo.", author: "Peter Drucker", userAdded: false }
+        ],
     };
 
     // --- MOCK DATA ---
@@ -114,17 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // A lista de tags foi movida para o objeto 'state' para ser personalizável
     const mockResources = [
         // Contextual resources based on tags
-        { id: "10", title: "Lidando com Pressão no Trabalho", description: "Estratégias para gerenciar o estresse profissional.", type: "article", contentUrl: "https://g1.globo.com/economia/concursos-e-emprego/noticia/2022/09/12/pressao-no-trabalho-veja-dicas-de-especialistas-para-lidar-com-o-problema.ghtml", icon: "briefcase", category: "contextual", tags: ["Trabalho"] },
-        { id: "11", title: "Comunicação Familiar Positiva", description: "Dicas para melhorar o diálogo com seus familiares.", type: "article", contentUrl: "https://www.psicologosberrini.com.br/blog/comunicacao-familiar/", icon: "users", category: "contextual", tags: ["Família"] },
-        { id: "12", title: "Cuidando da Saúde Mental", description: "Um guia para priorizar seu bem-estar emocional.", type: "video", contentUrl: "https://www.youtube.com/watch?v=s_41-PA-45Q", icon: "heart", category: "contextual", tags: ["Saúde", "Pessoal"] },
-        { id: "13", title: "Finanças e Bem-estar", description: "Como a organização financeira impacta suas emoções.", type: "article", contentUrl: "https://mepoupenaweb.uol.com.br/saude-financeira/saude-financeira-e-emocional/", icon: "dollar-sign", category: "contextual", tags: ["Finanças"] },
+        { id: "10", title: "Lidando com Pressão no Trabalho", description: "Estratégias para gerenciar o estresse profissional.", type: "article", contentUrl: "https://www.zendesk.com.br/blog/lidar-com-pressao-no-trabalho/", icon: "briefcase", category: "contextual", tags: ["Trabalho"] },
+        { id: "11", title: "Comunicação Familiar Positiva", description: "Dicas para melhorar o diálogo com seus familiares.", type: "article", contentUrl: "https://online.pucrs.br/blog/comunicacao-familiar-estrategias", icon: "users", category: "contextual", tags: ["Família"] },
+        { id: "12", title: "Cuidando da Saúde Mental", description: "Um guia para priorizar seu bem-estar emocional.", type: "video", contentUrl: "https://vidasaudavel.einstein.br/como-cuidar-da-saude-mental/", icon: "activity", category: "contextual", tags: ["Saúde", "Pessoal"] },
+        { id: "13", title: "Finanças e Bem-estar", description: "Como a organização financeira impacta suas emoções.", type: "article", contentUrl: "https://warren.com.br/magazine/bem-estar-financeiro/", icon: "dollar-sign", category: "contextual", tags: ["Finanças"] },
+        { id: "14", title: "Como Lidar com a Pressão nos Estudos", description: "Dicas para organizar sua rotina e evitar o esgotamento.", type: "article", contentUrl: "https://blog.grupointegrado.br/pressao-academica/", icon: "book-open", category: "contextual", tags: ["Estudos"] },
+        { id: "15", title: "A Importância do Lazer para a Saúde Mental", description: "Entenda por que ter um hobby e relaxar é fundamental.", type: "video", contentUrl: "https://www.youtube.com/watch?v=utcoAJQDHGM", icon: "sun", category: "contextual", tags: ["Lazer"] },
+        { id: "16", title: "Como Melhorar seus Relacionamentos", description: "Aprenda sobre comunicação e empatia nas suas relações.", type: "article", contentUrl: "https://www.youtube.com/watch?v=E0kzk_Ftjlo", icon: "heart", category: "contextual", tags: ["Relacionamentos"] },
         // General Calm/Release resources
-        { id: "1", title: "Respiração Diafragmática", description: "Aprenda a controlar a ansiedade com este exercício simples.", type: "video", contentUrl: "https://www.youtube.com/watch?v=4go_sY-I2Qc", icon: "wind", category: "calm", tags: [] },
-        { id: "2", title: "Meditação Guiada para Acalmar", description: "Relaxe e encontre seu centro com esta meditação de 5 minutos.", type: "audio", contentUrl: "https://www.youtube.com/watch?v=inpok4MKV-w", icon: "headphones", category: "calm", tags: [] },
-        { id: "3", title: "O Poder da Escrita Terapêutica", description: "Entenda como escrever sobre seus sentimentos pode clarear a mente.", type: "article", contentUrl: "https://www.psicologosberrini.com.br/blog/escrita-terapeutica-o-que-e-e-como-fazer/", icon: "edit-3", category: "release", tags: [] },
-        { id: "4", title: "Movimente o Corpo", description: "Uma caminhada ou dança pode ajudar a aliviar o estresse. Veja os benefícios.", type: "article", contentUrl: "https://www.cnnbrasil.com.br/saude/os-beneficios-para-a-saude-mental-de-se-movimentar-por-apenas-10-minutos/", icon: "activity", category: "release", tags: [] },
+        { id: "1", title: "Respiração Diafragmática", description: "Aprenda a controlar a ansiedade com este exercício simples.", type: "video", contentUrl: "https://www.youtube.com/watch?v=Waf3kZkpGq4", icon: "wind", category: "calm", tags: [] },
+        { id: "2", title: "Meditação Guiada para Acalmar", description: "Relaxe e encontre seu centro com esta meditação de 5 minutos.", type: "audio", contentUrl: "https://www.youtube.com/watch?v=pv-aymg97JM", icon: "headphones", category: "calm", tags: [] },
+        { id: "3", title: "O Poder da Escrita Terapêutica", description: "Entenda como escrever sobre seus sentimentos pode clarear a mente.", type: "article", contentUrl: "https://www.youtube.com/watch?v=H2i4yEF8wIA", icon: "edit-3", category: "release", tags: [] },
+        { id: "4", title: "Movimente o Corpo", description: "Uma caminhada ou dança pode ajudar a aliviar o estresse. Veja os benefícios.", type: "video", contentUrl: "https://www.youtube.com/watch?v=98aKpjFwd4s", icon: "activity", category: "release", tags: [] },
         // General resources
-        { id: "9", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "https://www.youtube.com/watch?v=2z3yB3i-2Yg", icon: "youtube", category: "general", tags: [] },
+        { id: "9", title: "O Poder do Pensamento Positivo", description: "Um vídeo sobre como mudar sua perspectiva.", type: "video", contentUrl: "https://www.youtube.com/watch?v=NVV5acjrcJE", icon: "youtube", category: "general", tags: [] },
     ];
     const contextualTipsData = {
         "Estudos": {
@@ -191,44 +207,43 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     };
 
+    const nextTourStep = () => {
+        if (state.tourStep === -1) return; // Tour não está ativo
+        state.tourStep++;
+        showTourStep(state.tourStep);
+    };
+
     const tourSteps = [
         {
-            element: '.mood-btn[data-mood="verde"]',
-            title: '1. Registre seu Humor',
-            text: 'Tudo começa aqui. Toque em uma das cores para fazer um registro rápido de como você se sente.',
+            element: '#onboarding-content-wrapper', // Elemento genérico para a primeira tela
+            title: 'Bem-vindo(a) ao Sinais!',
+            text: 'Vamos fazer um tour rápido para você conhecer as ferramentas principais. Sua jornada de autoconhecimento começa agora.',
+            action: () => navigateTo('checkin-screen') // Garante que a tela de check-in esteja pronta
+        },
+        {
+            element: '#checkin-screen .space-y-4',
+            title: '1/3: Registre sua Emoção',
+            text: 'O primeiro passo é simples: escolha a cor que melhor representa como você se sente neste momento. Toque em uma delas para continuar.',
             interactive: true,
-            action: () => navigateTo('checkin-screen')
+            // Ação do usuário (clique no botão de humor) avançará o tour
         },
         {
             element: '#save-checkin-btn',
-            title: '2. Adicione Detalhes',
-            text: 'Após escolher a cor, você pode adicionar notas e tags para dar mais contexto ao seu sentimento. Depois, é só salvar.',
-            action: () => {
-                // Simulate choosing a mood to get to the details screen
-                state.currentMood = 'verde';
-                navigateTo('details-screen');
-            }
+            title: '2/3: Adicione Contexto',
+            text: 'Ótimo! Agora, você pode adicionar tags e notas para entender melhor o que influenciou seu sentimento. Clique em "Salvar Registro" para avançar.',
+            interactive: true,
+            // Ação do usuário (submit do formulário) avançará o tour
         },
         {
             element: '.nav-btn[data-screen="journey-screen"]',
-            title: '3. Explore sua Jornada',
-            text: 'Aqui você acessa seu histórico, estatísticas, metas e conquistas. Toque para explorar.',
-            interactive: true,
-            action: () => navigateTo('checkin-screen')
-        },
-        {
-            element: '.nav-btn[data-screen="resources-screen"]',
-            title: '4. Encontre Apoio',
-            text: 'Acesse artigos, vídeos e sua rede de apoio pessoal sempre que precisar de uma força extra. Toque para ver.',
-            interactive: true,
-        },
-        {
-            element: '.nav-btn[data-screen="settings-screen"]',
-            title: '5. Personalize o App',
-            text: 'Nos Ajustes, você pode mudar o tema, gerenciar tags, exportar seus dados e muito mais.',
-            interactive: true,
-        },
-    ];    
+            title: '3/3: Acompanhe sua Jornada',
+            text: 'Perfeito! Todos os seus registros ficam salvos na sua Jornada. Lá você pode ver seu histórico, estatísticas e muito mais.',
+            action: () => {
+                // Navega de volta para a tela principal para mostrar a barra de navegação
+                navigateTo('checkin-screen');
+            }
+        }
+    ];
     const availableIcons = [
         'tag', 'briefcase', 'users', 'heart', 'activity', 'sun', 'book-open', 'dollar-sign',
         'home', 'user', 'moon', 'coffee', 'film', 'music', 'shopping-cart', 'gift',
@@ -424,12 +439,14 @@ document.addEventListener('DOMContentLoaded', () => {
             'history-screen': 'Meu Histórico',
             'goals-screen': 'Minhas Metas',
             'gratitude-journal-screen': 'Diário de Gratidão',
+            'quote-screen': 'Frase do Dia',
             'achievements-screen': 'Minhas Conquistas',
             'contextual-tips-screen': 'Dicas para Você',
             'diagnosis-screen': 'Diagnóstico Semanal',
             'resources-screen': 'Recursos e Ajuda',
             'stats-screen': 'Estatísticas',
             'settings-screen': 'Ajustes',
+            'qr-code-screen': 'Acessar no Celular',
         };
         headerTitle.textContent = titles[screenId] || '';
         feather.replace(); // Ensure icons are always rendered on navigation
@@ -456,6 +473,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (screenId === 'gratitude-journal-screen') {
             renderGratitudeJournal();
+        }
+        if (screenId === 'quote-screen') {
+            renderQuoteOfTheDay();
         }
         if (screenId === 'history-screen') {
             renderHistory();
@@ -1338,6 +1358,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const moodColorClass = moodButtonColors[state.currentMood] || 'bg-gray-500 hover:bg-gray-600';
             document.getElementById('save-checkin-btn').className = `w-full text-accent-text font-bold py-4 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${moodColorClass}`;
             navigateTo('details-screen');
+
+            // Avança o tour se estiver no passo de escolher o humor
+            if (state.tourStep === 1) {
+                nextTourStep();
+            }
         });
     });
     
@@ -1346,6 +1371,11 @@ document.addEventListener('DOMContentLoaded', () => {
             playClickSound();
             const screenId = e.currentTarget.dataset.screen;
             navigateTo(screenId);
+
+            // Finaliza o tour se o usuário clicar no último passo
+            if (state.tourStep === 3 && screenId === 'journey-screen') {
+                endTour();
+            }
         });
     });
 
@@ -1385,6 +1415,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render and navigate to feedback screen
         renderFeedbackScreen(state.currentMood);
         navigateTo('feedback-screen');
+
+        // Avança o tour se estiver no passo de adicionar detalhes
+        if (state.tourStep === 2) {
+            nextTourStep();
+        }
     });
 
     document.getElementById('feedback-continue-btn').addEventListener('click', () => {
@@ -1664,6 +1699,19 @@ document.addEventListener('DOMContentLoaded', () => {
         feather.replace();
     };
 
+    const renderQuoteOfTheDay = () => {
+        const quoteTextEl = document.getElementById('quote-text');
+        const quoteAuthorEl = document.getElementById('quote-author');
+
+        if (!quoteTextEl || !quoteAuthorEl) return;
+
+        const randomIndex = Math.floor(Math.random() * state.motivationalQuotes.length);
+        const { quote, author } = state.motivationalQuotes[randomIndex];
+
+        quoteTextEl.textContent = `“${quote}”`;
+        quoteAuthorEl.textContent = `— ${author || 'Autor Desconhecido'}`;
+    };
+
     document.getElementById('add-new-gratitude-entry-btn').addEventListener('click', () => {
         playClickSound();
         const input = document.getElementById('new-gratitude-entry-input');
@@ -1675,6 +1723,40 @@ document.addEventListener('DOMContentLoaded', () => {
             input.value = '';
             vibrate();
             triggerConfetti();
+        }
+    });
+
+    document.getElementById('toggle-add-quote-form-btn').addEventListener('click', () => {
+        playClickSound();
+        const formContainer = document.getElementById('add-quote-form-container');
+        formContainer.classList.toggle('hidden');
+    });
+
+    document.getElementById('cancel-add-quote-btn').addEventListener('click', () => {
+        playClickSound();
+        const formContainer = document.getElementById('add-quote-form-container');
+        formContainer.classList.add('hidden');
+        document.getElementById('new-quote-text-input').value = '';
+        document.getElementById('new-quote-author-input').value = '';
+    });
+
+    document.getElementById('save-new-quote-btn').addEventListener('click', () => {
+        playClickSound();
+        const textInput = document.getElementById('new-quote-text-input');
+        const authorInput = document.getElementById('new-quote-author-input');
+        const quoteText = textInput.value.trim();
+        const authorText = authorInput.value.trim() || 'Você';
+
+        if (quoteText) {
+            state.motivationalQuotes.push({ quote: quoteText, author: authorText, userAdded: true });
+            saveState();
+            
+            // Hide and reset form
+            document.getElementById('add-quote-form-container').classList.add('hidden');
+            textInput.value = '';
+            authorInput.value = '';
+
+            alert('Sua frase foi adicionada com sucesso!');
         }
     });
 
@@ -1788,6 +1870,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Trigger the hidden file input
             document.getElementById('import-file-input').click();
         }
+        if (e.target.closest('#go-to-qr-screen-btn')) {
+            playClickSound();
+            navigateTo('qr-code-screen');
+        }
+
     });
 
     document.getElementById('add-new-tag-btn').addEventListener('click', () => {
@@ -1908,6 +1995,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gratitudeEntries: state.gratitudeEntries,
             favoriteContacts: state.favoriteContacts,
             predefinedTags: state.predefinedTags,
+            motivationalQuotes: state.motivationalQuotes,
             unlockedAchievements: state.unlockedAchievements,
             streaks: state.streaks,
             settings: {
@@ -1950,6 +2038,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         state.gratitudeEntries = (importedData.gratitudeEntries || []).map(e => ({ ...e, createdAt: new Date(e.createdAt) }));
                         state.favoriteContacts = importedData.favoriteContacts || [];
                         state.predefinedTags = importedData.predefinedTags || ["Trabalho", "Família", "Relacionamentos", "Saúde", "Lazer", "Estudos", "Finanças", "Pessoal"];
+                        state.motivationalQuotes = importedData.motivationalQuotes || state.motivationalQuotes; // Keep default if not present
                         state.unlockedAchievements = importedData.unlockedAchievements || [];
                         state.streaks = importedData.streaks || { current: 0, longest: 0 };
                         if (importedData.settings) {
@@ -2073,7 +2162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('tour-next-btn').addEventListener('click', () => {
         playClickSound();
-        showTourStep(++state.tourStep);
+        nextTourStep();
     });
 
     document.getElementById('tour-skip-btn').addEventListener('click', () => {
@@ -2120,23 +2209,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Handle interactive tour steps
-    document.body.addEventListener('click', (e) => {
-        if (state.tourStep === -1) return;
-        const currentStep = tourSteps[state.tourStep];
-        if (!currentStep || !currentStep.interactive) return;
-
-        const targetElement = document.querySelector(currentStep.element);
-        if (targetElement && targetElement.contains(e.target)) {
-            playClickSound();
-            showTourStep(++state.tourStep);
-        }
-    });
-
             document.getElementById('import-file-input').addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 importDataFromJSON(file);
             });
+
+    const startAppFlow = () => {
+        if (state.isAuthenticated) {
+            header.style.display = 'block';
+            bottomNav.style.display = 'flex';
+            navSpacer.style.display = 'block';
+            navigateTo('checkin-screen');
+        } else {
+            navigateTo('onboarding-screen');
+        }
+    };
 
     // --- APP INITIALIZATION ---
     const initializeApp = () => {
@@ -2144,7 +2231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Data migration: if tags are strings, convert them to objects
         if (state.predefinedTags.length > 0 && typeof state.predefinedTags[0] === 'string') {
-            const defaultData = { "Trabalho": {icon: "briefcase", color: "#3B82F6"}, "Família": {icon: "users", color: "#10B981"}, "Relacionamentos": {icon: "heart", color: "#EF4444"}, "Saúde": {icon: "activity", color: "#14B8A6"}, "Lazer": {icon: "sun", color: "#F59E0B"}, "Estudos": {icon: "book-open", color: "#8B5CF6"}, "Finanças": {icon: "dollar-sign", color: "#22C55E"}, "Pessoal": {icon: "user", color: "#6366F1"} };
+            const defaultData = { "Trabalho": { icon: "briefcase", color: "#3B82F6" }, "Família": { icon: "users", color: "#10B981" }, "Relacionamentos": { icon: "heart", color: "#EF4444" }, "Saúde": { icon: "activity", color: "#14B8A6" }, "Lazer": { icon: "sun", color: "#F59E0B" }, "Estudos": { icon: "book-open", color: "#8B5CF6" }, "Finanças": { icon: "dollar-sign", color: "#22C55E" }, "Pessoal": { icon: "user", color: "#6366F1" } };
             state.predefinedTags = state.predefinedTags.map(tag => ({
                 name: tag,
                 icon: (defaultData[tag] && defaultData[tag].icon) || 'tag',
@@ -2153,14 +2240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         scheduleNextNotification(); // Check if a notification needs to be scheduled on app start
-        if (state.isAuthenticated) {
-            header.style.display = 'block';
-            bottomNav.style.display = 'flex';
-            navSpacer.style.display = 'block';
-            navigateTo('checkin-screen');
-        } else {
-                    navigateTo('onboarding-screen');
-        }
+        startAppFlow();
         feather.replace(); // Initialize icons
     };
 
