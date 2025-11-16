@@ -407,6 +407,20 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Botão para Falar com Especialista -->
+                <div class="my-8">
+                    <button data-screen="specialists-list-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <i data-feather="users" class="w-8 h-8 text-accent"></i>
+                            <div>
+                                <h4 class="text-lg font-bold text-left">Falar com Especialista</h4>
+                                <p class="text-sm text-text-secondary text-left">Agende uma consulta online.</p>
+                            </div>
+                        </div>
+                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
+                    </button>
+                </div>
                 <div id="suggested-resources" class="mb-8"></div>
                 <div id="all-resources">
                     <h3 class="text-xl font-bold mb-4">Biblioteca Completa</h3>
@@ -525,6 +539,148 @@
                     </button>
                     <div id="archived-goals-container" class="hidden mt-4 space-y-3">
                     </div>
+                </div>
+            </div>
+
+            <!-- ====================================================================== -->
+            <!-- =================== TELAS DE CONSULTA COM ESPECIALISTA ================= -->
+            <!-- ====================================================================== -->
+
+            <!-- Specialists List Screen -->
+            <div id="specialists-list-screen" class="screen">
+                <h3 class="text-2xl font-bold mb-2 text-center">Fale com um Especialista</h3>
+                <p class="text-text-muted text-center mb-8">Encontre profissionais qualificados para te ajudar na sua jornada.</p>
+                <div id="specialists-container" class="space-y-4">
+                    <!-- Apoio Imediato 24hs (Opção Gratuita) -->
+                    <div class="bg-accent-bg-light p-4 rounded-lg border-2 border-accent flex flex-col sm:flex-row items-center gap-4">
+                        <div class="w-24 h-24 rounded-full bg-accent flex items-center justify-center border-4 border-bg-tertiary flex-shrink-0">
+                            <i data-feather="message-circle" class="w-12 h-12 text-accent-text"></i>
+                        </div>
+                        <div class="flex-grow text-center sm:text-left">
+                            <h4 class="text-lg font-bold text-accent-text-dark">Apoio Imediato 24h</h4>
+                            <p class="text-sm text-accent font-semibold">Conversa de apoio gratuita</p>
+                            <p class="text-xs text-text-secondary mt-1">Um espaço seguro para desabafar com um ouvinte treinado, a qualquer hora.</p>
+                        </div>
+                        <div class="w-full sm:w-auto text-center mt-4 sm:mt-0">
+                            <p class="text-lg font-bold text-green-600 dark:text-green-400">Gratuito</p>
+                            <button data-action="start-immediate-chat" class="interactive-btn w-full sm:w-auto bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all mt-2">
+                                Conversar Agora
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Exemplo de Card de Especialista (será renderizado dinamicamente) -->
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex flex-col sm:flex-row items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Foto do Especialista" class="w-24 h-24 rounded-full object-cover border-4 border-bg-tertiary">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h4 class="text-lg font-bold text-text-primary">Dr. Carlos Pereira</h4>
+                            <p class="text-sm text-accent font-semibold">Psicologia Clínica</p>
+                            <p class="text-xs text-text-secondary mt-1">10+ anos de experiência em terapia cognitivo-comportamental.</p>
+                        </div>
+                        <div class="w-full sm:w-auto text-center">
+                            <p class="text-lg font-bold text-text-primary">R$ 150</p>
+                            <p class="text-xs text-text-muted -mt-1 mb-2">/ sessão</p>
+                            <button class="interactive-btn specialist-schedule-btn w-full sm:w-auto bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all">
+                                Agendar
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Outro exemplo -->
+                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex flex-col sm:flex-row items-center gap-4">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="Foto da Especialista" class="w-24 h-24 rounded-full object-cover border-4 border-bg-tertiary">
+                        <div class="flex-grow text-center sm:text-left">
+                            <h4 class="text-lg font-bold text-text-primary">Dra. Ana Júlia</h4>
+                            <p class="text-sm text-accent font-semibold">Mindfulness e Ansiedade</p>
+                            <p class="text-xs text-text-secondary mt-1">Especialista em técnicas de redução de estresse e atenção plena.</p>
+                        </div>
+                        <div class="w-full sm:w-auto text-center">
+                            <p class="text-lg font-bold text-text-primary">R$ 130</p>
+                            <p class="text-xs text-text-muted -mt-1 mb-2">/ sessão</p>
+                            <button class="interactive-btn specialist-schedule-btn w-full sm:w-auto bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all">
+                                Agendar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consultation Scheduling Screen -->
+            <div id="consultation-scheduling-screen" class="screen">
+                <div class="bg-bg-secondary rounded-lg shadow-lg border border-border-primary overflow-hidden">
+                    <!-- Painel de Informações e Confirmação -->
+                    <div class="p-6 border-b border-border-primary text-center">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Foto do Especialista" id="scheduling-specialist-img" class="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-bg-tertiary">
+                        <h2 id="scheduling-specialist-name" class="text-xl font-bold text-text-primary">Dr. Carlos Pereira</h2>
+                        <p id="scheduling-specialist-specialty" class="text-accent font-semibold">Psicologia Clínica</p>
+                        <div class="mt-4 bg-accent-bg-light text-accent-text-dark p-3 rounded-lg text-sm">
+                            <p><strong>Data:</strong> <span id="scheduling-selected-date">--</span></p>
+                            <p><strong>Hora:</strong> <span id="scheduling-selected-time">--</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Painel de Agendamento -->
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold mb-4 text-center">Selecione uma data e horário</h3>
+                        <!-- Calendário -->
+                        <div id="scheduling-calendar-header" class="text-center font-bold mb-2">Outubro 2024</div>
+                        <div id="scheduling-calendar-grid" class="grid grid-cols-7 gap-1 text-center mb-6">
+                            <div class="text-xs font-bold text-text-muted">D</div>
+                            <div class="text-xs font-bold text-text-muted">S</div>
+                            <div class="text-xs font-bold text-text-muted">T</div>
+                            <div class="text-xs font-bold text-text-muted">Q</div>
+                            <div class="text-xs font-bold text-text-muted">Q</div>
+                            <div class="text-xs font-bold text-text-muted">S</div>
+                            <div class="text-xs font-bold text-text-muted">S</div>
+                            <!-- Dias serão gerados pelo JS -->
+                        </div>
+
+                        <!-- Slots de Horário -->
+                        <h4 id="scheduling-time-slots-title" class="font-semibold mb-3 text-center">Selecione um dia para ver os horários</h4>
+                        <div id="scheduling-time-slots" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                            <!-- Horários serão gerados pelo JS -->
+                        </div>
+                    </div>
+                </div>
+                <button id="confirm-consultation-btn" class="interactive-btn w-full bg-accent text-accent-text font-bold py-4 rounded-full shadow-lg mt-6 transition-all duration-300 opacity-50 cursor-not-allowed" disabled>
+                    Confirmar Agendamento
+                </button>
+            </div>
+
+            <!-- Immediate Chat Screen -->
+            <div id="immediate-chat-screen" class="screen flex flex-col h-full">
+                <!-- Chat Header -->
+                <div class="flex items-center p-4 border-b border-border-primary flex-shrink-0">
+                    <button id="chat-back-btn" class="interactive-btn p-2 rounded-full hover:bg-bg-tertiary">
+                        <i data-feather="arrow-left"></i>
+                    </button>
+                    <div class="flex items-center gap-3 flex-grow">
+                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
+                            <i data-feather="smile" class="w-6 h-6 text-accent-text"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold leading-tight">Zen</h3>
+                        <p class="text-xs text-green-500 flex items-center justify-center gap-1.5">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            Online
+                        </p>
+                        </div>
+                    </div>
+                    <div class="w-10"></div> <!-- Spacer to balance the back button -->
+                </div>
+
+                <!-- Message Area -->
+                <div id="chat-messages" class="flex-grow p-4 space-y-4 overflow-y-auto">
+                    <!-- Messages will be rendered here by JS -->
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-4 border-t border-border-primary bg-bg-secondary flex-shrink-0">
+                    <form id="chat-form" class="flex items-center gap-2">
+                        <input type="text" id="chat-input" class="w-full p-3 border border-border-primary rounded-full bg-bg-input text-text-primary placeholder-text-muted focus:ring-2 focus:ring-accent transition" placeholder="Digite sua mensagem..." autocomplete="off">
+                        <button type="submit" id="chat-send-btn" class="interactive-btn bg-accent text-accent-text p-3 rounded-full hover:bg-accent-hover transition-colors flex-shrink-0"><i data-feather="send"></i></button>
+                    </form>
                 </div>
             </div>
 

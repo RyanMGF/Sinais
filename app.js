@@ -446,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'resources-screen': 'Recursos e Ajuda',
             'stats-screen': 'Estatísticas',
             'settings-screen': 'Ajustes',
+            'specialists-list-screen': 'Fale com um Especialista',
             'qr-code-screen': 'Acessar no Celular',
         };
         headerTitle.textContent = titles[screenId] || '';
@@ -489,6 +490,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (screenId === 'stats-screen') {
             renderStatistics();
+        }
+        if (screenId === 'immediate-chat-screen') {
+            // Hide main header/nav for a focused chat experience
+            toggleMainUI(false);
         }
     };
 
@@ -534,17 +539,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const transitionOnboardingStep = (direction) => {
-        const contentWrapper = document.getElementById('onboarding-content-wrapper');
-        const exitClass = direction === 'next' ? 'onboarding-content-exit-next' : 'onboarding-content-exit-prev';
-        const enterClass = direction === 'next' ? 'onboarding-content-enter-next' : 'onboarding-content-enter-prev';
-
-        contentWrapper.classList.add(exitClass);
+        const contentWrapper = document.getElementById('onboarding-content-wrapper');        
+        contentWrapper.style.animation = 'fadeOut 0.25s ease-in forwards';
 
         setTimeout(() => {
             state.onboardingStep += (direction === 'next' ? 1 : -1);
             renderOnboardingStep();
-            contentWrapper.className = 'flex-grow flex flex-col items-center justify-center'; // Reset classes
-            contentWrapper.classList.add(enterClass);
+            contentWrapper.style.animation = 'fadeIn 0.25s ease-out forwards';
         }, 250); // Half of the animation duration
     };
 
@@ -899,7 +900,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sortedCheckins = [...listCheckins].sort((a, b) => b.createdAt - a.createdAt);
 
         listContainer.innerHTML = sortedCheckins.map((checkin, index) => `
-            <div class="list-item-enter bg-bg-secondary p-4 rounded-lg border ${getMoodBorderColor(checkin.mood)} flex items-start gap-4" style="animation-delay: ${index * 50}ms;">
+            <div class="list-item-enter bg-bg-secondary p-4 rounded-lg border ${getMoodBorderColor(checkin.mood)} flex items-start gap-4" style="animation-delay: ${index * 60}ms;">
                 <div class="w-3 h-3 rounded-full ${getMoodColor(checkin.mood)} mt-2 flex-shrink-0"></div>
                 <div class="flex-grow">
                     <p class="font-bold">${getMoodName(checkin.mood)} - ${checkin.createdAt.toLocaleDateString('pt-BR')}</p>
@@ -1255,7 +1256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lockedClasses = 'bg-bg-tertiary border-border-primary text-text-muted opacity-60';
             return `
                 <div class="list-item-enter p-4 rounded-lg border-2 ${isUnlocked ? unlockedClasses : lockedClasses} flex flex-col items-center text-center" style="animation-delay: ${index * 50}ms;">
-                    <i data-feather="${ach.icon}" class="w-10 h-10 mb-3"></i>
+                    <i data-feather="${ach.icon}" class="w-10 h-10 mb-3 ${isUnlocked ? 'text-accent' : ''}"></i>
                     <h4 class="font-bold">${ach.title}</h4>
                     <p class="text-xs">${ach.description}</p>
                 </div>
@@ -1448,6 +1449,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const screenId = journeyLink.dataset.screen;
             navigateTo(screenId);
         }
+
+        const chatBtn = e.target.closest('[data-action="start-immediate-chat"]');
+        if (chatBtn) {
+            startImmediateChat();
+        }
     });
 
     document.getElementById('add-resources-contact-btn').addEventListener('click', () => {
@@ -1634,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render active goals
         activeList.innerHTML = state.goals.map((goal, index) => {
             return `
-                <div class="goal-item list-item-enter bg-bg-secondary p-4 rounded-lg border border-border-primary flex items-center gap-4" data-id="${goal.id}" style="animation-delay: ${index * 50}ms;">
+                <div class="goal-item list-item-enter bg-bg-secondary p-4 rounded-lg border border-border-primary flex items-center gap-4" data-id="${goal.id}" style="animation-delay: ${index * 60}ms;">
                     <i data-feather="grip-vertical" class="drag-handle text-text-muted cursor-move"></i>
                     <input type="checkbox" data-id="${goal.id}" class="goal-checkbox h-6 w-6 rounded text-accent focus:ring-accent border-border-primary">
                     <span class="flex-grow">${goal.text}</span>
@@ -1650,7 +1656,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleBtn.style.display = 'flex';
             archivedContainer.innerHTML = state.archivedGoals.map((goal, index) => {
                 return `
-                <div class="goal-item list-item-enter bg-bg-secondary/50 p-4 rounded-lg border border-border-primary flex items-center gap-4 opacity-70" data-id="${goal.id}" style="animation-delay: ${index * 50}ms;">
+                <div class="goal-item list-item-enter bg-bg-secondary/50 p-4 rounded-lg border border-border-primary flex items-center gap-4 opacity-70" data-id="${goal.id}" style="animation-delay: ${index * 60}ms;">
                     <i data-feather="check-circle" class="text-green-500"></i>
                     <span class="flex-grow line-through text-text-muted">${goal.text}</span>
                     <button data-id="${goal.id}" class="restore-goal-btn text-text-muted hover:text-accent p-1 rounded-md" title="Restaurar Meta">
@@ -1685,7 +1691,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sortedEntries = [...state.gratitudeEntries].sort((a, b) => b.createdAt - a.createdAt);
 
         list.innerHTML = sortedEntries.map((entry, index) => `
-            <div class="list-item-enter bg-bg-secondary p-4 rounded-lg border border-border-primary flex flex-col" style="animation-delay: ${index * 50}ms;">
+            <div class="list-item-enter bg-bg-secondary p-4 rounded-lg border border-border-primary flex flex-col" style="animation-delay: ${index * 60}ms;">
                 <p class="text-text-primary flex-grow">${entry.text}</p>
                 <div class="flex justify-between items-center mt-3">
                     <p class="text-xs text-text-muted">${new Date(entry.createdAt).toLocaleDateString('pt-BR')}</p>
@@ -2315,5 +2321,127 @@ document.addEventListener('DOMContentLoaded', () => {
             saveState();
             // Re-render to update the order in other parts of the app if necessary, e.g., the details screen
         },
+    });
+
+    // --- IMMEDIATE CHAT LOGIC ---
+
+    const showTypingIndicator = () => {
+        const chatMessages = document.getElementById('chat-messages');
+        // Evita adicionar múltiplos indicadores
+        if (document.getElementById('typing-indicator')) return;
+
+        const indicatorHTML = `
+            <div id="typing-indicator" class="flex items-end gap-2 animate-fade-in">
+                <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0 text-accent-text">
+                    <i data-feather="smile" class="w-5 h-5"></i>
+                </div>
+                <div class="bg-bg-tertiary p-3 rounded-lg flex items-center space-x-1.5">
+                    <div class="w-2 h-2 bg-text-muted rounded-full animate-bounce" style="animation-delay: -0.3s;"></div>
+                    <div class="w-2 h-2 bg-text-muted rounded-full animate-bounce" style="animation-delay: -0.15s;"></div>
+                    <div class="w-2 h-2 bg-text-muted rounded-full animate-bounce"></div>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', indicatorHTML);
+        feather.replace();
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const hideTypingIndicator = () => {
+        document.getElementById('typing-indicator')?.remove();
+    };
+
+    const toggleMainUI = (show) => {
+        header.style.display = show ? 'block' : 'none';
+        bottomNav.style.display = show ? 'flex' : 'none';
+        navSpacer.style.display = show ? 'block' : 'none';
+    };
+
+    const startImmediateChat = () => {
+        playClickSound();
+        navigateTo('immediate-chat-screen');
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.innerHTML = ''; // Clear previous chat
+        addBotMessage("Olá! Eu sou o Zen, seu companheiro de apoio. Estou aqui para te ouvir sem julgamentos. Como você está se sentindo agora?");
+    };
+
+    const addBotMessage = (text) => {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageHTML = `
+            <div class="flex items-end gap-2 animate-fade-in">
+                <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0 text-accent-text">
+                    <i data-feather="smile" class="w-5 h-5"></i>
+                </div>
+                <div class="bg-bg-tertiary p-3 rounded-lg max-w-xs">
+                    <p class="text-sm">${text}</p>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+        feather.replace();
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const addUserMessage = (text) => {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageHTML = `
+            <div class="flex items-end gap-2 justify-end animate-fade-in">
+                <div class="bg-accent p-3 rounded-lg max-w-xs">
+                    <p class="text-sm text-accent-text">${text}</p>
+                </div>
+            </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const getBotResponse = (userMessage) => {
+        // Simple keyword-based responses for demonstration
+        const lowerMessage = userMessage.toLowerCase();
+        if (lowerMessage.includes("ansioso") || lowerMessage.includes("preocupado") || lowerMessage.includes("nervoso")) {
+            return "Percebo que a ansiedade está presente. É uma sensação que pode ser muito intensa. Se você se sentir confortável, pode me contar o que está passando pela sua mente?";
+        }
+        if (lowerMessage.includes("triste") || lowerMessage.includes("sozinho") || lowerMessage.includes("pra baixo")) {
+            return "Sinto muito que esteja se sentindo assim. A tristeza pode ser pesada. Lembre-se que este é um espaço seguro para você, e eu estou aqui para te ouvir.";
+        }
+        if (lowerMessage.includes("obrigado") || lowerMessage.includes("ajudou")) {
+            return "Fico feliz em poder ser um apoio para você. Lembre-se, minha programação é estar sempre aqui se precisar conversar. Cuide-se bem.";
+        }
+        if (lowerMessage.includes("quem é você") || lowerMessage.includes("você é um robô")) {
+            return "Eu sou o Zen, uma inteligência artificial criada para ser um ouvinte empático. Não sou uma pessoa, mas fui programado para oferecer um espaço seguro e sem julgamentos para você se expressar.";
+        }
+        // Generic empathetic responses
+        const responses = [
+            "Entendi. Se quiser, pode me contar mais sobre isso.",
+            "Isso parece ser algo importante para você. Agradeço por compartilhar.",
+            "É preciso coragem para falar sobre nossos sentimentos. Estou aqui, ouvindo.",
+            "E como você se sentiu com essa situação?",
+            "Na sua opinião, o que poderia te ajudar a se sentir um pouco melhor neste momento?"
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    };
+
+    document.getElementById('chat-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+
+        if (message) {
+            addUserMessage(message);
+            input.value = '';
+            showTypingIndicator();
+            // Simulate bot thinking and responding
+            setTimeout(() => {
+                hideTypingIndicator();
+                const botResponse = getBotResponse(message);
+                addBotMessage(botResponse);
+            }, 1500);
+        }
+    });
+
+    document.getElementById('chat-back-btn').addEventListener('click', () => {
+        playClickSound();
+        toggleMainUI(true); // Show main header/nav again
+        navigateTo('specialists-list-screen');
     });
 });
