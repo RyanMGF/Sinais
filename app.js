@@ -1306,18 +1306,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const validateContactForm = (nameInput, phoneInput, addButton) => {
+        const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        const isValid = name.length > 0 && phone.length === 15;
+
+        if (isValid) {
+            addButton.disabled = false;
+            addButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            if (addButton.id === 'add-mandatory-contact-btn') {
+                addButton.classList.add('hover:opacity-80');
+            } else {
+                addButton.classList.add('hover:bg-accent-hover');
+            }
+        } else {
+            addButton.disabled = true;
+            addButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    };
+
     document.getElementById('add-mandatory-contact-btn').addEventListener('click', () => {
         playClickSound();
         const nameInput = document.getElementById('mandatory-contact-name-input');
         const phoneInput = document.getElementById('mandatory-contact-phone-input');
+        const errorDiv = document.getElementById('mandatory-contact-error');
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
 
+        // Clear previous error
+        errorDiv.textContent = '';
+
         if (name && phone) {
+            if (phone.length < 15) {
+                errorDiv.textContent = 'Por favor, insira um número de telefone completo.';
+                return;
+            }
             state.favoriteContacts.push({ id: Date.now(), name, phone });
             renderMandatoryContacts();
             nameInput.value = '';
             phoneInput.value = '';
+            validateContactForm(nameInput, phoneInput, document.getElementById('add-mandatory-contact-btn'));
+        } else {
+            errorDiv.textContent = 'Nome e telefone são obrigatórios.';
         }
     });
 
@@ -1329,6 +1359,18 @@ document.addEventListener('DOMContentLoaded', () => {
             state.favoriteContacts = state.favoriteContacts.filter(c => c.id.toString() !== contactId);
             renderMandatoryContacts();
         }
+    });
+
+    // Add input listeners for mandatory contact form validation
+    ['mandatory-contact-name-input', 'mandatory-contact-phone-input'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            const nameInput = document.getElementById('mandatory-contact-name-input');
+            const phoneInput = document.getElementById('mandatory-contact-phone-input');
+            const addBtn = document.getElementById('add-mandatory-contact-btn');
+            const errorDiv = document.getElementById('mandatory-contact-error');
+            errorDiv.textContent = ''; // Clear error on input
+            validateContactForm(nameInput, phoneInput, addBtn);
+        });
     });
 
     document.getElementById('mandatory-contact-continue-btn').addEventListener('click', () => {
@@ -1460,15 +1502,37 @@ document.addEventListener('DOMContentLoaded', () => {
         playClickSound();
         const nameInput = document.getElementById('resources-contact-name-input');
         const phoneInput = document.getElementById('resources-contact-phone-input');
+        const errorDiv = document.getElementById('resources-contact-error');
         const name = nameInput.value.trim();
         const phone = phoneInput.value.trim();
 
+        // Clear previous error
+        errorDiv.textContent = '';
+
         if (name && phone) {
+            if (phone.length < 15) {
+                errorDiv.textContent = 'Por favor, insira um número de telefone completo.';
+                return;
+            }
             state.favoriteContacts.push({ id: Date.now(), name, phone });
             renderEmergencyContacts();
             nameInput.value = '';
             phoneInput.value = '';
+        } else {
+            errorDiv.textContent = 'Nome e telefone são obrigatórios.';
         }
+    });
+
+    // Add input listeners for resources contact form validation
+    ['resources-contact-name-input', 'resources-contact-phone-input'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            const nameInput = document.getElementById('resources-contact-name-input');
+            const phoneInput = document.getElementById('resources-contact-phone-input');
+            const addBtn = document.getElementById('add-resources-contact-btn');
+            const errorDiv = document.getElementById('resources-contact-error');
+            errorDiv.textContent = ''; // Clear error on input
+            validateContactForm(nameInput, phoneInput, addBtn);
+        });
     });
 
     document.getElementById('emergency-help-section').addEventListener('click', (e) => {

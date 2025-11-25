@@ -97,10 +97,11 @@
                 <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
                     <h3 class="text-lg font-semibold mb-3">Adicionar Contato</h3>
                     <div class="flex items-center gap-2 mb-3">
-                        <input type="text" id="mandatory-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Nome (Ex: Mãe)">
-                        <input type="tel" id="mandatory-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Telefone">
+                        <input type="text" id="mandatory-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Nome (Ex: Mãe)" required>
+                        <input type="tel" id="mandatory-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input" placeholder="Telefone, Ex:(DD)9" required oninput="handlePhoneInput(event)" maxlength="15">
                     </div>
-                    <button id="add-mandatory-contact-btn" class="interactive-btn w-full bg-bg-tertiary text-text-primary font-semibold py-2 px-4 rounded-lg hover:opacity-80 transition-all">
+                    <div id="mandatory-contact-error" class="text-red-500 text-sm mb-3 text-center"></div>
+                    <button id="add-mandatory-contact-btn" class="interactive-btn w-full bg-bg-tertiary text-text-primary font-semibold py-2 px-4 rounded-lg transition-all opacity-50 cursor-not-allowed" disabled>
                         Adicionar
                     </button>
                 </div>
@@ -400,9 +401,10 @@
                         <h3 class="text-lg font-semibold mb-3 text-left">Adicionar Novo Contato</h3>
                         <div class="flex items-center gap-2 mb-3">
                             <input type="text" id="resources-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Nome">
-                            <input type="tel" id="resources-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Telefone">
+                            <input type="tel" id="resources-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Telefone" required oninput="handlePhoneInput(event)" maxlength="15">
                         </div>
-                        <button id="add-resources-contact-btn" class="interactive-btn w-full bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-opacity">
+                        <div id="resources-contact-error" class="text-red-500 text-sm mb-3 text-center"></div>
+                        <button id="add-resources-contact-btn" class="interactive-btn w-full bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg transition-opacity opacity-50 cursor-not-allowed" disabled>
                             Adicionar à Rede
                         </button>
                     </div>
@@ -842,6 +844,32 @@
     <!-- ====================================================================== -->
     <!-- ======================= JAVASCRIPT MODULES ======================= -->
     <!-- ====================================================================== -->
+
+    <script>
+        /**
+         * Formats a phone number input to (DD) 9XXXX-XXXX as the user types.
+         * @param {InputEvent} event - The input event from the phone number field.
+         */
+        function handlePhoneInput(event) {
+            const input = event.target;
+            let value = input.value;
+
+            // First, remove all non-digit characters to get only the numbers.
+            let numbers = value.replace(/\D/g, '');
+
+            // Apply the mask (DD) 9XXXX-XXXX
+            if (numbers.length > 10) {
+                numbers = numbers.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (numbers.length > 6) {
+                numbers = numbers.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (numbers.length > 2) {
+                numbers = numbers.replace(/^(\d{2})(\d*)/, '($1) $2');
+            } else if (numbers.length > 0) {
+                numbers = numbers.replace(/^(\d*)/, '($1');
+            }
+            input.value = numbers;
+        }
+    </script>
                 
     <!-- Main Application Script -->
     <script src="app.js"></script>
