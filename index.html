@@ -3,52 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinais de Emoções</title>
+    <title>Ecoar | Dando voz ao que você sente</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            // darkMode is handled by a 'data-theme' attribute now
             theme: {
                 extend: {
                     colors: {
+                        bauhaus: {
+                            canvas: 'var(--bauhaus-canvas)',
+                            ink: 'var(--bauhaus-ink)',
+                            red: 'var(--bauhaus-red)',
+                            blue: 'var(--bauhaus-blue)',
+                            yellow: 'var(--bauhaus-yellow)',
+                            muted: 'var(--bauhaus-muted)',
+                        },
                         'bg-primary': 'rgb(var(--color-bg-primary) / <alpha-value>)',
                         'bg-secondary': 'rgb(var(--color-bg-secondary) / <alpha-value>)',
                         'bg-tertiary': 'rgb(var(--color-bg-tertiary) / <alpha-value>)',
                         'bg-input': 'rgb(var(--color-bg-input) / <alpha-value>)',
                         'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
-                        'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
-                        'text-muted': 'rgb(var(--color-text-muted) / <alpha-value>)',
+                        'text-secondary': 'rgb(var(--color-text-primary) / 0.72)',
+                        'text-muted': 'rgb(var(--color-text-primary) / 0.65)',
                         'border-primary': 'rgb(var(--color-border-primary) / <alpha-value>)',
                         'accent': 'rgb(var(--color-accent) / <alpha-value>)',
                         'accent-hover': 'rgb(var(--color-accent-hover) / <alpha-value>)',
                         'accent-text': 'rgb(var(--color-accent-text) / <alpha-value>)',
                         'accent-bg-light': 'rgb(var(--color-accent-bg-light) / <alpha-value>)',
                         'accent-text-dark': 'rgb(var(--color-accent-text-dark) / <alpha-value>)',
-                    }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'hard-sm': '4px 4px 0 var(--bauhaus-ink)',
+                        'hard-md': '6px 6px 0 var(--bauhaus-ink)',
+                        'hard-lg': '8px 8px 0 var(--bauhaus-ink)',
+                    },
                 }
             }
         }
     </script>
     
-    <!-- Google Fonts: Poppins -->
+    <!-- Google Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- Confetti for celebrations -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
-    <!-- QUnit for Unit Testing -->
-    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.20.0.css">
-    <script src="https://code.jquery.com/qunit/qunit-2.20.0.js"></script>
 
     <!-- SortableJS for Drag and Drop -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -61,8 +70,18 @@
     <div id="app-container" class="max-w-lg mx-auto min-h-screen bg-bg-secondary shadow-lg flex flex-col">
         
         <!-- App Header -->
-        <header id="app-header" class="p-4 border-b border-border-primary hidden">
-            <h1 class="text-xl font-bold text-center text-text-primary"></h1>
+        <header id="app-header" class="grid grid-cols-[1fr_auto] grid-rows-[auto_auto] items-center gap-x-3 gap-y-2 p-3 border-b border-border-primary hidden">
+            <div class="col-start-1 row-start-1 flex items-center gap-2">
+                <div class="bauhaus-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+                <button id="toggle-user-role-btn" class="interactive-btn flex items-center gap-1 p-2 rounded-full text-text-muted hover:text-accent hover:bg-bg-tertiary" aria-label="Alternar perfil (atual: Aluno)" title="Alternar perfil">
+                    <i data-feather="users"></i>
+                    <span id="current-role-label" class="hidden sm:inline text-xs font-semibold">Aluno</span>
+                </button>
+            </div>
+            <h1 class="col-span-2 row-start-2 text-lg leading-tight font-bold text-center text-text-primary"></h1>
+            <button id="open-settings-btn" class="interactive-btn col-start-2 row-start-1 justify-self-end p-2 rounded-full text-text-muted hover:text-accent hover:bg-bg-tertiary" aria-label="Ajustes" title="Ajustes">
+                <i data-feather="settings"></i>
+            </button>
         </header>
 
         <main class="flex-grow p-6 overflow-y-auto">
@@ -72,9 +91,9 @@
             <div id="onboarding-screen" class="screen flex flex-col justify-center h-full text-center">
                 <div id="onboarding-content-wrapper" class="flex-grow flex flex-col items-center justify-center">
                     <div id="onboarding-icon-container" class="mb-6">
-                        <i data-feather="heart" class="w-24 h-24 text-accent"></i>
+                        <i data-feather="radio" class="w-20 h-20 text-accent"></i>
                     </div>
-                    <h2 id="onboarding-title" class="text-2xl md:text-3xl font-bold mb-3 text-text-primary"></h2>
+                    <h1 id="onboarding-title" class="text-4xl font-black uppercase mb-3 text-text-primary"></h1>
                     <p id="onboarding-text" class="text-text-secondary max-w-md mx-auto"></p>
                 </div>
                 <div class="w-full pt-8 pb-4">
@@ -117,13 +136,13 @@
             <div id="checkin-screen" class="screen text-center">
                 <p class="text-lg text-text-secondary mb-8">Escolha a cor que melhor representa seu sentimento agora.</p>
                 <div class="space-y-4">
-                    <button data-mood="verde" class="interactive-btn mood-btn w-full bg-green-500 hover:bg-green-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                    <button data-mood="verde" class="interactive-btn mood-btn w-full bg-green-500 hover:bg-green-600 text-black font-bold py-6 rounded-xl shadow-hard-md transition-transform transform hover:scale-105">
                         <i data-feather="smile" class="inline-block mr-2"></i> Siga em Frente
                     </button>
-                    <button data-mood="amarelo" class="interactive-btn mood-btn w-full bg-amber-400 hover:bg-amber-500 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                    <button data-mood="amarelo" class="interactive-btn mood-btn w-full bg-amber-400 hover:bg-amber-500 text-black font-bold py-6 rounded-xl shadow-hard-md transition-transform transform hover:scale-105">
                         <i data-feather="meh" class="inline-block mr-2"></i> Atenção
                     </button>
-                    <button data-mood="vermelho" class="interactive-btn mood-btn w-full bg-red-500 hover:bg-red-600 text-white font-bold py-6 rounded-xl shadow-md transition-transform transform hover:scale-105">
+                    <button data-mood="vermelho" class="interactive-btn mood-btn w-full bg-red-500 hover:bg-red-600 text-black font-bold py-6 rounded-xl shadow-hard-md transition-transform transform hover:scale-105">
                         <i data-feather="frown" class="inline-block mr-2"></i> Pare
                     </button>
                 </div>
@@ -138,8 +157,8 @@
                         <div id="predefined-tags-container" class="flex flex-wrap gap-2"></div>
                     </div>
                     <div class="mb-6">
-                        <label for="notes" class="block text-lg font-semibold mb-2">Notas (Opcional)</label>
-                        <textarea id="notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="O que aconteceu? Descreva a situação ou o sentimento."></textarea>
+                        <label for="notes" class="block text-lg font-semibold mb-2">Contexto (opcional)</label>
+                        <textarea id="notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Se quiser, conte o que influenciou como você se sente."></textarea>
                     </div>
                     <button type="submit" id="save-checkin-btn" class="interactive-btn w-full text-accent-text font-bold py-4 rounded-full shadow-lg transition-all duration-300 bg-accent hover:shadow-xl transform hover:-translate-y-1">
                         Salvar Registro
@@ -150,29 +169,17 @@
             <!-- Feedback Screen -->
             <div id="feedback-screen" class="screen flex flex-col items-center justify-center h-full text-center">
                 <i id="feedback-icon" data-feather="smile" class="w-20 h-20 text-accent mb-6"></i>
-                <h2 id="feedback-title" class="text-3xl font-bold mb-4 text-text-primary">Que bom!</h2>
-                <p id="feedback-message" class="text-text-secondary mb-8">É ótimo ver que você está se sentindo bem. Continue assim!</p>
+                <h2 id="feedback-title" class="text-3xl font-bold mb-4 text-text-primary">Obrigado por compartilhar.</h2>
+                <p id="feedback-message" class="text-text-secondary mb-8">A escola está aqui para te ouvir.</p>
                 <button id="feedback-continue-btn" class="interactive-btn text-accent-text font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300">
                     Continuar
                 </button>
             </div>
 
-            <!-- Contextual Tips Screen -->
-            <div id="contextual-tips-screen" class="screen">
-                <h2 class="text-2xl font-bold mb-4 text-center">Dicas para seu Momento</h2>
-                <p class="text-text-secondary mb-8 text-center">Com base no que você compartilhou, aqui estão algumas sugestões.</p>
-                <div id="tips-container" class="space-y-6 mb-8">
-                    <!-- Tips will be rendered here by JS -->
-                </div>
-                <button id="tips-continue-btn" class="interactive-btn w-full bg-accent text-accent-text font-bold py-3 px-8 rounded-full shadow-lg hover:bg-accent-hover transition-all duration-300">
-                    Entendido
-                </button>
-            </div>
-
             <!-- Weekly Diagnosis Screen -->
             <div id="diagnosis-screen" class="screen">
-                <h3 class="text-2xl font-bold mb-2 text-center">Diagnóstico Semanal</h3>
-                <p class="text-text-muted text-center mb-8">Um resumo dos seus sentimentos nos últimos 7 dias.</p>
+                <h3 class="text-2xl font-bold mb-2 text-center">Resumo Semanal</h3>
+                <p class="text-text-muted text-center mb-8">Visão geral dos registros dos últimos 7 dias.</p>
                 
                 <div id="diagnosis-content" class="hidden">
                     <div class="mb-8">
@@ -186,23 +193,38 @@
                 </div>
                 <div id="no-diagnosis-data" class="text-center text-text-muted py-16 hidden">
                     <i data-feather="calendar" class="w-16 h-16 mx-auto mb-4"></i>
-                    <p>Não há registros suficientes na última semana para gerar um diagnóstico.</p>
+                    <p>Não há registros suficientes na última semana para gerar um resumo.</p>
                 </div>
             </div>
 
-            <!-- Gratitude Journal Screen -->
-            <div id="gratitude-journal-screen" class="screen">
-                <h3 class="text-2xl font-bold mb-2 text-center">Diário de Gratidão</h3>
-                <p class="text-text-muted text-center mb-8">Registre as coisas pelas quais você é grato(a) hoje.</p>
-                <div class="mb-6">
-                    <textarea id="new-gratitude-entry-input" rows="3" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Hoje sou grato(a) por..."></textarea>
-                    <button type="button" id="add-new-gratitude-entry-btn" class="interactive-btn w-full mt-3 bg-accent text-accent-text font-bold py-3 rounded-lg hover:bg-accent-hover transition-colors">
-                        Adicionar Gratidão
-                    </button>
-                </div>
-                <div id="gratitude-entries-list" class="space-y-3">
-                    <!-- Entries will be rendered here -->
-                </div>
+            <!-- Coordinator Dashboard Screen -->
+            <div id="coordinator-dashboard-screen" class="screen">
+                <section class="mb-10">
+                    <div class="flex flex-wrap items-start justify-between gap-2 mb-4">
+                        <div>
+                            <h2 class="text-xl font-bold">Alertas Silenciosos</h2>
+                            <p class="text-sm text-text-secondary mt-1">Alunos com registro vermelho nas últimas 48 horas.</p>
+                        </div>
+                        <span class="text-xs font-semibold text-red-600 bg-red-500/10 px-3 py-1 rounded-full">Acompanhamento reservado</span>
+                    </div>
+                    <div id="coordinator-alerts-list" class="space-y-3" aria-live="polite"></div>
+                </section>
+
+                <section class="heatmap-panel">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold">Mapa de Calor das Turmas</h2>
+                        <p class="text-sm text-text-secondary mt-1">Emoção predominante por turma, de segunda a sexta.</p>
+                    </div>
+                    <div class="overflow-x-auto pb-2">
+                        <div id="coordinator-heatmap" class="min-w-[440px] space-y-2" role="table" aria-label="Mapa de calor semanal das turmas"></div>
+                    </div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-4 text-xs text-text-secondary" aria-label="Legenda do mapa de calor">
+                        <span class="inline-flex items-center gap-2"><i class="w-3 h-3 rounded-sm bg-green-500"></i>Verde</span>
+                        <span class="inline-flex items-center gap-2"><i class="w-3 h-3 rounded-sm bg-amber-400"></i>Amarelo</span>
+                        <span class="inline-flex items-center gap-2"><i class="w-3 h-3 rounded-sm bg-red-500"></i>Vermelho</span>
+                        <span class="inline-flex items-center gap-2"><i class="w-3 h-3 rounded-sm bg-bg-tertiary border border-border-primary"></i>Sem registros</span>
+                    </div>
+                </section>
             </div>
 
             <!-- Statistics Screen -->
@@ -211,7 +233,7 @@
                 <div id="stats-content" class="space-y-6">
                     <!-- General Stats -->
                     <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
-                        <h4 class="text-lg font-bold mb-2">Resumo da Jornada</h4>
+                        <h4 class="text-lg font-bold mb-2">Resumo de registros</h4>
                         <div class="flex justify-between text-sm">
                             <span class="text-text-secondary">Total de Registros:</span>
                             <span id="stats-total-checkins" class="font-bold"></span>
@@ -231,110 +253,6 @@
                 </div>_
             </div>
 
-            <!-- Journey Hub Screen -->
-            <div id="journey-screen" class="screen">
-                <h3 class="text-2xl font-bold mb-8 text-center">Sua Jornada</h3>
-                <div class="space-y-4">
-                    <button data-screen="history-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="bar-chart-2" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Histórico</h4>
-                                <p class="text-sm text-text-secondary text-left">Veja seus registros e padrões.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                    <button data-screen="stats-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="pie-chart" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Estatísticas</h4>
-                                <p class="text-sm text-text-secondary text-left">Insights sobre suas emoções.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                    <button data-screen="diagnosis-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="compass" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Diagnóstico</h4>
-                                <p class="text-sm text-text-secondary text-left">Análise do seu humor semanal.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                    <button data-screen="achievements-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="star" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Conquistas</h4>
-                                <p class="text-sm text-text-secondary text-left">Acompanhe seu progresso.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                    <button data-screen="goals-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="target" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Metas</h4>
-                                <p class="text-sm text-text-secondary text-left">Defina seus objetivos.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                    <button data-screen="gratitude-journal-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="sun" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Diário de Gratidão</h4>
-                                <p class="text-sm text-text-secondary text-left">Foque nos pontos positivos.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                    <button data-screen="quote-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="sunrise" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Frase do Dia</h4>
-                                <p class="text-sm text-text-secondary text-left">Uma dose diária de inspiração.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quote of the Day Screen -->
-            <div id="quote-screen" class="screen flex flex-col items-center justify-center h-full text-center">
-                <div class="w-full max-w-md">
-                    <i data-feather="sunrise" class="w-16 h-16 text-accent mx-auto mb-6"></i>
-                    <h3 class="text-2xl font-bold mb-8">Frase do Dia</h3>
-                    <blockquote id="quote-text" class="text-xl lg:text-2xl font-semibold text-text-primary mb-4 italic">
-                        <!-- Quote will be rendered here -->
-                    </blockquote>
-                    <p id="quote-author" class="text-text-secondary font-medium">— Autor Desconhecido</p>
-
-                    <div class="mt-12">
-                        <button id="toggle-add-quote-form-btn" class="interactive-btn text-accent font-semibold py-2 px-4 rounded-lg hover:bg-accent/10 transition-colors">
-                            Adicionar sua frase
-                        </button>
-                        <div id="add-quote-form-container" class="hidden mt-4 p-4 bg-bg-tertiary rounded-lg text-left">
-                            <h4 class="font-bold mb-3">Nova Frase Motivacional</h4>
-                            <textarea id="new-quote-text-input" rows="3" class="w-full p-2 border border-border-primary rounded-lg bg-bg-input mb-2" placeholder="Escreva a frase aqui..."></textarea>
-                            <input type="text" id="new-quote-author-input" class="w-full p-2 border border-border-primary rounded-lg bg-bg-input mb-3" placeholder="Autor (opcional)">
-                            <div class="flex justify-end gap-2">
-                                <button id="cancel-add-quote-btn" class="interactive-btn px-4 py-2 bg-bg-secondary text-text-primary rounded-lg hover:opacity-80">Cancelar</button>
-                                <button id="save-new-quote-btn" class="interactive-btn px-4 py-2 bg-accent text-accent-text rounded-lg hover:bg-accent-hover">Salvar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- History Dashboard Screen -->
             <div id="history-screen" class="screen">
                 <div id="calendar-view" class="mb-8">
@@ -349,9 +267,8 @@
                 </div>
 
                 <div class="flex justify-end mb-4 -mt-4">
-                    <button id="zen-mode-toggle" title="Modo Zen" class="flex items-center gap-2 text-text-muted hover:text-accent p-2 rounded-lg transition-colors">
-                        <i data-feather="leaf"></i>
-                        <span class="text-sm font-semibold">Modo Zen</span>
+                    <button data-screen="stats-screen" class="interactive-btn journey-link text-accent font-semibold text-sm hover:underline">
+                        Ver estatísticas detalhadas
                     </button>
                 </div>
 
@@ -388,9 +305,15 @@
 
             <!-- Resource Library Screen -->
             <div id="resources-screen" class="screen">
-                <div id="emergency-help-section" class="mb-8 p-6 rounded-lg bg-red-500/10 border border-red-500/20 text-center">
-                    <h3 class="text-xl font-bold mb-2 text-red-600 dark:text-red-400">Ajuda Urgente</h3>
-                    <p class="text-text-secondary mb-4">Se você está em uma crise, ligue para o Centro de Valorização da Vida (CVV).</p>
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-2">Rede de Apoio Escolar</h2>
+                    <p class="text-text-secondary mb-5">Contatos demonstrativos da equipe escolar. Consulte a escola para confirmar os canais oficiais.</p>
+                    <div id="school-support-contacts" class="space-y-3"></div>
+                </section>
+
+                <div id="emergency-help-section" class="mb-8 p-6 bg-red-500/10 border border-red-500/20 text-center">
+                    <h3 class="text-xl font-bold mb-2 text-red-600">Apoio imediato</h3>
+                    <p class="text-text-secondary mb-4">Para conversar com o Centro de Valorização da Vida, ligue 188.</p>
                     <a href="tel:188" class="w-full bg-red-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-600 transition-colors duration-300 flex items-center justify-center gap-3">
                         <i data-feather="phone-call"></i> Ligar para CVV - 188
                     </a>
@@ -398,35 +321,16 @@
                         <!-- Favorite contacts will be rendered here -->
                     </div>
                     <div class="mt-6 pt-6 border-t border-red-500/20">
-                        <h3 class="text-lg font-semibold mb-3 text-left">Adicionar Novo Contato</h3>
+                        <h3 class="text-lg font-semibold mb-3 text-left">Adicionar contato de confiança</h3>
                         <div class="flex items-center gap-2 mb-3">
                             <input type="text" id="resources-contact-name-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Nome">
                             <input type="tel" id="resources-contact-phone-input" class="w-1/2 p-3 border border-border-primary rounded-lg bg-bg-input text-text-primary" placeholder="Telefone" required oninput="handlePhoneInput(event)" maxlength="15">
                         </div>
                         <div id="resources-contact-error" class="text-red-500 text-sm mb-3 text-center"></div>
                         <button id="add-resources-contact-btn" class="interactive-btn w-full bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg transition-opacity opacity-50 cursor-not-allowed" disabled>
-                            Adicionar à Rede
+                            Adicionar contato
                         </button>
                     </div>
-                </div>
-
-                <!-- Botão para Falar com Especialista -->
-                <div class="my-8">
-                    <button data-screen="specialists-list-screen" class="interactive-btn journey-link w-full bg-bg-secondary p-6 rounded-lg border border-border-primary flex items-center justify-between hover:border-accent hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                        <div class="flex items-center gap-4">
-                            <i data-feather="users" class="w-8 h-8 text-accent"></i>
-                            <div>
-                                <h4 class="text-lg font-bold text-left">Falar com Especialista</h4>
-                                <p class="text-sm text-text-secondary text-left">Agende uma consulta online.</p>
-                            </div>
-                        </div>
-                        <i data-feather="chevron-right" class="w-6 h-6 text-text-muted"></i>
-                    </button>
-                </div>
-                <div id="suggested-resources" class="mb-8"></div>
-                <div id="all-resources">
-                    <h3 class="text-xl font-bold mb-4">Biblioteca Completa</h3>
-                    <div id="resources-list" class="space-y-4"></div>
                 </div>
             </div>
 
@@ -434,16 +338,6 @@
             <div id="settings-screen" class="screen">
                 <h3 class="text-xl font-bold mb-6">Configurações</h3>
                 <div class="space-y-4">
-                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
-                        <h4 class="text-lg font-bold mb-4">Tema</h4>
-                        <div id="theme-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            <button data-theme="auto" class="interactive-btn theme-btn p-3 rounded-lg border-2 border-border-primary transition-all">Automático</button>
-                            <button data-theme="light" class="interactive-btn theme-btn p-3 rounded-lg border-2 border-border-primary transition-all">Claro</button>
-                            <button data-theme="dark" class="interactive-btn theme-btn p-3 rounded-lg border-2 border-border-primary transition-all">Escuro</button>
-                            <button data-theme="ocean" class="interactive-btn theme-btn p-3 rounded-lg border-2 border-border-primary transition-all">Oceano</button>                            
-                            <button data-theme="nature" class="interactive-btn theme-btn p-3 rounded-lg border-2 border-border-primary transition-all">Natureza</button>
-                        </div>
-                    </div>
                     <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex justify-between items-center">
                         <div>
                             <h4 class="text-lg font-bold">Modo Foco</h4>
@@ -456,7 +350,7 @@
                     <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary">
                         <div class="flex justify-between items-center">
                             <div>
-                                <h4 class="text-lg font-bold">Lembrete Diário</h4>
+                                <h4 class="text-lg font-bold">Lembrete de Check-in</h4>
                                 <p class="text-sm text-text-secondary">Receba uma notificação para seu check-in.</p>
                             </div>
                             <button id="reminder-toggle" role="switch" aria-checked="false" class="toggle-switch relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent">
@@ -512,180 +406,6 @@
                 </div>
             </div>
 
-            <!-- Achievements Screen -->
-            <div id="achievements-screen" class="screen">
-                <h3 class="text-2xl font-bold mb-2 text-center">Minhas Conquistas</h3>
-                <p class="text-text-muted text-center mb-8">Continue registrando para desbloquear todas!</p>
-                <div id="achievements-list" class="grid grid-cols-2 gap-4">
-                    <!-- Achievements will be rendered here -->
-                </div>
-            </div>
-
-            <!-- Goals Screen -->
-            <div id="goals-screen" class="screen">
-                <h3 class="text-2xl font-bold mb-2 text-center">Minhas Metas</h3>
-                <p class="text-text-muted text-center mb-8">Defina objetivos para seu bem-estar emocional.</p>
-                <div class="flex items-center gap-2 mb-6">
-                    <input type="text" id="new-goal-input" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted" placeholder="Ex: Meditar 5 minutos por dia">
-                    <button type="button" id="add-new-goal-btn" class="interactive-btn bg-accent text-accent-text p-3 rounded-lg hover:bg-accent-hover transition-colors flex-shrink-0">
-                        <i data-feather="plus"></i>
-                    </button>
-                </div>
-                <div id="goals-list" class="space-y-3">
-                    <!-- Goals will be rendered here -->
-                </div>
-                <div class="mt-12">
-                    <button id="toggle-archived-goals-btn" class="interactive-btn w-full flex justify-between items-center p-4 bg-bg-tertiary rounded-lg transition-all">
-                        <span class="font-semibold text-text-secondary">Metas Arquivadas</span>
-                        <i data-feather="chevron-down" id="archived-goals-chevron" class="text-text-secondary transition-transform"></i>
-                    </button>
-                    <div id="archived-goals-container" class="hidden mt-4 space-y-3">
-                    </div>
-                </div>
-            </div>
-
-            <!-- ====================================================================== -->
-            <!-- =================== TELAS DE CONSULTA COM ESPECIALISTA ================= -->
-            <!-- ====================================================================== -->
-
-            <!-- Specialists List Screen -->
-            <div id="specialists-list-screen" class="screen">
-                <h3 class="text-2xl font-bold mb-2 text-center">Fale com um Especialista</h3>
-                <p class="text-text-muted text-center mb-8">Encontre profissionais qualificados para te ajudar na sua jornada.</p>
-                <div id="specialists-container" class="space-y-4">
-                    <!-- Apoio Imediato 24hs (Opção Gratuita) -->
-                    <div class="bg-accent-bg-light p-4 rounded-lg border-2 border-accent flex flex-col sm:flex-row items-center gap-4">
-                        <div class="w-24 h-24 rounded-full bg-accent flex items-center justify-center border-4 border-bg-tertiary flex-shrink-0">
-                            <i data-feather="message-circle" class="w-12 h-12 text-accent-text"></i>
-                        </div>
-                        <div class="flex-grow text-center sm:text-left">
-                            <h4 class="text-lg font-bold text-accent-text-dark">Apoio Imediato 24h</h4>
-                            <p class="text-sm text-accent font-semibold">Conversa de apoio gratuita</p>
-                            <p class="text-xs text-text-secondary mt-1">Um espaço seguro para desabafar com um ouvinte treinado, a qualquer hora.</p>
-                        </div>
-                        <div class="w-full sm:w-auto text-center mt-4 sm:mt-0">
-                            <p class="text-lg font-bold text-green-600 dark:text-green-400">Gratuito</p>
-                            <button data-action="start-immediate-chat" class="interactive-btn w-full sm:w-auto bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all mt-2">
-                                Conversar Agora
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Exemplo de Card de Especialista (será renderizado dinamicamente) -->
-                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex flex-col sm:flex-row items-center gap-4">
-                        <img src="https://i.pravatar.cc/150?img=5" alt="Foto do Especialista" class="w-24 h-24 rounded-full object-cover border-4 border-bg-tertiary">
-                        <div class="flex-grow text-center sm:text-left">
-                            <h4 class="text-lg font-bold text-text-primary">Dr. Carlos Pereira</h4>
-                            <p class="text-sm text-accent font-semibold">Psicologia Clínica</p>
-                            <p class="text-xs text-text-secondary mt-1">10+ anos de experiência em terapia cognitivo-comportamental.</p>
-                        </div>
-                        <div class="w-full sm:w-auto text-center">
-                            <p class="text-lg font-bold text-text-primary">R$ 150</p>
-                            <p class="text-xs text-text-muted -mt-1 mb-2">/ sessão</p>
-                            <button class="interactive-btn specialist-schedule-btn w-full sm:w-auto bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all">
-                                Agendar
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Outro exemplo -->
-                    <div class="bg-bg-secondary p-4 rounded-lg border border-border-primary flex flex-col sm:flex-row items-center gap-4">
-                        <img src="https://i.pravatar.cc/150?img=32" alt="Foto da Especialista" class="w-24 h-24 rounded-full object-cover border-4 border-bg-tertiary">
-                        <div class="flex-grow text-center sm:text-left">
-                            <h4 class="text-lg font-bold text-text-primary">Dra. Ana Júlia</h4>
-                            <p class="text-sm text-accent font-semibold">Mindfulness e Ansiedade</p>
-                            <p class="text-xs text-text-secondary mt-1">Especialista em técnicas de redução de estresse e atenção plena.</p>
-                        </div>
-                        <div class="w-full sm:w-auto text-center">
-                            <p class="text-lg font-bold text-text-primary">R$ 130</p>
-                            <p class="text-xs text-text-muted -mt-1 mb-2">/ sessão</p>
-                            <button class="interactive-btn specialist-schedule-btn w-full sm:w-auto bg-accent text-accent-text font-semibold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all">
-                                Agendar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Consultation Scheduling Screen -->
-            <div id="consultation-scheduling-screen" class="screen">
-                <div class="bg-bg-secondary rounded-lg shadow-lg border border-border-primary overflow-hidden">
-                    <!-- Painel de Informações e Confirmação -->
-                    <div class="p-6 border-b border-border-primary text-center">
-                        <img src="https://i.pravatar.cc/150?img=5" alt="Foto do Especialista" id="scheduling-specialist-img" class="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-bg-tertiary">
-                        <h2 id="scheduling-specialist-name" class="text-xl font-bold text-text-primary">Dr. Carlos Pereira</h2>
-                        <p id="scheduling-specialist-specialty" class="text-accent font-semibold">Psicologia Clínica</p>
-                        <div class="mt-4 bg-accent-bg-light text-accent-text-dark p-3 rounded-lg text-sm">
-                            <p><strong>Data:</strong> <span id="scheduling-selected-date">--</span></p>
-                            <p><strong>Hora:</strong> <span id="scheduling-selected-time">--</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Painel de Agendamento -->
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold mb-4 text-center">Selecione uma data e horário</h3>
-                        <!-- Calendário -->
-                        <div id="scheduling-calendar-header" class="text-center font-bold mb-2">Outubro 2024</div>
-                        <div id="scheduling-calendar-grid" class="grid grid-cols-7 gap-1 text-center mb-6">
-                            <div class="text-xs font-bold text-text-muted">D</div>
-                            <div class="text-xs font-bold text-text-muted">S</div>
-                            <div class="text-xs font-bold text-text-muted">T</div>
-                            <div class="text-xs font-bold text-text-muted">Q</div>
-                            <div class="text-xs font-bold text-text-muted">Q</div>
-                            <div class="text-xs font-bold text-text-muted">S</div>
-                            <div class="text-xs font-bold text-text-muted">S</div>
-                            <!-- Dias serão gerados pelo JS -->
-                        </div>
-
-                        <!-- Slots de Horário -->
-                        <h4 id="scheduling-time-slots-title" class="font-semibold mb-3 text-center">Selecione um dia para ver os horários</h4>
-                        <div id="scheduling-time-slots" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                            <!-- Horários serão gerados pelo JS -->
-                        </div>
-                    </div>
-                </div>
-                <button id="confirm-consultation-btn" class="interactive-btn w-full bg-accent text-accent-text font-bold py-4 rounded-full shadow-lg mt-6 transition-all duration-300 opacity-50 cursor-not-allowed" disabled>
-                    Confirmar Agendamento
-                </button>
-            </div>
-
-            <!-- Immediate Chat Screen -->
-            <div id="immediate-chat-screen" class="screen flex flex-col h-full">
-                <!-- Chat Header -->
-                <div class="flex items-center p-4 border-b border-border-primary flex-shrink-0">
-                    <button id="chat-back-btn" class="interactive-btn p-2 rounded-full hover:bg-bg-tertiary">
-                        <i data-feather="arrow-left"></i>
-                    </button>
-                    <div class="flex items-center gap-3 flex-grow">
-                        <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
-                            <i data-feather="smile" class="w-6 h-6 text-accent-text"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold leading-tight">Zen</h3>
-                        <p class="text-xs text-green-500 flex items-center justify-center gap-1.5">
-                            <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                            </span>
-                            Online
-                        </p>
-                        </div>
-                    </div>
-                    <div class="w-10"></div> <!-- Spacer to balance the back button -->
-                </div>
-
-                <!-- Message Area -->
-                <div id="chat-messages" class="flex-grow p-4 space-y-4 overflow-y-auto">
-                    <!-- Messages will be rendered here by JS -->
-                </div>
-
-                <!-- Input Area -->
-                <div class="p-4 border-t border-border-primary bg-bg-secondary flex-shrink-0">
-                    <form id="chat-form" class="flex items-center gap-2">
-                        <input type="text" id="chat-input" class="w-full p-3 border border-border-primary rounded-full bg-bg-input text-text-primary placeholder-text-muted focus:ring-2 focus:ring-accent transition" placeholder="Digite sua mensagem..." autocomplete="off">
-                        <button type="submit" id="chat-send-btn" class="interactive-btn bg-accent text-accent-text p-3 rounded-full hover:bg-accent-hover transition-colors flex-shrink-0"><i data-feather="send"></i></button>
-                    </form>
-                </div>
-            </div>
-
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -693,16 +413,16 @@
             <div id="bottom-nav" class="relative flex justify-around hidden">
                 <div id="nav-indicator" style="left: 12.5%;"></div>
                 <button data-screen="checkin-screen" class="nav-btn flex-1 py-3 text-center text-text-muted transition-colors">
-                    <i data-feather="home" class="mx-auto"></i><span class="text-xs block">Início</span>
+                    <i data-feather="home" class="mx-auto"></i><span class="text-xs block">Check-in</span>
                 </button>
-                <button data-screen="journey-screen" class="nav-btn flex-1 py-3 text-center text-text-muted transition-colors">
-                    <i data-feather="trending-up" class="mx-auto"></i><span class="text-xs block">Jornada</span>
+                <button data-screen="history-screen" class="nav-btn flex-1 py-3 text-center text-text-muted transition-colors">
+                    <i data-feather="calendar" class="mx-auto"></i><span class="text-xs block">Histórico</span>
+                </button>
+                <button data-screen="diagnosis-screen" class="nav-btn flex-1 py-3 text-center text-text-muted transition-colors">
+                    <i data-feather="activity" class="mx-auto"></i><span class="text-xs block">Resumo</span>
                 </button>
                 <button data-screen="resources-screen" class="nav-btn flex-1 py-3 text-center text-text-muted transition-colors">
-                    <i data-feather="book-open" class="mx-auto"></i><span class="text-xs block">Recursos</span>
-                </button>
-                <button data-screen="settings-screen" class="nav-btn flex-1 py-3 text-center text-text-muted transition-colors">
-                    <i data-feather="settings" class="mx-auto"></i><span class="text-xs block">Ajustes</span>
+                    <i data-feather="users" class="mx-auto"></i><span class="text-xs block">Apoio Escolar</span>
                 </button>
             </div>
         </nav>
@@ -716,7 +436,7 @@
                 <h3 class="text-xl font-bold mb-4">Editar Registro</h3>
                 <form id="edit-form">
                     <div class="mb-6">
-                        <label for="edit-notes" class="block text-lg font-semibold mb-2">Notas</label>
+                        <label for="edit-notes" class="block text-lg font-semibold mb-2">Contexto</label>
                         <textarea id="edit-notes" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted"></textarea>
                     </div>
                     <div class="mb-6">
@@ -728,19 +448,6 @@
                         <button type="submit" id="save-edit-btn" class="interactive-btn px-6 py-2 bg-accent text-accent-text rounded-lg hover:bg-accent-hover transition-all">Salvar</button>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <!-- Achievement Unlocked Modal -->
-        <div id="achievement-unlocked-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
-            <div id="achievement-modal-content" class="bg-bg-secondary rounded-lg shadow-xl w-full max-w-sm p-6 text-center">
-                <i data-feather="award" class="w-16 h-16 text-accent mx-auto mb-4"></i>
-                <h3 class="text-2xl font-bold mb-2">Conquista Desbloqueada!</h3>
-                <p id="unlocked-achievement-title" class="text-lg font-semibold text-accent"></p>
-                <p id="unlocked-achievement-desc" class="text-text-secondary mb-6"></p>
-                <button id="close-achievement-modal-btn" class="interactive-btn w-full bg-accent text-accent-text font-bold py-2 px-4 rounded-lg hover:bg-accent-hover transition-all">
-                    Legal!
-                </button>
             </div>
         </div>
 
@@ -756,31 +463,13 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- Gratitude Edit Modal -->
-        <div id="gratitude-edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
-            <div id="gratitude-edit-modal-content" class="bg-bg-secondary rounded-lg shadow-xl w-full max-w-md p-6">
-                <h3 class="text-xl font-bold mb-4">Editar Gratidão</h3>
-                <form id="gratitude-edit-form">
-                    <div class="mb-6">
-                        <textarea id="edit-gratitude-text" rows="5" class="w-full p-3 border border-border-primary rounded-lg focus:ring-2 focus:ring-accent transition bg-bg-input text-text-primary placeholder-text-muted"></textarea>
-                    </div>
-                    <div class="flex justify-end gap-4">
-                        <button type="button" id="cancel-gratitude-edit-btn" class="interactive-btn px-6 py-2 bg-bg-tertiary text-text-primary rounded-lg hover:opacity-80 transition-all">Cancelar</button>
-                        <button type="submit" id="save-gratitude-edit-btn" class="interactive-btn px-6 py-2 bg-accent text-accent-text rounded-lg hover:bg-accent-hover transition-all">Salvar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
             <!-- QR Code Screen (replaces Desktop Landing Screen) -->
             <div id="qr-code-screen" class="screen flex flex-col items-center justify-center h-full p-4 md:p-8">
                 <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <!-- Coluna Esquerda: QR Code e Ação -->
                     <div class="text-center order-2 md:order-1">
                         <i data-feather="smartphone" class="w-16 h-16 text-accent mx-auto mb-4"></i>
-                        <h2 class="text-3xl font-bold mb-2 text-text-primary">Venha testar o Sinal de Emoções!</h2>
+                        <h2 class="text-3xl font-bold mb-2 text-text-primary">Conheça o Ecoar</h2>
                         <p class="text-text-secondary mb-6">Aponte a câmera do seu celular para o QR Code e tenha a experiência completa.</p>
                         
                         <div class="flex justify-center mb-4">
@@ -797,8 +486,8 @@
                             <h3 class="font-bold text-lg text-text-primary">Colégio Estadual da Prata</h3>
                         </div>
                         <div class="flex-grow text-text-secondary space-y-4 text-sm">
-                            <h4 class="font-bold text-text-primary text-base">Nossa História</h4>
-                            <p>O "Sinal de Emoções" nasceu da necessidade de criar um espaço seguro para o diálogo sobre saúde mental. Inspirado em metodologias de autoconhecimento, este aplicativo foi pensado para ser uma ferramenta simples e acessível, ajudando usuários a identificar e compreender seus sentimentos diários.</p>
+                            <h4 class="font-bold text-text-primary text-base">Sobre o Ecoar</h4>
+                            <p>O Ecoar é uma ferramenta de check-in emocional criada para facilitar o diálogo entre estudantes e equipe escolar e dar visibilidade aos canais de apoio da escola.</p>
                             
                             <h4 class="font-bold text-text-primary text-base mt-4">Participantes do Projeto</h4>
                             <ul class="list-none space-y-2">
@@ -834,13 +523,6 @@
         </div>
     </div>
 
-    <!-- Test Runner Display Area -->
-    <div id="qunit-container" class="max-w-lg mx-auto p-4" style="display: none;">
-        <h2 class="text-2xl font-bold mb-4 text-text-primary">Testes Unitários da Lógica de Dados</h2>
-        <div id="qunit"></div>
-        <div id="qunit-fixture"></div>
-    </div>
-
     <!-- ====================================================================== -->
     <!-- ======================= JAVASCRIPT MODULES ======================= -->
     <!-- ====================================================================== -->
@@ -873,76 +555,6 @@
                 
     <!-- Main Application Script -->
     <script src="app.js"></script>
-
-    <!-- ====================================================================== -->
-    <!-- ======================= UNIT TEST SCRIPT ========================= -->
-    <!-- ====================================================================== -->
-    <script>
-        // To run tests, append "?test" to the URL.
-        if (new URLSearchParams(window.location.search).has('test')) {
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('qunit-container').style.display = 'block';
-
-            QUnit.module('Data Logic: calculateStreaks', function() {
-                const createCheckin = (daysAgo) => {
-                    const date = new Date();
-                    date.setDate(date.getDate() - daysAgo);
-                    return { createdAt: date };
-                };
-
-                QUnit.test('should return 0 for current and longest with no checkins', function(assert) {
-                    const result = calculateStreaks([]);
-                    assert.deepEqual(result, { current: 0, longest: 0 }, 'Correctly handles empty array');
-                });
-
-                QUnit.test('should calculate a single day streak', function(assert) {
-                    const checkins = [createCheckin(0)]; // Today
-                    const result = calculateStreaks(checkins);
-                    assert.deepEqual(result, { current: 1, longest: 1 }, 'Correctly handles a single checkin today');
-                });
-
-                QUnit.test('should calculate a current streak of 3 days', function(assert) {
-                    const checkins = [createCheckin(0), createCheckin(1), createCheckin(2)];
-                    const result = calculateStreaks(checkins);
-                    assert.deepEqual(result, { current: 3, longest: 3 }, 'Correctly calculates a 3-day current streak');
-                });
-
-                QUnit.test('should handle multiple checkins on the same day', function(assert) {
-                    const checkins = [createCheckin(0), createCheckin(0), createCheckin(1), createCheckin(1), createCheckin(2)];
-                    const result = calculateStreaks(checkins);
-                    assert.deepEqual(result, { current: 3, longest: 3 }, 'Counts multiple checkins on the same day as one');
-                });
-
-                QUnit.test('should identify a broken streak', function(assert) {
-                    const checkins = [createCheckin(2), createCheckin(3), createCheckin(4)]; // Last checkin was 2 days ago
-                    const result = calculateStreaks(checkins);
-                    assert.deepEqual(result, { current: 0, longest: 3 }, 'Current streak is 0, longest is 3');
-                });
-
-                QUnit.test('should correctly identify longest streak when there are multiple streaks', function(assert) {
-                    const checkins = [
-                        createCheckin(0), createCheckin(1), // Current streak: 2
-                        createCheckin(5), createCheckin(6), createCheckin(7) // Past streak: 3
-                    ];
-                    const result = calculateStreaks(checkins);
-                    assert.deepEqual(result, { current: 2, longest: 3 }, 'Correctly identifies longest streak');
-                });
-
-                QUnit.test('should handle streak crossing a month boundary', function(assert) {
-                    // Simulate checkins for today (e.g., 2nd of a month) and yesterday (1st of a month)
-                    const today = new Date();
-                    const yesterday = new Date();
-                    yesterday.setDate(today.getDate() - 1);
-                    const dayBefore = new Date();
-                    dayBefore.setDate(today.getDate() - 2);
-
-                    const checkins = [{ createdAt: today }, { createdAt: yesterday }, { createdAt: dayBefore }];
-                    const result = calculateStreaks(checkins);
-                    assert.deepEqual(result, { current: 3, longest: 3 }, 'Correctly handles streak over month/year boundary');
-                });
-            });
-        }
-    </script>
 
 </body>
 </html>
